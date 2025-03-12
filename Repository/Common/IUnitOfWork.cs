@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Repository.Repositories;
 
-namespace Repository.Common
+namespace Repository.Common;
+
+public interface IUnitOfWork
 {
-    internal interface IUnitOfWork
-    {
-    }
+    public IUserRepository UserRepository { get; }
+
+    Task<int> SaveChangesAsync();   
 }

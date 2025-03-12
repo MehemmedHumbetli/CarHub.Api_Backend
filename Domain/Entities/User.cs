@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.BaseEntities;
+using Domain.Enums;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+public class User : BaseEntity
 {
-    internal class User
-    {
-    }
+    public string Name { get; set; }
+    public string Surname { get; set; }
+    public string Email { get; set; }
+    public string Phone { get; set; }
+    public string PasswordHash { get; set; }
+    public UserRoles UserRole { get; set; }
+    public List<Car> Favorites { get; set; }
+    public List<Car> UserCars { get; set; }
+    public List<string> UserImagePaths { get; set; }
 }
