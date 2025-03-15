@@ -7,6 +7,8 @@ public interface IUserRepository
     Task RegisterAsync(User user);
     void Update(User user);
     Task Remove(int id);
+    Task AddUserImagePathAsync(int userId, string imagePath);
+    Task RemoveUserImagePathAsync(int userId, string imagePath);
     IQueryable<User> GetAll();
     Task<User> GetByIdAsync(int id);
     Task<User> GetUserByEmailAsync(string email);
@@ -19,8 +21,5 @@ public interface IUserRepository
     Task<IEnumerable<Car>> GetUserCarsAsync(int userId);       
     Task AddUserCarAsync(int userId, Car car);                 
     Task RemoveUserCarAsync(int userId, int carId);            
-
-    Task<IEnumerable<string>> GetUserImagePathsAsync(int userId);  
-    Task AddUserImagePathAsync(int userId, string imagePath);      
-    Task RemoveUserImagePathAsync(int userId, string imagePath);
+  
 }

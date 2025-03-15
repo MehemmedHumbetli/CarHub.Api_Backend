@@ -6,5 +6,5 @@ public interface IUnitOfWork
 {
     public IUserRepository UserRepository { get; }
 
-    Task<int> SaveChangesAsync();   
+    Task<int> SaveChangeAsync();   
 }

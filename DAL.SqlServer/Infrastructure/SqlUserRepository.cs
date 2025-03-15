@@ -8,7 +8,7 @@ namespace DAL.SqlServer.Infrastructure;
 
 public class SqlUserRepository(string connectionString, AppDbContext context) : BaseSqlRepository(connectionString), IUserRepository
 {
-    private readonly AppDbContext _context;
+    private readonly AppDbContext _context = context;
 
     public IQueryable<User> GetAll()
     {
@@ -80,28 +80,11 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
         return await connection.QueryAsync<Car>(sql, new { UserId = userId });
     }
 
-    public async Task AddUserCarAsync(int userId, Car car)
-    {
-        using var connection = OpenConnection();
-        string sql = @"INSERT INTO Cars (Brand, Model, Year) 
-                       VALUES (@Brand, @Model, @Year);
-                       DECLARE @CarId INT = SCOPE_IDENTITY();
-                       INSERT INTO UserCars (UserId, CarId) VALUES (@UserId, @CarId)";
-        await connection.ExecuteAsync(sql, new { car.Brand, car.Model, car.Year, UserId = userId });
-    }
-
     public async Task RemoveUserCarAsync(int userId, int carId)
     {
         using var connection = OpenConnection();
         string sql = "DELETE FROM UserCars WHERE UserId = @UserId AND CarId = @CarId";
         await connection.ExecuteAsync(sql, new { UserId = userId, CarId = carId });
-    }
-
-    public async Task<IEnumerable<string>> GetUserImagePathsAsync(int userId)
-    {
-        using var connection = OpenConnection();
-        string sql = "SELECT ImagePath FROM UserImages WHERE UserId = @UserId";
-        return await connection.QueryAsync<string>(sql, new { UserId = userId });
     }
 
     public async Task AddUserImagePathAsync(int userId, string imagePath)
@@ -116,5 +99,20 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
         using var connection = OpenConnection();
         string sql = "DELETE FROM UserImages WHERE UserId = @UserId AND ImagePath = @ImagePath";
         await connection.ExecuteAsync(sql, new { UserId = userId, ImagePath = imagePath });
+    }
+
+
+    //public async Task AddUserCarAsync(int userId, Car car)
+    //{
+    //    using var connection = OpenConnection();
+    //    string sql = @"INSERT INTO Cars (Brand, Model, Year) 
+    //                   VALUES (@Brand, @Model, @Year);
+    //                   DECLARE @CarId INT = SCOPE_IDENTITY();
+    //                   INSERT INTO UserCars (UserId, CarId) VALUES (@UserId, @CarId)";
+    //    await connection.ExecuteAsync(sql, new { car.Brand, car.Model, car.Year, UserId = userId });
+    //}
+    public Task AddUserCarAsync(int userId, Car car)
+    {
+        throw new NotImplementedException();
     }
 }
