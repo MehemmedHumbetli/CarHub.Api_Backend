@@ -16,8 +16,8 @@ public class Update
         public string Surname { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public string PasswordHash { get; set; }
-        public string UserImagePath { get; set; }
+        //public string UserImagePath { get; set; }
+        //public string PasswordHash { get; set; }
     }
 
     public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<Command, Result<UpdateDto>>
@@ -28,14 +28,14 @@ public class Update
         public async Task<Result<UpdateDto>> Handle(Command request, CancellationToken cancellationToken)
         {
             var currentUser = await _unitOfWork.UserRepository.GetByIdAsync(request.Id);
-            if (currentUser == null) throw new BadRequestException($"User doesnot exist with id {request.Id}");
+            if (currentUser == null) throw new BadRequestException($"User does not exist with id {request.Id}");
 
             currentUser.Name = request.Name;
             currentUser.Surname = request.Surname;
             currentUser.Email = request.Email;
             currentUser.Phone = request.Phone;
-            currentUser.PasswordHash = request.PasswordHash;
-            currentUser.UserImagePath = request.UserImagePath;
+            //currentUser.UserImagePath = request.UserImagePath;
+            //currentUser.PasswordHash = request.PasswordHash;
             currentUser.UpdatedBy = 1;
 
             _unitOfWork.UserRepository.Update(currentUser);

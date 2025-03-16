@@ -10,20 +10,22 @@ namespace Application.CQRS.Users.Handlers;
 
 public class Register
 {
-    public class Command : IRequest<Result<RegisterDto>>
+    public class RegisterCommand : IRequest<Result<RegisterDto>>
     {
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Password { get; set; }
+        public string UserImagePath { get; set; }
+
     }
 
-    public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<Command, Result<RegisterDto>>
+    public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<RegisterCommand, Result<RegisterDto>>
     {
         private readonly IMapper _mapper = mapper;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<Result<RegisterDto>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<RegisterDto>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             var currentUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(request.Email);
             if (currentUser != null) throw new BadRequestException("User is already exist with provided mail");

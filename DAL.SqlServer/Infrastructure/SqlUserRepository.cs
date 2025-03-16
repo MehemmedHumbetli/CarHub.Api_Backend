@@ -26,6 +26,8 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
     }
     public void Update(User user)
     {
+        var users = _context.Users.ToList();
+        Console.WriteLine(users);
         user.UpdatedDate = DateTime.Now;
         _context.Update(user);
         _context.SaveChanges();

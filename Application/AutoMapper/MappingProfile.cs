@@ -2,15 +2,17 @@
 using AutoMapper;
 using Domain.Entities;
 using static Application.CQRS.Users.Handlers.Register;
+using static Application.CQRS.Users.Handlers.Update;
 namespace Application.AutoMapper;
 
 public class MappingProfile:Profile
 {
     public MappingProfile()
     {
-        CreateMap<Command, User>().ReverseMap();
+        CreateMap<RegisterCommand, User>().ReverseMap();
         CreateMap<User, RegisterDto>();
 
-        //CreateMap<User, UpdateDto>();
+        CreateMap<User, UpdateDto>();
+        CreateMap<User, GetAllDto>();
     }
 }
