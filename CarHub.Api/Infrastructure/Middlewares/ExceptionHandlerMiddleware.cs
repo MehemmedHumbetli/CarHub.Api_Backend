@@ -48,4 +48,8 @@ public class ExceptionHandlerMiddleware(RequestDelegate next)
         await context.Response.WriteAsync(json);
     }
 
+    public ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

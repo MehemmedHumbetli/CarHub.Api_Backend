@@ -87,21 +87,6 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
         await connection.ExecuteAsync(sql, new { UserId = userId, CarId = carId });
     }
 
-    public async Task AddUserImagePathAsync(int userId, string imagePath)
-    {
-        using var connection = OpenConnection();
-        string sql = "INSERT INTO UserImages (UserId, ImagePath) VALUES (@UserId, @ImagePath)";
-        await connection.ExecuteAsync(sql, new { UserId = userId, ImagePath = imagePath });
-    }
-
-    public async Task RemoveUserImagePathAsync(int userId, string imagePath)
-    {
-        using var connection = OpenConnection();
-        string sql = "DELETE FROM UserImages WHERE UserId = @UserId AND ImagePath = @ImagePath";
-        await connection.ExecuteAsync(sql, new { UserId = userId, ImagePath = imagePath });
-    }
-
-
     //public async Task AddUserCarAsync(int userId, Car car)
     //{
     //    using var connection = OpenConnection();

@@ -7,8 +7,6 @@ public interface IUserRepository
     Task RegisterAsync(User user);
     void Update(User user);
     Task Remove(int id);
-    Task AddUserImagePathAsync(int userId, string imagePath);
-    Task RemoveUserImagePathAsync(int userId, string imagePath);
     IQueryable<User> GetAll();
     Task<User> GetByIdAsync(int id);
     Task<User> GetUserByEmailAsync(string email);
