@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Domain.Enums;
 
-namespace Domain.Enums
+public enum TransmissionTypes : int
 {
-    internal class TransmissionTypes
-    {
-    }
+    Automatic = 1,
+    Manual = 2
 }

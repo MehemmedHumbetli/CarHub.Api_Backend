@@ -7,12 +7,8 @@ public enum BodyTypes : int
     Coupe = 3,
     Convertible = 4,
     Hatchback = 5,
-    Wagon = 6,
-    Van = 7,
-    Truck = 8,
-    Minivan = 9,
-    Pickup = 10,
-    Crossover = 11,
-    Hybrid = 12,
-    Electric = 13
+    Van = 6,
+    Truck = 7,
+    Hybrid = 8,
+    Electric = 9
 }

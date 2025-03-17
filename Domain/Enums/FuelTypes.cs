@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Domain.Enums;
 
-namespace Domain.Enums
+public enum FuelTypes : int
 {
-    internal class FuelTypes
-    {
-    }
+    Diesel = 1,
+    Petrol = 2,
+    Electric = 3,
 }

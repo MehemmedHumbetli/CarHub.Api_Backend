@@ -1,29 +1,20 @@
-﻿using Domain.BaseEntities;
+﻿using Domain.Entities;
 using Domain.Enums;
 
-namespace Domain.Entities;
+namespace Application.CQRS.Users.ResponseDtos;
 
-public class Car : BaseEntity
+public class AddDto
 {
     public string Brand { get; set; }
-    public string BrandImagePath { get; set; }
     public string Model { get; set; }
     public int Year { get; set; }
     public int Price { get; set; }
     public FuelTypes Fuel { get; set; }
     public TransmissionTypes Transmission { get; set; }
     public double Miles { get; set; }
-    public List<CarImage> CarImagePaths { get; set; } = new List<CarImage>();
+    public List<CarImage> CarImagePaths { get; set; }
     public BodyTypes Body { get; set; }
-    public string BodyTypeImage { get; set; }
     public string Color { get; set; }
     public string VIN { get; set; }
     public string Text { get; set; }
-    public List<User> FavoritedByUsers { get; set; } = new List<User>();
-
-    public Car()
-    {
-        BrandImagePath = "None";
-        BodyTypeImage = "None";
-    }
 }
