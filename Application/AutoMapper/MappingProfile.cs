@@ -12,6 +12,7 @@ public class MappingProfile : Profile
     {
         CreateMap<Category, AddDto>();
         CreateMap<AddCommand, Category>();
+        CreateMap<Category, GetAllDto>();
 
     }
 }

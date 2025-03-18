@@ -15,39 +15,33 @@ public class Add
         public string Description { get; set; }
     }
 
-    public sealed class Handler : IRequestHandler<AddCommand, Result<AddDto>>
+    public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<AddCommand, Result<AddDto>>
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-
-        public Handler(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<Result<AddDto>> Handle(AddCommand request, CancellationToken cancellationToken)
         {
-            // Yeni kategori objesini map et
+         
             var newCategory = _mapper.Map<Domain.Entities.Category>(request);
 
-            // Kategori ismi zorunlu
+         
             if (string.IsNullOrEmpty(newCategory.Name))
             {
                 throw new Exception("Category name is required");
             }
 
-            // Kategoriyi veritabanına ekle
+            
             await _unitOfWork.CategoryRepository.AddAsync(newCategory);
 
-            // Cevabı map et
+        
             var response = _mapper.Map<AddDto>(newCategory);
 
-            // Sonuç dön
+  
             return new Result<AddDto>
             {
                 Data = response,
-                Errors = new List<string>(),  // Hataları boş gönderiyoruz
+                Errors = new List<string>(),  
                 IsSuccess = true
             };
         }
