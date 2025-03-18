@@ -51,34 +51,38 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
     public async Task<IEnumerable<Car>> GetUserFavoritesAsync(int userId)
     {
         using var connection = OpenConnection();
-        string sql = @"SELECT c.Id, c.Brand, c.Model, c.Year 
-                       FROM FavoriteCars fc
-                       JOIN Cars c ON fc.CarId = c.Id
-                       WHERE fc.UserId = @UserId";
+        string sql = @"SELECT c.Id, c.Brand, c.BrandImagePath, c.Model, c.Year, c.Price, 
+                          c.Fuel, c.Transmission, c.Miles, c.Body, c.BodyTypeImage, 
+                          c.Color, c.VIN, c.Text 
+                   FROM UserFavorites fc
+                   JOIN Cars c ON fc.CarId = c.Id
+                   WHERE fc.UserId = @UserId";
         return await connection.QueryAsync<Car>(sql, new { UserId = userId });
     }
 
     public async Task AddFavoriteCarAsync(int userId, int carId)
     {
         using var connection = OpenConnection();
-        string sql = "INSERT INTO FavoriteCars (UserId, CarId) VALUES (@UserId, @CarId)";
+        string sql = "INSERT INTO UserFavorites (UserId, CarId) VALUES (@UserId, @CarId)";
         await connection.ExecuteAsync(sql, new { UserId = userId, CarId = carId });
     }
 
     public async Task RemoveFavoriteCarAsync(int userId, int carId)
     {
         using var connection = OpenConnection();
-        string sql = "DELETE FROM FavoriteCars WHERE UserId = @UserId AND CarId = @CarId";
+        string sql = "DELETE FROM UserFavorites WHERE UserId = @UserId AND CarId = @CarId";
         await connection.ExecuteAsync(sql, new { UserId = userId, CarId = carId });
     }
 
     public async Task<IEnumerable<Car>> GetUserCarsAsync(int userId)
     {
         using var connection = OpenConnection();
-        string sql = @"SELECT c.Id, c.Brand, c.Model, c.Year 
-                       FROM UserCars uc
-                       JOIN Cars c ON uc.CarId = c.Id
-                       WHERE uc.UserId = @UserId";
+        string sql = @"SELECT c.Id, c.Brand, c.BrandImagePath, c.Model, c.Year, c.Price, 
+                          c.Fuel, c.Transmission, c.Miles, c.Body, c.BodyTypeImage, 
+                          c.Color, c.VIN, c.Text 
+                   FROM UserCars uc
+                   JOIN Cars c ON uc.CarId = c.Id
+                   WHERE uc.UserId = @UserId";
         return await connection.QueryAsync<Car>(sql, new { UserId = userId });
     }
 
@@ -88,6 +92,7 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
         string sql = "DELETE FROM UserCars WHERE UserId = @UserId AND CarId = @CarId";
         await connection.ExecuteAsync(sql, new { UserId = userId, CarId = carId });
     }
+
 
     //public async Task AddUserCarAsync(int userId, Car car)
     //{

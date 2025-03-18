@@ -3,7 +3,7 @@ using Domain.Enums;
 
 namespace Application.CQRS.Users.ResponseDtos;
 
-public class GetAllDto
+public class GetByIdDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -12,6 +12,6 @@ public class GetAllDto
     public string Phone { get; set; }
     public UserRoles UserRole { get; set; }
     public List<Car> Favorites { get; set; }
-    public List<Car> UserCars { get; set; }
+    public List<Car> UserCars { get; set; } 
     public string UserImagePath { get; set; }
 }

@@ -43,4 +43,16 @@ public class UserController(ISender sender) : Controller
 
         return Ok(result.Data);
     }
+
+    [HttpGet("GetById")]
+    public async Task<IActionResult> GetById([FromQuery] GetById.Query request)
+    {
+        return Ok(await _sender.Send(request));
+    }
+
+    [HttpGet("GetUserByEmail")]
+    public async Task<IActionResult> GetUserByEmail([FromQuery] GetUserByEmail.GetUserByEmailCommand request)
+    {
+        return Ok(await _sender.Send(request));
+    }
 }

@@ -14,5 +14,6 @@ public class MappingProfile:Profile
 
         CreateMap<User, UpdateDto>();
         CreateMap<User, GetAllDto>();
+        CreateMap<User, GetByIdDto>();
     }
 }
