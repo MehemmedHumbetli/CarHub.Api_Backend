@@ -1,4 +1,5 @@
-﻿using Application.CQRS.Users.ResponseDtos;
+﻿using Application.CQRS.Cars.ResponseDtos;
+using Application.CQRS.Users.ResponseDtos;
 using AutoMapper;
 using Common.GlobalResponses.Generics;
 using Domain.Entities;
@@ -6,7 +7,7 @@ using Domain.Enums;
 using MediatR;
 using Repository.Common;
 
-namespace Application.CQRS.Users.Handlers;
+namespace Application.CQRS.Cars.Handlers;
 
 public class Add
 {

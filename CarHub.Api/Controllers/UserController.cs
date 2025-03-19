@@ -34,7 +34,7 @@ public class UserController(ISender sender) : Controller
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAllUsers()
     {
-        var result = await _sender.Send(new GetAll.GetAllUsersQuery());
+        var result = await _sender.Send(new UserGetAll.GetAllUsersQuery());
 
         if (!result.IsSuccess)
         {

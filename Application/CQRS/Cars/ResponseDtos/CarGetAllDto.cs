@@ -1,9 +1,9 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
 
-namespace Application.CQRS.Users.ResponseDtos;
+namespace Application.CQRS.Cars.ResponseDtos;
 
-public class GetAllDto
+public class CarGetAllDto
 {
     public int Id { get; set; }
     public string Brand { get; set; }

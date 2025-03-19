@@ -6,11 +6,11 @@ using Repository.Common;
 
 namespace Application.CQRS.Users.Handlers;
 
-public class GetAll
+public class UserGetAll
 {
-    public record struct GetAllCarsQuery : IRequest<Result<List<GetAllDto>>> { }
+    public record struct GetAllUsersQuery : IRequest<Result<List<UserGetAllDto>>> { }
 
-    public sealed class Handler : IRequestHandler<GetAllCarsQuery, Result<List<GetAllDto>>>
+    public sealed class Handler : IRequestHandler<GetAllUsersQuery, Result<List<UserGetAllDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -21,20 +21,20 @@ public class GetAll
             _mapper = mapper;
         }
 
-        public async Task<Result<List<GetAllDto>>> Handle(GetAllCarsQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<UserGetAllDto>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
         {
-            var cars = _unitOfWork.CarRepository.GetAll();
-            if (cars == null || !cars.Any())
-                return new Result<List<GetAllDto>>
+            var users = _unitOfWork.UserRepository.GetAll();
+            if (users == null || !users.Any())
+                return new Result<List<UserGetAllDto>>
                 {
                     Data = [],
-                    Errors = ["No cars found"],
+                    Errors = ["No users found"],
                     IsSuccess = false
                 };
 
-            var response = _mapper.Map<List<GetAllDto>>(cars);
+            var response = _mapper.Map<List<UserGetAllDto>>(users);
 
-            return new Result<List<GetAllDto>>
+            return new Result<List<UserGetAllDto>>
             {
                 Data = response,
                 Errors = [],

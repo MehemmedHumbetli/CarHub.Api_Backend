@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
 
-namespace Application.CQRS.Users.ResponseDtos;
+namespace Application.CQRS.Cars.ResponseDtos;
 
 public class AddDto
 {

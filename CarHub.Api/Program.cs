@@ -39,5 +39,5 @@ app.UseCors("AllowAll"); // CORS'u aktif et
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-app.UseMiddleware<ExceptionHandlerMiddleware>();
+//app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.Run();

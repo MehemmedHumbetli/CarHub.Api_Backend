@@ -1,4 +1,4 @@
-﻿using Application.CQRS.Users.Handlers;
+﻿using Application.CQRS.Cars.Handlers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +12,7 @@ public class CarController(ISender sender) : Controller
 
 
     [HttpPost]
-    public async Task<IActionResult> AddAsync([FromBody] Application.CQRS.Users.Handlers.Add.AddCommand request)
+    public async Task<IActionResult> AddAsync([FromBody] Application.CQRS.Cars.Handlers.Add.AddCommand request)
     {
         return Ok(await _sender.Send(request));
     }
@@ -20,7 +20,7 @@ public class CarController(ISender sender) : Controller
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAllCars()
     {
-        var result = await _sender.Send(new GetAll.GetAllCarsQuery());
+        var result = await _sender.Send(new CarGetAll.GetAllCarsQuery());
 
         if (!result.IsSuccess)
         {

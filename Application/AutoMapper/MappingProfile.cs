@@ -3,7 +3,8 @@ using static Application.CQRS.Users.Handlers.Register;
 using static Application.CQRS.Users.Handlers.Update;
 using AutoMapper;
 using Domain.Entities;
-using static Application.CQRS.Users.Handlers.Add;
+using static Application.CQRS.Cars.Handlers.Add;
+using Application.CQRS.Cars.ResponseDtos;
 
 namespace Application.AutoMapper;
 
@@ -16,7 +17,7 @@ public class MappingProfile : Profile
         CreateMap<User, RegisterDto>();
 
         CreateMap<User, UpdateDto>();
-        CreateMap<User, GetAllDto>();
+        CreateMap<User, UserGetAllDto>();
         CreateMap<User, GetByIdDto>();
         
         //Car Mapping
@@ -24,6 +25,6 @@ public class MappingProfile : Profile
         CreateMap<Car, AddDto>();
 
         //CreateMap<User, UpdateDto>();
-        CreateMap<Car, GetAllDto>();
+        CreateMap<Car, CarGetAllDto>();
      }
 }

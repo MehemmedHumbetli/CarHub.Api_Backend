@@ -1,5 +1,6 @@
 ﻿using Domain.BaseEntities;
 using Domain.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Entities;
 
 public class Car : BaseEntity
@@ -18,6 +19,7 @@ public class Car : BaseEntity
     public string Color { get; set; }
     public string VIN { get; set; }
     public string Text { get; set; }
+    [NotMapped]
     public List<User> FavoritedByUsers { get; set; } = new List<User>();
 
     public Car()
