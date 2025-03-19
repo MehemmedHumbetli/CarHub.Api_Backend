@@ -37,3 +37,4 @@ public class DeleteUserBackgroundService(IServiceScopeFactory scopeFactory) : Ba
         }
     }
 }
+

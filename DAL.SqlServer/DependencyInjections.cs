@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Repository.Common;
 
 namespace DAL.SqlServer;
-
 public static class DependencyInjections
 {
     public static IServiceCollection AddSqlServerServices(this IServiceCollection services, string connectionstring)

@@ -1,9 +1,18 @@
 using DAL.SqlServer;
 using Application;
 using CarHub.Api.Infrastructure.Middlewares;
+
 using CarHub.Api.Security;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy => policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -16,6 +25,7 @@ builder.Services.AddSqlServerServices(conn!);
 builder.Services.AddApplicationServices();
 builder.Services.AddAuthenticationService(builder.Configuration);
 
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -23,7 +33,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowAll"); // CORS'u aktif et
 
 
 app.UseHttpsRedirection();
