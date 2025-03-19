@@ -1,17 +1,17 @@
-﻿using Domain.BaseEntities;
+﻿using Domain.Entities;
 using Domain.Enums;
 
-namespace Domain.Entities;
+namespace Application.CQRS.Users.ResponseDtos;
 
-public class User : BaseEntity
+public class GetUserByEmailDto
 {
+    public int Id { get; set; }
     public string Name { get; set; }
     public string Surname { get; set; }
     public string Email { get; set; }
     public string Phone { get; set; }
-    public string PasswordHash { get; set; }
     public UserRoles UserRole { get; set; }
-    public List<Car> Favorites { get; set; } = new List<Car>();  
-    public List<Car> UserCars { get; set; } = new List<Car>();
+    public List<Car> Favorites { get; set; }
+    public List<Car> UserCars { get; set; }
     public string UserImagePath { get; set; }
 }

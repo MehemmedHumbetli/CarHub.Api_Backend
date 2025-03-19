@@ -14,6 +14,11 @@ public class SqlUnitOfWork(string connectionString, AppDbContext context) : IUni
 
     public ICarRepository CarRepository => _carRepository ?? new SqlCarRepository(_connectionString, context);
 
+    public SqlUserRepository _userRepository;
+
+    public IUserRepository UserRepository => _userRepository ?? new SqlUserRepository(_connectionString,context);
+
+
     public async Task<int> SaveChangeAsync()
     {
         return await _context.SaveChangesAsync();

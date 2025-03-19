@@ -1,6 +1,5 @@
 ﻿using Domain.BaseEntities;
 using Domain.Enums;
-
 namespace Domain.Entities;
 
 public class Car : BaseEntity
