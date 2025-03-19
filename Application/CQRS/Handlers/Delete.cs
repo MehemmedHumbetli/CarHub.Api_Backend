@@ -1,12 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common.GlobalResponses.Generics;
+using MediatR;
+using Repository.Common;
 
-namespace Application.CQRS.Handlers
+namespace Application.CQRS.Handlers;
+
+public sealed class Delete : IRequest<Result<bool>>
 {
-    internal class Delete
+    public int Id { get; set; }
+
+    public Delete(int id)
     {
+        Id = id;
+    }
+}
+
+public class Remove
+{
+    public class DeleteCommand : IRequest<Result<Unit>>
+    {
+        public int Id { get; set; }
+    }
+
+    public class Handler : IRequestHandler<DeleteCommand, Result<Unit>>
+    {
+        private readonly IUnitOfWork _unitOfWork;
+
+        public Handler(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+
+        public async Task<Result<Unit>> Handle(DeleteCommand request, CancellationToken cancellationToken)
+        {
+            await _unitOfWork.CategoryRepository.DeleteAsync(request.Id);
+            await _unitOfWork.SaveChangeAsync();
+            return new Result<Unit> { Errors = [], IsSuccess = true };
+        }
     }
 }

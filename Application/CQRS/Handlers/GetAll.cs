@@ -8,31 +8,41 @@ namespace Application.CQRS.Handlers;
 
 
 
-public sealed class GetAllHandler
+public class GetAll
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
+    public record struct GetAllCarsQuery : IRequest<Result<List<GetAllDto>>> { }
 
-    public GetAllHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public sealed class Handler : IRequestHandler<GetAllCarsQuery, Result<List<GetAllDto>>>
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-    }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-    public async Task<Result<List<GetAllDto>>> Handle(CancellationToken cancellationToken)
-    {
-      
-        var categories =  _unitOfWork.CategoryRepository.GetAll();
-
-        var response = _mapper.Map<List<GetAllDto>>(categories);
-
-        
-        return new Result<List<GetAllDto>>
+        public Handler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            Data = response,
-            Errors = new List<string>(),  
-            IsSuccess = true
-        };
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        public async Task<Result<List<GetAllDto>>> Handle(GetAllCarsQuery request, CancellationToken cancellationToken)
+        {
+            var cars = _unitOfWork.CategoryRepository.GetAll();
+            if (cars == null || !cars.Any())
+                return new Result<List<GetAllDto>>
+                {
+                    Data = [],
+                    Errors = ["No cars found"],
+                    IsSuccess = false
+                };
+
+            var response = _mapper.Map<List<GetAllDto>>(cars);
+
+            return new Result<List<GetAllDto>>
+            {
+                Data = response,
+                Errors = [],
+                IsSuccess = true
+            };
+        }
     }
 }
 

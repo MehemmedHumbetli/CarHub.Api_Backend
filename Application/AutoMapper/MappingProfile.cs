@@ -12,7 +12,16 @@ public class MappingProfile : Profile
     {
         CreateMap<Category, AddDto>();
         CreateMap<AddCommand, Category>();
+
         CreateMap<Category, GetAllDto>();
+        CreateMap<GetAllDto, Category>();
+
+        CreateMap<Category, UpdateDto>();
+        CreateMap<UpdateDto, Category>();
+
+        CreateMap<Category, DeleteDto>();
+        CreateMap<DeleteDto, Category>();
+
 
     }
 }
