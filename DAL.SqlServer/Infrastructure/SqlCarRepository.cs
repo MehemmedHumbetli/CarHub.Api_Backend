@@ -45,9 +45,9 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
         throw new NotImplementedException();
     }
 
-    public Task<Car> GetByIdAsync(int id)
+    public async Task<Car> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return (await _context.Cars.FirstOrDefaultAsync(u => u.Id == id))!;
     }
 
     public Task<IEnumerable<Car>> GetByMilesAsync(double miles)

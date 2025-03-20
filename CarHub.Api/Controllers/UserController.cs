@@ -27,7 +27,7 @@ public class UserController(ISender sender) : Controller
     [HttpDelete("Remove")]
     public async Task<IActionResult> Delete([FromQuery] int id)
     {
-        var request = new Application.CQRS.Users.Handlers.Remove.DeleteCommand { Id = id };
+        var request = new Application.CQRS.Users.Handlers.UserRemove.UserDeleteCommand { Id = id };
         return Ok(await _sender.Send(request));
     }
 
@@ -52,6 +52,24 @@ public class UserController(ISender sender) : Controller
 
     [HttpGet("GetUserByEmail")]
     public async Task<IActionResult> GetUserByEmail([FromQuery] GetUserByEmail.GetUserByEmailCommand request)
+    {
+        return Ok(await _sender.Send(request));
+    }
+
+    [HttpGet("AddFavoriteCar")]
+    public async Task<IActionResult> AddUserFavorites([FromQuery] AddFavoriteCar.AddFavoriteCarCommand request)
+    {
+        return Ok(await _sender.Send(request));
+    }
+
+    [HttpGet("GetUserFavorites")]
+    public async Task<IActionResult> GetUserFavorites([FromQuery] GetUserFavorites.GetUserFavoritesCommand request)
+    {
+        return Ok(await _sender.Send(request));
+    }
+
+    [HttpDelete("RemoveFavorite")]
+    public async Task<IActionResult> RemoveFavoriteCar([FromQuery] RemoveFavoriteCar.RemoveFavoriteCarCommand request)
     {
         return Ok(await _sender.Send(request));
     }

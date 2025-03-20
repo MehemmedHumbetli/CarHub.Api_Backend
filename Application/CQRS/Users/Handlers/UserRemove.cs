@@ -6,14 +6,14 @@ using Repository.Common;
 namespace Application.CQRS.Users.Handlers;
 
 
-public class Remove
+public class UserRemove
 {
-    public class DeleteCommand : IRequest<Result<Unit>>
+    public class UserDeleteCommand : IRequest<Result<Unit>>
     {
         public int Id { get; set; }
     }
 
-    public class Handler : IRequestHandler<DeleteCommand, Result<Unit>>
+    public class Handler : IRequestHandler<UserDeleteCommand, Result<Unit>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -22,7 +22,7 @@ public class Remove
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<Unit>> Handle(DeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(UserDeleteCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.UserRepository.Remove(request.Id);
             await _unitOfWork.SaveChangeAsync();

@@ -1,23 +1,26 @@
-﻿﻿CREATE TABLE Users (
-    Id INT IDENTITY(1,1) PRIMARY KEY, 
-    [Name] NVARCHAR(100) NOT NULL,  
-    Surname NVARCHAR(100) NOT NULL,  
-    Email NVARCHAR(255) UNIQUE NOT NULL,  
-    Phone NVARCHAR(20),  
-    PasswordHash NVARCHAR(255) NOT NULL,  
-    UserImagePath NVARCHAR(500) NULL,
-    UserRole INT NOT NULL,  
-    CreatedBy INT, 
-    UpdatedBy INT,  
-    DeletedBy INT,  
-    CreatedDate DATETIME,  
-    UpdatedDate DATETIME,  
-    DeletedDate DATETIME,  
-    IsDeleted BIT DEFAULT 0,  
+﻿CREATE TABLE [dbo].[Users] (
+    [Id]            INT            IDENTITY (1, 1) NOT NULL,
+    [Name]          NVARCHAR (100) NOT NULL,
+    [Surname]       NVARCHAR (100) NOT NULL,
+    [Email]         NVARCHAR (255) NOT NULL,
+    [Phone]         NVARCHAR (20)  NULL,
+    [PasswordHash]  NVARCHAR (255) NOT NULL,
+    [UserImagePath] NVARCHAR (500) NULL,
+    [UserRole]      INT            NOT NULL,
+    [CreatedBy]     INT            NULL,
+    [UpdatedBy]     INT            NULL,
+    [DeletedBy]     INT            NULL,
+    [CreatedDate]   DATETIME       NULL,
+    [UpdatedDate]   DATETIME       NULL,
+    [DeletedDate]   DATETIME       NULL,
+    [IsDeleted]     BIT            DEFAULT ((0)) NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    UNIQUE NONCLUSTERED ([Email] ASC)
 );
 
+
 CREATE TABLE [dbo].[Cars] (
-    [Id]             INT PRIMARY KEY            IDENTITY (1, 1) NOT NULL,
+    [Id]             INT            IDENTITY (1, 1) NOT NULL,
     [Brand]          NVARCHAR (255) NOT NULL,
     [BrandImagePath] NVARCHAR (300) NULL,
     [Model]          NVARCHAR (255) NOT NULL,
@@ -39,30 +42,25 @@ CREATE TABLE [dbo].[Cars] (
     [DeletedDate]    DATETIME       NULL,
     [DeletedBy]      INT            NULL,
     [UserId]         INT            NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    FOREIGN KEY ([UserId]) REFERENCES [dbo].[Users] ([Id])
+);
+
+CREATE TABLE [dbo].[UserFavorite] (
+    [Id]         INT IDENTITY (1, 1) NOT NULL,
+    [UserId]     INT NOT NULL,
+    [CarId]      INT NOT NULL,
+    [IsFavorite] BIT DEFAULT ((0)) NOT NULL,
+    PRIMARY KEY CLUSTERED ([UserId] ASC, [CarId] ASC),
     FOREIGN KEY ([UserId]) REFERENCES [dbo].[Users] ([Id]),
+    FOREIGN KEY ([CarId]) REFERENCES [dbo].[Cars] ([Id])
 );
 
-
-CREATE TABLE UserFavorites (
-    UserId INT,  
-    CarId INT,  
-    PRIMARY KEY (UserId, CarId),
-    FOREIGN KEY (UserId) REFERENCES Users(Id),
-    FOREIGN KEY (CarId) REFERENCES Cars(Id)
+CREATE TABLE [dbo].[CarImage] (
+    [Id]        INT            IDENTITY (1, 1) NOT NULL,
+    [CarId]     INT            NOT NULL,
+    [ImagePath] NVARCHAR (500) NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    FOREIGN KEY ([CarId]) REFERENCES [dbo].[Cars] ([Id])
 );
 
---CREATE TABLE UserCars (
---    UserId INT NOT NULL,  
---    CarId INT NOT NULL,   
---    PRIMARY KEY (UserId, CarId),  
---    FOREIGN KEY (UserId) REFERENCES Users(Id),
---    FOREIGN KEY (CarId) REFERENCES Cars(Id)
---);
-
-
-CREATE TABLE CarImages (
-    Id INT IDENTITY(1,1) PRIMARY KEY, 
-    CarId INT NOT NULL,
-    ImagePath NVARCHAR(500) NOT NULL,
-    FOREIGN KEY (CarId) REFERENCES Cars(Id)
-);

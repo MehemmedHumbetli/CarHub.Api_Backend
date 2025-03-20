@@ -11,7 +11,7 @@ public class User : BaseEntity
     public string Phone { get; set; }
     public string PasswordHash { get; set; }
     public UserRoles UserRole { get; set; }
-    public List<Car> Favorites { get; set; } = new List<Car>();  
+    public List<UserFavorite> Favorites { get; set; } = new List<UserFavorite>();  
     public List<Car> UserCars { get; set; } = new List<Car>();
     public string UserImagePath { get; set; }
 }

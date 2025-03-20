@@ -11,7 +11,7 @@ public class GetByIdDto
     public string Email { get; set; }
     public string Phone { get; set; }
     public UserRoles UserRole { get; set; }
-    public List<Car> Favorites { get; set; }
+    public List<UserFavorite> Favorites { get; set; }
     public List<Car> UserCars { get; set; } 
     public string UserImagePath { get; set; }
 }

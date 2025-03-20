@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Entities;
 using static Application.CQRS.Cars.Handlers.Add;
 using Application.CQRS.Cars.ResponseDtos;
+using Application.CQRS.Users.Handlers;
 
 namespace Application.AutoMapper;
 
@@ -19,12 +20,11 @@ public class MappingProfile : Profile
         CreateMap<User, UpdateDto>();
         CreateMap<User, UserGetAllDto>();
         CreateMap<User, GetByIdDto>();
-        
+        CreateMap<Car, GetUserFavoritesDto>();
+
         //Car Mapping
         CreateMap<AddCommand, Car>().ReverseMap();
         CreateMap<Car, AddDto>();
-
-        //CreateMap<User, UpdateDto>();
         CreateMap<Car, CarGetAllDto>();
      }
 }

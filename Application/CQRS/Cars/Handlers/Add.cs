@@ -1,5 +1,4 @@
 ﻿using Application.CQRS.Cars.ResponseDtos;
-using Application.CQRS.Users.ResponseDtos;
 using AutoMapper;
 using Common.GlobalResponses.Generics;
 using Domain.Entities;
