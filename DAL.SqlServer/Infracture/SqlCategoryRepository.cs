@@ -48,9 +48,11 @@ public class SqlCategoryRepository(string connectionString, AppDbContext context
         _context.SaveChanges();
     }
 
-    public Task<IEnumerable<Category>> GetCategoriesWithProductsAsync()
+    public async Task<IEnumerable<Category>> GetCategoriesWithProducts()
     {
-        throw new NotImplementedException();
+        var categories = await _context.Categories.Include(c => c.Products).ToListAsync();
+        return categories;
+
     }
 
     public async Task<IEnumerable<Product>> GetProductsByPriceRangeAsync(decimal minPrice, decimal maxPrice)

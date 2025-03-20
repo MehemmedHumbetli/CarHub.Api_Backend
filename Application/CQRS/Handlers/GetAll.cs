@@ -10,23 +10,17 @@ namespace Application.CQRS.Handlers;
 
 public class GetAll
 {
-    public record struct GetAllCarsQuery : IRequest<Result<List<GetAllDto>>> { }
+    public record struct GetAllCategoryQuery : IRequest<Result<List<GetAllDto>>> { }
 
-    public sealed class Handler : IRequestHandler<GetAllCarsQuery, Result<List<GetAllDto>>>
+    public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<GetAllCategoryQuery, Result<List<GetAllDto>>>
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IMapper _mapper = mapper;
 
-        public Handler(IUnitOfWork unitOfWork, IMapper mapper)
+        public async Task<Result<List<GetAllDto>>> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
-
-        public async Task<Result<List<GetAllDto>>> Handle(GetAllCarsQuery request, CancellationToken cancellationToken)
-        {
-            var cars = _unitOfWork.CategoryRepository.GetAll();
-            if (cars == null || !cars.Any())
+            var categories = _unitOfWork.CategoryRepository.GetAll();
+            if (categories == null || !categories.Any())
                 return new Result<List<GetAllDto>>
                 {
                     Data = [],
@@ -34,7 +28,7 @@ public class GetAll
                     IsSuccess = false
                 };
 
-            var response = _mapper.Map<List<GetAllDto>>(cars);
+            var response = _mapper.Map<List<GetAllDto>>(categories);
 
             return new Result<List<GetAllDto>>
             {

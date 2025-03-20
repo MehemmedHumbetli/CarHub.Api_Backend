@@ -20,9 +20,9 @@ namespace CarHub.Api.Controllers
         }
 
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllCars()
+        public async Task<IActionResult> GetAllCategory()
         {
-            var result = await _sender.Send(new GetAll.GetAllCarsQuery());
+            var result = await _sender.Send(new GetAll.GetAllCategoryQuery());
 
             if (!result.IsSuccess)
             {
@@ -55,6 +55,18 @@ namespace CarHub.Api.Controllers
         public async Task<IActionResult> Update([FromBody] Application.CQRS.Handlers.Update.Command request)
         {
             return Ok(await _sender.Send(request));
+        }
+
+        [HttpGet("GetCategoriesWithProducts")]
+        public async Task<IActionResult> GetCategoriesWithProducts()
+        {
+           
+            var result = await _sender.Send(new GetCategoriesWithProductsQuery());
+            if (!result.IsSuccess)
+            {
+                return NotFound(result.Errors);
+            }
+            return Ok(result.Data);
         }
 
     }

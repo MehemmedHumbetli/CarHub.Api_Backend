@@ -21,14 +21,9 @@ public class Remove
         public int Id { get; set; }
     }
 
-    public class Handler : IRequestHandler<DeleteCommand, Result<Unit>>
+    public class Handler(IUnitOfWork unitOfWork) : IRequestHandler<DeleteCommand, Result<Unit>>
     {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public Handler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public async Task<Result<Unit>> Handle(DeleteCommand request, CancellationToken cancellationToken)
         {
