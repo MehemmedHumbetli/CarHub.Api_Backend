@@ -1,8 +1,6 @@
-﻿using Domain.BaseEntities;
+﻿namespace Application.CRQS.ResponsesDto;
 
-namespace Domain.Entities;
-
-public class Product : BaseEntity
+public class GetByNameProductDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -11,7 +9,4 @@ public class Product : BaseEntity
     public int UnitsInStock { get; set; }
     public string Description { get; set; }
     public string ImagePath { get; set; }
-
-   
-
 }

@@ -6,6 +6,7 @@ public interface IProductRepository
 {
     #region
     Task AddAsync(Product product); 
+    
     void Update(Product product);
     Task DeleteAsync(int productId);
     Task<Product> GetByIdAsync(int id);
@@ -14,6 +15,7 @@ public interface IProductRepository
     #endregion
 
 
-    Task<IEnumerable<Product>> GetByNameAsync(string productName);
-
+    Task <Product> GetByNameAsync(string productName);
+    IEnumerable<Product> GetByCategoryId(int categoryId);
+    
 }
