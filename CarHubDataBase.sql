@@ -64,3 +64,11 @@ CREATE TABLE [dbo].[CarImage] (
     FOREIGN KEY ([CarId]) REFERENCES [dbo].[Cars] ([Id])
 );
 
+
+CREATE TABLE [dbo].[RefreshTokens] (
+    [Id]             INT            IDENTITY (1, 1) NOT NULL,
+    [Token]          NVARCHAR (255) NOT NULL,
+    [UserId]         INT            NOT NULL,
+    [ExpirationDate] DATETIME2 (7)  NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);

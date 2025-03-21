@@ -3,6 +3,8 @@ using Application;
 using CarHub.Api.Infrastructure.Middlewares;
 
 using CarHub.Api.Security;
+using Application.Security;
+using CarHub.Api.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,15 +18,15 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddProblemDetails();
+builder.Services.AddSwaggerService();
+builder.Services.AddScoped<IUserContext, HttpUserContext>();
 
 var conn = builder.Configuration.GetConnectionString("MyConn");
 builder.Services.AddSqlServerServices(conn!);
 builder.Services.AddApplicationServices();
 builder.Services.AddAuthenticationService(builder.Configuration);
-
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
 
