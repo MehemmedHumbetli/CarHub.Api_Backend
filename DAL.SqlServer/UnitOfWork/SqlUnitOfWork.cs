@@ -10,6 +10,13 @@ public class SqlUnitOfWork(string connectionString, AppDbContext context) : IUni
     private readonly string _connectionString = connectionString;
     private readonly AppDbContext _context = context;
 
+
+    public SqlCategoryRepository _categoryRepository;
+
+
+    public ICategoryRepository CategoryRepository => _categoryRepository ?? new SqlCategoryRepository(_connectionString, _context);
+
+
     public SqlProductRepository _productRepository;
 
 
@@ -19,6 +26,7 @@ public class SqlUnitOfWork(string connectionString, AppDbContext context) : IUni
     {
         await _context.SaveChangesAsync();
     }
+
     public async Task<int> SaveChangeAsync()
     {
         return await _context.SaveChangesAsync();

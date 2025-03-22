@@ -14,4 +14,6 @@ public abstract class BaseEntity
     {
         CreatedDate = DateTime.Now;
     }
+
 }
+

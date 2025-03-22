@@ -4,9 +4,8 @@ namespace Repository.Common;
 
 public interface IUnitOfWork
 {
-    IProductRepository ProductRepository { get; }
-
+    public ICategoryRepository CategoryRepository { get; }
+    public IProductRepository ProductRepository { get; }
     Task CompleteAsync();
-
     Task<int> SaveChangeAsync();
 }

@@ -1,19 +1,27 @@
-using Application;
 using DAL.SqlServer;
+using Application;
+using Application.Security;
+using CarHub.Api.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IUserContext, HttpUserContext>();
+
+
+
+builder.Services.AddSwaggerGen();
 
 var conn = builder.Configuration.GetConnectionString("MyConn");
 builder.Services.AddSqlServerServices(conn!);
 builder.Services.AddApplicationServices();
+//builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 
 
 var app = builder.Build();
