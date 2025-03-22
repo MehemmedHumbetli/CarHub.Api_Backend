@@ -1,9 +1,10 @@
-using Application.CQRS.ResponseDtos;
 using AutoMapper;
 using Domain.Entities;
-using static Application.CQRS.Handlers.Add;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static Application.CRQS.Handlers.AddProduct;
+using static Application.CQRS.Categories.Handlers.Add;
+//using static System.Runtime.InteropServices.JavaScript.JSType;
+using static Application.CQRS.Products.Handlers.AddProduct;
+using Application.CQRS.Categories.ResponseDtos;
+using Application.CQRS.Products.ResponsesDto;
 
 
 namespace Application.AutoMapper;
@@ -27,6 +28,9 @@ public class MappingProfile : Profile
 
         CreateMap<GetCategoriesWithProductsDto, Category>();
         CreateMap<Category, GetCategoriesWithProductsDto>();
+        CreateMap<Product, ProductDto>();
+
+
         //Product Mapping
         CreateMap<Product, AddProductDto>();
         CreateMap<AddProductCommand, Product>();

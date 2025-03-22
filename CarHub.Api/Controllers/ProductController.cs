@@ -1,8 +1,8 @@
-﻿using Application.CRQS.Handlers;
+﻿using Application.CQRS.Products.Handlers;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static Application.CRQS.Handlers.AddProduct;
+using static Application.CQRS.Products.Handlers.AddProduct;
 
 namespace CarHub.Api.Controllers
 {
@@ -13,14 +13,14 @@ namespace CarHub.Api.Controllers
         private readonly ISender _sender = sender;
 
         [HttpPost("AddProduct")]
-        public async Task<IActionResult> AddProduct([FromBody] Application.CRQS.Handlers.AddProduct.AddProductCommand request)
+        public async Task<IActionResult> AddProduct([FromBody] AddProduct.AddProductCommand request)
         {
             var result = await _sender.Send(request);
             return Ok(result);
         }
 
         [HttpDelete("DeleteProduct")]
-        public async Task<IActionResult> DeleteProduct([FromBody] Application.CRQS.Handlers.DeleteProduct.DeleteCommand request)
+        public async Task<IActionResult> DeleteProduct([FromBody] DeleteProduct.DeleteCommand request)
         {
             var result = await _sender.Send(request);
             return Ok(result);
@@ -29,7 +29,7 @@ namespace CarHub.Api.Controllers
         [HttpGet("GetById")]
         public async Task<IActionResult> GetByIdProduct([FromQuery] int id)
         {
-            var request = new Application.CRQS.Handlers.GetByIdProduct.Query { Id = id };
+            var request = new GetByIdProduct.ProductGetByIdCommand { Id = id };
             var result = await _sender.Send(request);
             if (!result.IsSuccess)
             {
@@ -41,7 +41,7 @@ namespace CarHub.Api.Controllers
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllCategory()
         {
-            var result = await _sender.Send(new GetAll.GetAllCategoryQuery());
+            var result = await _sender.Send(new GetAll.GetAllProductQuery());
 
             if (!result.IsSuccess)
             {
@@ -51,7 +51,7 @@ namespace CarHub.Api.Controllers
             return Ok(result.Data);
         }
         [HttpPut("UpdateProduct")]
-        public async Task<IActionResult> Update([FromBody] Application.CRQS.Handlers.UpdateProduct.Command request)
+        public async Task<IActionResult> Update([FromBody] UpdateProduct.ProductCommand request)
         {
             return Ok(await _sender.Send(request));
         }
@@ -72,7 +72,7 @@ namespace CarHub.Api.Controllers
         [HttpGet("GetByNameProduct")]
         public async Task<IActionResult> GetByNameProduct([FromQuery] string name)
         {
-            var request = new Application.CRQS.Handlers.GetByNameProduct.Query { Name = name };
+            var request = new GetByNameProduct.ProductGetByNameCommand { Name = name };
             var result = await _sender.Send(request);
             if (!result.IsSuccess)
             {
@@ -84,7 +84,7 @@ namespace CarHub.Api.Controllers
         [HttpGet("GetProductsByPriceRange")]
         public async Task<IActionResult> GetProductsByPriceRange([FromQuery] decimal minPrice, [FromQuery] decimal maxPrice)
         {
-            var query = new GetProductsByPriceRange.Query(minPrice, maxPrice);
+            var query = new GetProductsByPriceRange.ProductRangeCommand(minPrice, maxPrice);
             var products = await _sender.Send(query);
             return Ok(products);
         }

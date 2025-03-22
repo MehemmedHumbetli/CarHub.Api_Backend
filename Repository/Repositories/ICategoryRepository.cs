@@ -12,6 +12,6 @@ namespace Repository.Repositories
 
         Task<Category> GetByNameAsync(string name);
         Task<IEnumerable<Category>> GetCategoriesWithProducts(); // category icinde ki produclarnan birlikde getirir
-        Task<IEnumerable<Product>> GetProductsByPriceRangeAsync(decimal minPrice, decimal maxPrice); // filtreleme 
+        
     }
 }

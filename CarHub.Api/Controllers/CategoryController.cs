@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Application.CQRS.Handlers;
+using Application.CQRS.Categories.Handlers;
 
 namespace CarHub.Api.Controllers
 {
@@ -13,7 +13,7 @@ namespace CarHub.Api.Controllers
         private readonly ISender _sender = sender;
 
         [HttpPost("Add")]
-        public async Task<IActionResult> AddCategory(Application.CQRS.Handlers.Add.AddCommand request)
+        public async Task<IActionResult> AddCategory(Add.AddCommand request)
         {
             var result = await _sender.Send(request);
             return Ok(result);
@@ -35,14 +35,14 @@ namespace CarHub.Api.Controllers
         [HttpDelete("Remove")]
         public async Task<IActionResult> Delete([FromQuery] int id)
         {
-            var request = new Application.CQRS.Handlers.Remove.DeleteCommand { Id = id };
+            var request = new Remove.CategoryDeleteCommand { Id = id };
             return Ok(await _sender.Send(request));
         }
 
         [HttpGet("GetById")]
         public async Task<IActionResult> GetById([FromQuery] int id)
         {
-            var request = new Application.CQRS.Handlers.GetById.Query { Id = id };
+            var request = new GetById.CategoryGetByIdCommand { Id = id };
             var result = await _sender.Send(request);
             if (!result.IsSuccess)
             {
@@ -52,7 +52,7 @@ namespace CarHub.Api.Controllers
         }
 
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] Application.CQRS.Handlers.Update.Command request)
+        public async Task<IActionResult> Update([FromBody] Update.CategoryCommand request)
         {
             return Ok(await _sender.Send(request));
         }

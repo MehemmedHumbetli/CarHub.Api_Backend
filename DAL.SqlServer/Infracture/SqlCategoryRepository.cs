@@ -55,19 +55,7 @@ public class SqlCategoryRepository(string connectionString, AppDbContext context
 
     }
 
-    public async Task<IEnumerable<Product>> GetProductsByPriceRangeAsync(decimal minPrice, decimal maxPrice)
-    {
-        //var sql = @"
-        //    SELECT * FROM Products 
-        //    WHERE UnitPrice BETWEEN @MinPrice AND @MaxPrice";
-
-        //using (var connection = OpenConnection())
-        //{
-        //    return await connection.QueryAsync<Product>(sql, new { MinPrice = minPrice, MaxPrice = maxPrice });
-        //}
-
-        throw new NotImplementedException();
-    }
+    
 }
 
 
