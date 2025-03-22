@@ -2,6 +2,7 @@ using DAL.SqlServer;
 using Application;
 using Application.Security;
 using CarHub.Api.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,13 +15,12 @@ builder.Services.AddScoped<IUserContext, HttpUserContext>();
 
 
 builder.Services.AddSwaggerGen();
+
 var conn = builder.Configuration.GetConnectionString("MyConn");
 builder.Services.AddSqlServerServices(conn!);
 builder.Services.AddApplicationServices();
 //builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-
 
 
 

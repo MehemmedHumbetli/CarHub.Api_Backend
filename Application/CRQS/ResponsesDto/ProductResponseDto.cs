@@ -1,8 +1,12 @@
-﻿using Domain.BaseEntities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Domain.Entities;
+namespace Application.CRQS.ResponsesDto;
 
-public class Product : BaseEntity
+public class ProductResponseDto
 {
     public int Id { get; set; }
     public string Name { get; set; }

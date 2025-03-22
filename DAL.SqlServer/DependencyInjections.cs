@@ -17,6 +17,7 @@ public static class DependencyInjections
             var dbContext = opt.GetRequiredService<AppDbContext>();
             return new SqlUnitOfWork(connectionstring, dbContext);
         });
+
         return services;
     }
 }

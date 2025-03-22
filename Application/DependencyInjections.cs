@@ -1,10 +1,11 @@
-﻿using Application.AutoMapper;
+using Application.AutoMapper;
 using Application.PipelineBehaviour;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+
 
 namespace Application;
 
@@ -26,8 +27,6 @@ public static class DependencyInjections
         services.AddMediatR(Assembly.GetExecutingAssembly());
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehaviour<,>));
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
-  
 
         return services;
     }
