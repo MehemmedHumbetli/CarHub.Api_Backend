@@ -78,8 +78,8 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
     public async Task<IEnumerable<Car>> GetUserCarsAsync(int userId)
     {
         using var connection = OpenConnection();
-        string sql = @"SELECT c.Id, c.Brand, c.BrandImagePath, c.Model, c.Year, c.Price, 
-                          c.Fuel, c.Transmission, c.Miles, c.Body, c.BodyTypeImage, 
+        string sql = @"SELECT c.Id, c.Brand, c.Model, c.Year, c.Price, 
+                          c.Fuel, c.Transmission, c.Miles, 
                           c.Color, c.VIN, c.Text 
                    FROM UserCars uc
                    JOIN Cars c ON uc.CarId = c.Id
@@ -87,25 +87,18 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
         return await connection.QueryAsync<Car>(sql, new { UserId = userId });
     }
 
-    public async Task RemoveUserCarAsync(int userId, int carId)
-    {
-        using var connection = OpenConnection();
-        string sql = "DELETE FROM UserCars WHERE UserId = @UserId AND CarId = @CarId";
-        await connection.ExecuteAsync(sql, new { UserId = userId, CarId = carId });
-    }
+    //public async Task RemoveUserCarAsync(int userId, int carId)
+    //{
+    //    using var connection = OpenConnection();
+    //    string sql = "DELETE FROM UserCars WHERE UserId = @UserId AND CarId = @CarId";
+    //    await connection.ExecuteAsync(sql, new { UserId = userId, CarId = carId });
+    //}
 
 
     //public async Task AddUserCarAsync(int userId, Car car)
     //{
-    //    using var connection = OpenConnection();
-    //    string sql = @"INSERT INTO Cars (Brand, Model, Year) 
-    //                   VALUES (@Brand, @Model, @Year);
-    //                   DECLARE @CarId INT = SCOPE_IDENTITY();
-    //                   INSERT INTO UserCars (UserId, CarId) VALUES (@UserId, @CarId)";
-    //    await connection.ExecuteAsync(sql, new { car.Brand, car.Model, car.Year, UserId = userId });
+    //    car.UserId = userId;
+
+    //    await _context.Cars.AddAsync(car);
     //}
-    public Task AddUserCarAsync(int userId, Car car)
-    {
-        throw new NotImplementedException();
-    }
 }

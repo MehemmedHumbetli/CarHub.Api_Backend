@@ -22,6 +22,9 @@ public class Car : BaseEntity
     
     public List<UserFavorite> FavoritedByUsers { get; set; } = new List<UserFavorite>();
 
+    public int UserId { get; set; }
+    public User User { get; set; }
+
     public Car()
     {
         BrandImagePath = "None";

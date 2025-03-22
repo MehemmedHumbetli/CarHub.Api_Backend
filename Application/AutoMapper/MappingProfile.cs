@@ -21,6 +21,7 @@ public class MappingProfile : Profile
         CreateMap<User, UserGetAllDto>();
         CreateMap<User, GetByIdDto>();
         CreateMap<Car, GetUserFavoritesDto>();
+        CreateMap<Car, GetUserCarsDto>();
 
         //Car Mapping
         CreateMap<AddCommand, Car>().ReverseMap();

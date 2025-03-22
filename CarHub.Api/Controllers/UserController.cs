@@ -35,6 +35,7 @@ public class UserController(ISender sender) : Controller
     }
 
     [HttpGet("GetAll")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllUsers()
     {
         var result = await _sender.Send(new UserGetAll.GetAllUsersQuery());
@@ -55,7 +56,6 @@ public class UserController(ISender sender) : Controller
     }
 
     [HttpGet("GetUserByEmail")]
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetUserByEmail([FromQuery] GetUserByEmail.GetUserByEmailCommand request)
     {
         return Ok(await _sender.Send(request));
@@ -82,6 +82,12 @@ public class UserController(ISender sender) : Controller
     [HttpPost("Login")]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] Application.CQRS.Users.Handlers.Login.LoginRequest request)
+    {
+        return Ok(await _sender.Send(request));
+    }
+
+    [HttpGet("GetUserCars")]
+    public async Task<IActionResult> GetUserCars([FromQuery] GetUserCars.GetUserCarsQuery request)
     {
         return Ok(await _sender.Send(request));
     }
