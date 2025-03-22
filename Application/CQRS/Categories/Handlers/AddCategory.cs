@@ -7,7 +7,7 @@ using Repository.Common;
 
 namespace Application.CQRS.Categories.Handlers;
 
-public class Add
+public class AddCategory
 {
     public class AddCommand : IRequest<Result<AddDto>>
     {

@@ -13,7 +13,7 @@ namespace CarHub.Api.Controllers
         private readonly ISender _sender = sender;
 
         [HttpPost("Add")]
-        public async Task<IActionResult> AddCategory(Add.AddCommand request)
+        public async Task<IActionResult> AddCategory(AddCategory.AddCommand request)
         {
             var result = await _sender.Send(request);
             return Ok(result);
@@ -22,7 +22,7 @@ namespace CarHub.Api.Controllers
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllCategory()
         {
-            var result = await _sender.Send(new GetAll.GetAllCategoryQuery());
+            var result = await _sender.Send(new GetAllCategory.GetAllCategoryQuery());
 
             if (!result.IsSuccess)
             {
@@ -42,7 +42,7 @@ namespace CarHub.Api.Controllers
         [HttpGet("GetById")]
         public async Task<IActionResult> GetById([FromQuery] int id)
         {
-            var request = new GetById.CategoryGetByIdCommand { Id = id };
+            var request = new GetByIdCategory.CategoryGetByIdCommand { Id = id };
             var result = await _sender.Send(request);
             if (!result.IsSuccess)
             {
@@ -52,7 +52,7 @@ namespace CarHub.Api.Controllers
         }
 
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] Update.CategoryCommand request)
+        public async Task<IActionResult> Update([FromBody] UpdateCategory.CategoryCommand request)
         {
             return Ok(await _sender.Send(request));
         }

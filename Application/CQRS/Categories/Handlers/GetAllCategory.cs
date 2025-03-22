@@ -8,7 +8,7 @@ namespace Application.CQRS.Categories.Handlers;
 
 
 
-public class GetAll
+public class GetAllCategory
 {
     public record struct GetAllCategoryQuery : IRequest<Result<List<GetAllDto>>> { }
 

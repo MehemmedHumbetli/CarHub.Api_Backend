@@ -4,11 +4,11 @@ using Repository.Common;
 
 namespace Application.CQRS.Categories.Handlers;
 
-public sealed class Delete : IRequest<Result<bool>>
+public sealed class DeleteCategory : IRequest<Result<bool>>
 {
     public int Id { get; set; }
 
-    public Delete(int id)
+    public DeleteCategory(int id)
     {
         Id = id;
     }

@@ -6,7 +6,7 @@ using Repository.Common;
 
 namespace Application.CQRS.Categories.Handlers;
 
-public class Update
+public class UpdateCategory
 {
     public record struct CategoryCommand : IRequest<Result<UpdateDto>>
     {

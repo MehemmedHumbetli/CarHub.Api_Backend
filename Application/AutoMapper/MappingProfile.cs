@@ -1,6 +1,6 @@
 using AutoMapper;
 using Domain.Entities;
-using static Application.CQRS.Categories.Handlers.Add;
+using static Application.CQRS.Categories.Handlers.AddCategory;
 //using static System.Runtime.InteropServices.JavaScript.JSType;
 using static Application.CQRS.Products.Handlers.AddProduct;
 using Application.CQRS.Categories.ResponseDtos;

@@ -1,9 +1,9 @@
 ﻿using Application.CQRS.Products.ResponsesDto;
 using AutoMapper;
-using Common.GlobalResponses.Generich;
+using Common.GlobalResponses.Generics;
 using MediatR;
 using Repository.Common;
-using static Application.CQRS.Categories.Handlers.GetById;
+using static Application.CQRS.Categories.Handlers.GetByIdCategory;
 
 namespace Application.CQRS.Products.Handlers;
 
@@ -29,7 +29,11 @@ public class GetByIdProduct
             {
                 Id = currentproduct.Id,
                 Name = currentproduct.Name,
-                Description = currentproduct.Description
+                Description = currentproduct.Description,
+                UnitPrice = currentproduct.UnitPrice,
+                UnitsInStock = currentproduct.UnitsInStock,
+                ImagePath = currentproduct.ImagePath,
+
 
             };
 

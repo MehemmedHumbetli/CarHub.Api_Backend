@@ -1,6 +1,6 @@
 ﻿using Application.CQRS.Products.ResponsesDto;
 using AutoMapper;
-using Common.GlobalResponses.Generich;
+using Common.GlobalResponses.Generics;
 using MediatR;
 using Repository.Common;
 using System;

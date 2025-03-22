@@ -51,7 +51,7 @@ namespace CarHub.Api.Controllers
             return Ok(result.Data);
         }
         [HttpPut("UpdateProduct")]
-        public async Task<IActionResult> Update([FromBody] UpdateProduct.ProductCommand request)
+        public async Task<IActionResult> Update([FromBody] UpdateProduct.UpdateProductCommand request)
         {
             return Ok(await _sender.Send(request));
         }

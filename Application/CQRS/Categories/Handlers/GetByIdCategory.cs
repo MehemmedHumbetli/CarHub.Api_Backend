@@ -5,7 +5,7 @@ using Repository.Common;
 
 namespace Application.CQRS.Categories.Handlers;
 
-public class GetById
+public class GetByIdCategory
 {
     public class CategoryGetByIdCommand : IRequest<Result<GetByIdDto>>
     {

@@ -1,7 +1,7 @@
 ﻿using Application.CQRS.Products.ResponsesDto;
 using AutoMapper;
 using Common.Exceptions;
-using Common.GlobalResponses.Generich;
+using Common.GlobalResponses.Generics;
 using MediatR;
 using Repository.Common;
 
@@ -9,7 +9,7 @@ namespace Application.CQRS.Products.Handlers;
 
 public class UpdateProduct
 {
-    public record struct ProductCommand : IRequest<Result<UpdateProductDto>>
+    public record struct UpdateProductCommand : IRequest<Result<UpdateProductDto>>
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -20,12 +20,12 @@ public class UpdateProduct
         public string ImagePath { get; set; }
     }
 
-    public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<ProductCommand, Result<UpdateProductDto>>
+    public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<UpdateProductCommand, Result<UpdateProductDto>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<Result<UpdateProductDto>> Handle(ProductCommand request, CancellationToken cancellationToken)
+        public async Task<Result<UpdateProductDto>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
             var currentproduct = await _unitOfWork.ProductRepository.GetByIdAsync(request.Id);
             if (currentproduct == null) throw new BadRequestException($"User does not exist with id {request.Id}");

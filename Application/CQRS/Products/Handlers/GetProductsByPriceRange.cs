@@ -1,6 +1,6 @@
 ﻿using Application.CQRS.Products.ResponsesDto;
 using AutoMapper;
-using Common.GlobalResponses.Generich;
+using Common.GlobalResponses.Generics;
 using Domain.Entities;
 using MediatR;
 using Repository.Common;
@@ -10,7 +10,7 @@ namespace Application.CQRS.Products.Handlers;
 
 public class GetProductsByPriceRange
 {
-    // Query sınıfı
+    
     public class ProductRangeCommand : IRequest<Result<List<GetByNameProductDto>>>
     {
         public decimal MinPrice { get; set; }
