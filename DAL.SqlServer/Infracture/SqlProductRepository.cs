@@ -52,6 +52,11 @@ public class SqlProductRepository(string connectionString, AppDbContext context)
         return product;
     }
 
+    public async Task<List<Product>> GetProductsByPriceRange(decimal minPrice, decimal maxPrice)
+    {
+        return await _context.Products.Where(p => p.UnitPrice >= minPrice && p.UnitPrice <= maxPrice).ToListAsync();
+    }
+
     public void Update(Product product)
     {
         product.UpdatedDate = DateTime.Now;
