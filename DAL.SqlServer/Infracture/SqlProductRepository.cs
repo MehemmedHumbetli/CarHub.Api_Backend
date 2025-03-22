@@ -17,13 +17,14 @@ public class SqlProductRepository(string connectionString, AppDbContext context)
         await _context.SaveChangesAsync();
     }
 
-    public Task DeleteAsync(int productId)
+    public async Task DeleteAsync(int productId)
     {
-        var product = _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
-        return product;
-
-
-
+        var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
+        product.IsDeleted = true;
+        product.DeletedDate = DateTime.Now;
+        product.DeletedBy = 0;
+        
+        
     }
 
     public IQueryable<Product> GetAll()
