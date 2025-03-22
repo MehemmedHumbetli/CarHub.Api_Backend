@@ -1,10 +1,10 @@
-﻿using Application.CRQS.ResponsesDto;
+﻿using Application.CQRS.Products.ResponsesDto;
 using AutoMapper;
 using Common.GlobalResponses.Generich;
 using MediatR;
 using Repository.Common;
 
-namespace Application.CRQS.Handlers;
+namespace Application.CQRS.Products.Handlers;
 
 public class GetByIdProduct
 {
@@ -22,7 +22,7 @@ public class GetByIdProduct
             var currentproduct = await _unitOfWork.ProductRepository.GetByIdAsync(request.Id);
             if (currentproduct == null)
             {
-                return new Result<GetByIdProductDto>() { Errors = ["Product tapilmadi"], IsSuccess = true };
+                return new Result<GetByIdProductDto>() { Errors = ["Products tapilmadi"], IsSuccess = true };
             }
             GetByIdProductDto response = new()
             {

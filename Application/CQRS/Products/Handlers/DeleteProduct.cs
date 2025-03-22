@@ -2,7 +2,7 @@
 using MediatR;
 using Repository.Common;
 
-namespace Application.CRQS.Handlers;
+namespace Application.CQRS.Products.Handlers;
 
 public sealed class Delete : IRequest<Result<bool>>
 {

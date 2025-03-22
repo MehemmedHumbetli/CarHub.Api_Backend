@@ -1,4 +1,4 @@
-﻿using Application.CRQS.ResponsesDto;
+﻿using Application.CQRS.Products.ResponsesDto;
 using AutoMapper;
 using Common.GlobalResponses;
 using Common.GlobalResponses.Generich;
@@ -6,7 +6,7 @@ using Domain.Entities;
 using MediatR;
 using Repository.Common;
 
-namespace Application.CRQS.Handlers;
+namespace Application.CQRS.Products.Handlers;
 
 public class AddProduct
 {
@@ -17,7 +17,7 @@ public class AddProduct
         public int UnitsInStock { get; set; }
         public string Description { get; set; }
         public string? ImagePath { get; set; }
-        public int CategoryId { get; set; } 
+        public int CategoryId { get; set; }
     }
 
     public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<AddProductCommand, Result<AddProductDto>>

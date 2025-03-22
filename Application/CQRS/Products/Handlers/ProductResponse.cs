@@ -1,4 +1,4 @@
-﻿using Application.CRQS.ResponsesDto;
+﻿using Application.CQRS.Products.ResponsesDto;
 using AutoMapper;
 using Common.GlobalResponses.Generich;
 using MediatR;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.CRQS.Handlers;
+namespace Application.CQRS.Products.Handlers;
 
 public class ProductResponse
 {
@@ -32,7 +32,7 @@ public class ProductResponse
         {
             try
             {
-         
+
                 var products = _unitOfWork.ProductRepository.GetByCategoryId(request.CategoryId);
 
                 if (products == null || !products.Any())

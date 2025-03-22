@@ -1,6 +1,6 @@
-﻿namespace Application.CRQS.ResponsesDto;
+﻿namespace Application.CQRS.Products.ResponsesDto;
 
-public class GetByIdProductDto
+public class AddProductDto
 {
     public int Id { get; set; }
     public string Name { get; set; }

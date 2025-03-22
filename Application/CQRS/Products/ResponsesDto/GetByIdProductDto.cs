@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Application.CQRS.Products.ResponsesDto;
 
-namespace Application.CRQS.ResponsesDto;
-
-public class ProductResponseDto
+public class GetByIdProductDto
 {
     public int Id { get; set; }
     public string Name { get; set; }

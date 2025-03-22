@@ -1,10 +1,10 @@
-﻿using Application.CRQS.ResponsesDto;
+﻿using Application.CQRS.Products.ResponsesDto;
 using AutoMapper;
 using Common.GlobalResponses.Generich;
 using MediatR;
 using Repository.Common;
 
-namespace Application.CRQS.Handlers;
+namespace Application.CQRS.Products.Handlers;
 
 public class GetAll
 {

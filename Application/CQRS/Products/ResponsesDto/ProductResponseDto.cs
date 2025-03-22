@@ -1,6 +1,12 @@
-﻿namespace Application.CRQS.ResponsesDto;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public class GetByNameProductDto
+namespace Application.CQRS.Products.ResponsesDto;
+
+public class ProductResponseDto
 {
     public int Id { get; set; }
     public string Name { get; set; }

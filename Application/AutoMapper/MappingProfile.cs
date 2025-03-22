@@ -1,7 +1,7 @@
-﻿using Application.CRQS.ResponsesDto;
+﻿using Application.CQRS.Products.ResponsesDto;
 using AutoMapper;
 using Domain.Entities;
-using static Application.CRQS.Handlers.AddProduct;
+using static Application.CQRS.Products.Handlers.AddProduct;
 
 namespace Application.AutoMapper;
 

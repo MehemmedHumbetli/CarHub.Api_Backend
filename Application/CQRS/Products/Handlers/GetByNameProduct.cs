@@ -1,15 +1,15 @@
-﻿using Application.CRQS.ResponsesDto;
+﻿using Application.CQRS.Products.ResponsesDto;
 using Common.GlobalResponses.Generich;
 using MediatR;
 using Repository.Common;
 
-namespace Application.CRQS.Handlers;
+namespace Application.CQRS.Products.Handlers;
 
 public class GetByNameProduct
 {
     public class Query : IRequest<Result<GetByNameProductDto>>
     {
-       public string Name { get; set; }
+        public string Name { get; set; }
     }
 
     public class Handler(IUnitOfWork unitOfWork) : IRequestHandler<Query, Result<GetByNameProductDto>>
@@ -21,7 +21,7 @@ public class GetByNameProduct
             var currentproduct = await _unitOfWork.ProductRepository.GetByNameAsync(request.Name);
             if (currentproduct == null)
             {
-                return new Result<GetByNameProductDto>() { Errors = ["Product tapilmadi"], IsSuccess = true };
+                return new Result<GetByNameProductDto>() { Errors = ["Products tapilmadi"], IsSuccess = true };
             }
             GetByNameProductDto response = new()
             {
