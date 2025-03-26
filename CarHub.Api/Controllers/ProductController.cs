@@ -82,12 +82,20 @@ namespace CarHub.Api.Controllers
         }
 
         [HttpGet("GetProductsByPriceRange")]
-        public async Task<IActionResult> GetProductsByPriceRange([FromQuery] decimal minPrice, [FromQuery] decimal maxPrice)
+        //public async Task<IActionResult> GetProductsByPriceRange([FromQuery] decimal minPrice, [FromQuery] decimal maxPrice)
+        //{
+        //    var query = new GetProductsByPriceRange.ProductRangeCommand(minPrice, maxPrice);
+        //    var products = await _sender.Send(query);
+        //    return Ok(products);
+        //}
+
+        public async Task<IActionResult> GetProductsByPriceRange([FromQuery] decimal maxPrice)
         {
-            var query = new GetProductsByPriceRange.ProductRangeCommand(minPrice, maxPrice);
+            var query = new GetProductsByPriceRange.ProductRangeCommand(maxPrice);
             var products = await _sender.Send(query);
             return Ok(products);
         }
+
     }
 }
 

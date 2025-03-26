@@ -11,16 +11,10 @@ namespace Application.CQRS.Products.Handlers;
 public class GetProductsByPriceRange
 {
     
-    public class ProductRangeCommand : IRequest<Result<List<GetByNameProductDto>>>
+    public class ProductRangeCommand( decimal maxPrice) : IRequest<Result<List<GetByNameProductDto>>>
     {
-        public decimal MinPrice { get; set; }
-        public decimal MaxPrice { get; set; }
-
-        public ProductRangeCommand(decimal minPrice, decimal maxPrice)
-        {
-            MinPrice = minPrice;
-            MaxPrice = maxPrice;
-        }
+        //public decimal MinPrice { get; set; } = minPrice;
+        public decimal MaxPrice { get; set; } = maxPrice;
     }
 
 
@@ -32,7 +26,9 @@ public class GetProductsByPriceRange
         public async Task<Result<List<GetByNameProductDto>>> Handle(ProductRangeCommand request, CancellationToken cancellationToken)
         {
 
-            var products = await _unitOfWork.ProductRepository.GetProductsByPriceRange(request.MinPrice, request.MaxPrice);
+            //var products = await _unitOfWork.ProductRepository.GetProductsByPriceRange(request.MinPrice, request.MaxPrice);
+
+            var products = await _unitOfWork.ProductRepository.GetProductsByPriceRange(0, request.MaxPrice);
 
 
             if (products == null || !products.Any())
