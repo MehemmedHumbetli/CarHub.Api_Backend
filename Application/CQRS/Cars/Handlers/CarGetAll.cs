@@ -23,8 +23,9 @@ public class CarGetAll
 
         public async Task<Result<List<CarGetAllDto>>> Handle(GetAllCarsQuery request, CancellationToken cancellationToken)
         {
-            var cars = _unitOfWork.CarRepository.GetAll();
-            if (cars == null || !cars.Any())
+            var cars = _unitOfWork.CarRepository.GetAll().ToList();
+
+            if (!cars.Any())
                 return new Result<List<CarGetAllDto>>
                 {
                     Data = [],
@@ -41,5 +42,6 @@ public class CarGetAll
                 IsSuccess = true
             };
         }
+
     }
 }

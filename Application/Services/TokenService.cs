@@ -11,6 +11,7 @@ public static class TokenService
 {
     public static JwtSecurityToken CreateToken(List<Claim> authClaim, IConfiguration configuration)
     {
+
         var authSigninKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!));
 
         var token = new JwtSecurityToken(

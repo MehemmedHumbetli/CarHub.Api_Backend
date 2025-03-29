@@ -19,11 +19,10 @@ public class Car : BaseEntity
     public string Color { get; set; }
     public string VIN { get; set; }
     public string Text { get; set; }
-    
     public List<UserFavorite> FavoritedByUsers { get; set; } = new List<UserFavorite>();
-
     public int UserId { get; set; }
     public User User { get; set; }
+    public bool IsFavorite { get; set; }
 
     public Car()
     {

@@ -40,7 +40,7 @@ public class GetById
                 Email = currentUser.Email,
                 Phone = currentUser.Phone,
                 UserRole = currentUser.UserRole,
-                Favorites = currentUser.Favorites,
+                FavoriteCarIds = currentUser.Favorites.Select(f => f.CarId).ToList(),
                 UserCars = currentUser.UserCars,
                 UserImagePath = currentUser.UserImagePath,
             

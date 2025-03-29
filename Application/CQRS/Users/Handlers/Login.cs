@@ -40,6 +40,7 @@ public class Login
                 List<Claim> authClaims = [
                     new Claim(ClaimTypes.NameIdentifier , currentUser.Id.ToString()),
                     new Claim(ClaimTypes.Name , currentUser.Name),
+                    new Claim(ClaimTypes.Surname , currentUser.Surname),
                     new Claim(ClaimTypes.Email , currentUser.Email),
                     new Claim(ClaimTypes.Role , currentUser.UserRole.ToString())
                     ];

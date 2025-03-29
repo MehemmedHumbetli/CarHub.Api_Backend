@@ -5,6 +5,8 @@ using AutoMapper;
 using Repository.Common;
 using Common.Exceptions;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http;
+using Application.Services;
 
 namespace Application.CQRS.Users.Handlers;
 
@@ -18,23 +20,38 @@ public class Register
         public string Phone { get; set; }
         public string Password { get; set; }
         public string UserImagePath { get; set; }
-
+        //public IFormFile UserImage { get; set; }
     }
 
-    public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<RegisterCommand, Result<RegisterDto>>
+    public sealed class Handler : IRequestHandler<RegisterCommand, Result<RegisterDto>>
     {
-        private readonly IMapper _mapper = mapper;
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public Handler(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
         public async Task<Result<RegisterDto>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             var currentUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(request.Email);
-            if (currentUser != null) throw new BadRequestException("User is already exist with provided mail");
+            if (currentUser != null)
+                throw new BadRequestException("User is already exist with provided mail");
 
             var user = _mapper.Map<User>(request);
-
             var hashPassword = PasswordHasher.ComputeStringToSha256Hash(request.Password);
             user.PasswordHash = hashPassword;
-            user.CreatedBy = 1;
+            user.CreatedBy = user.Id;
+
+            
+            //if (request.UserImage != null)
+            //{
+            //    var userImagePath = await UserImageService.SaveUserImageAsync(request.UserImage);
+            //    user.UserImagePath = userImagePath;
+            //}
+
             await _unitOfWork.UserRepository.RegisterAsync(user);
 
             var response = _mapper.Map<RegisterDto>(user);
@@ -42,9 +59,10 @@ public class Register
             return new Result<RegisterDto>
             {
                 Data = response,
-                Errors = [],
+                Errors = new List<string>(),
                 IsSuccess = true
             };
         }
     }
+
 }

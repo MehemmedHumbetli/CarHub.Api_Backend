@@ -43,6 +43,7 @@ namespace Application.CQRS.Users.Handlers
                 return new Result<List<GetUserFavoritesDto>> { Data = favoriteCarsDto, IsSuccess = true };
             }
         }
+
     }
 }
 

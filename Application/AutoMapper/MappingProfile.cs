@@ -23,9 +23,11 @@ public class MappingProfile : Profile
         CreateMap<Car, GetUserFavoritesDto>();
         CreateMap<Car, GetUserCarsDto>();
 
+
         //Car Mapping
         CreateMap<AddCommand, Car>().ReverseMap();
         CreateMap<Car, AddDto>();
         CreateMap<Car, CarGetAllDto>();
+        CreateMap<Car, CarUpdateDto>();
      }
 }

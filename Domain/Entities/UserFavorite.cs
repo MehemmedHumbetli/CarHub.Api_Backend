@@ -9,5 +9,4 @@ public class UserFavorite
 
     public int CarId { get; set; }
     public Car Car { get; set; }
-    public bool IsFavorite { get; set; }
 }

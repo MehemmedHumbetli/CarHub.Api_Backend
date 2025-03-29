@@ -1,4 +1,6 @@
-﻿namespace Application.CQRS.Users.ResponseDtos;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Application.CQRS.Users.ResponseDtos;
 
 public class RegisterDto
 {
@@ -8,4 +10,6 @@ public class RegisterDto
     public string Email { get; set; }
     public string Phone { get; set; }
     public string UserImagePath { get; set; }
+    //public IFormFile UserImage { get; set; }
+
 }

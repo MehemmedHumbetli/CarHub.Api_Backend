@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.CQRS.Users.Handlers;
 using System.Reflection;
+using Application.Services;
 
 namespace CarHub.Api.Controllers;
 
@@ -12,10 +13,10 @@ namespace CarHub.Api.Controllers;
 public class UserController(ISender sender) : Controller
 {
     private readonly ISender _sender = sender;
-    
-    [HttpPost]
+
+    [HttpPost("Register")]
     [AllowAnonymous]
-    public async Task<IActionResult> RegisterAsync([FromBody] Application.CQRS.Users.Handlers.Register.RegisterCommand request)
+    public async Task<IActionResult> RegisterAsync([FromBody] Register.RegisterCommand request)
     {
         return Ok(await _sender.Send(request));
     }
@@ -50,6 +51,7 @@ public class UserController(ISender sender) : Controller
 
     [HttpGet("GetById")]
     [Authorize(Roles = "Admin")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetById([FromQuery] GetById.Query request)
     {
         return Ok(await _sender.Send(request));
@@ -61,19 +63,24 @@ public class UserController(ISender sender) : Controller
         return Ok(await _sender.Send(request));
     }
 
-    [HttpGet("AddFavoriteCar")]
+    [HttpGet("AddUserFavorites")]
+    [AllowAnonymous]
+
     public async Task<IActionResult> AddUserFavorites([FromQuery] AddFavoriteCar.AddFavoriteCarCommand request)
     {
         return Ok(await _sender.Send(request));
     }
 
     [HttpGet("GetUserFavorites")]
+    [AllowAnonymous]
+
     public async Task<IActionResult> GetUserFavorites([FromQuery] GetUserFavorites.GetUserFavoritesCommand request)
     {
         return Ok(await _sender.Send(request));
     }
 
     [HttpDelete("RemoveFavoriteCar")]
+    [AllowAnonymous]
     public async Task<IActionResult> RemoveFavoriteCar([FromQuery] RemoveFavoriteCar.RemoveFavoriteCarCommand request)
     {
         return Ok(await _sender.Send(request));

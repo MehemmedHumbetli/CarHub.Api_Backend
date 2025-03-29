@@ -36,7 +36,7 @@ public class Update
             currentUser.Phone = request.Phone;
             //currentUser.UserImagePath = request.UserImagePath;
             //currentUser.PasswordHash = request.PasswordHash;
-            currentUser.UpdatedBy = 1;
+            currentUser.UpdatedBy = currentUser.Id;
 
             _unitOfWork.UserRepository.Update(currentUser);
 

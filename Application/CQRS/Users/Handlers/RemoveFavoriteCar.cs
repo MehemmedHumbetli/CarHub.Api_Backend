@@ -40,11 +40,6 @@ public class RemoveFavoriteCar
                 throw new BadRequestException("Car is not in the favorites.");
             }
 
-            if (!existingFavorite.IsFavorite)
-            {
-                throw new BadRequestException("Car already removed from favorites.");
-            }
-
             await _unitOfWork.UserRepository.RemoveFavoriteCarAsync(request.UserId, request.CarId);
             await _unitOfWork.SaveChangeAsync();
 

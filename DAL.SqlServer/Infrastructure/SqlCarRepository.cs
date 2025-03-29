@@ -15,14 +15,27 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
         await _context.SaveChangesAsync();
     }
 
-    public Task AddImagePathAsync(int carId, string imagePath)
+    public async Task Remove(int id)
     {
-        throw new NotImplementedException();
+        var car = await _context.Cars.FirstOrDefaultAsync(u => u.Id == id);
+        car.IsDeleted = true;
+        car.DeletedDate = DateTime.Now;
+        car.DeletedBy = 0;
+    }
+
+    public void Update(Car car)
+    {
+        var cars = _context.Cars.ToList();
+        car.UpdatedDate = DateTime.Now;
+        _context.Update(car);
+        _context.SaveChanges();
     }
 
     public IQueryable<Car> GetAll()
     {
-        return _context.Cars.Include(c => c.CarImagePaths);
+        return _context.Cars
+            .Where(c => !c.IsDeleted)
+            .Include(c => c.CarImagePaths);
     }
 
     public Task<IEnumerable<Car>> GetByBodyAsync(BodyTypes body)
@@ -76,21 +89,6 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
     }
 
     public Task<IEnumerable<string>> GetImagePathsAsync(int carId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task RemoveAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task RemoveImagePathAsync(int carId, string imagePath)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Update(Car car)
     {
         throw new NotImplementedException();
     }

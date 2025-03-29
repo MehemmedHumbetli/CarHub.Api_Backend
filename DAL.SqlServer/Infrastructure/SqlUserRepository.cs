@@ -27,7 +27,6 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
     public void Update(User user)
     {
         var users = _context.Users.ToList();
-        Console.WriteLine(users);
         user.UpdatedDate = DateTime.Now;
         _context.Update(user);
         _context.SaveChanges();
@@ -46,45 +45,49 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
         user.DeletedBy = 0;
     }
 
-    //Dapper Operations
-    public async Task<IEnumerable<Car>> GetUserFavoritesAsync(int userId)
-    {
-        using var connection = OpenConnection();
-        string sql = @"SELECT c.Id, c.Brand, c.BrandImagePath, c.Model, c.Year, c.Price, 
-                          c.Fuel, c.Transmission, c.Miles, c.Body, c.BodyTypeImage, 
-                          c.Color, c.VIN, c.Text 
-                   FROM UserFavorite fc
-                   JOIN Cars c ON fc.CarId = c.Id
-                   WHERE fc.UserId = @UserId";
-        return await connection.QueryAsync<Car>(sql, new { UserId = userId });
-    }
 
     public async Task AddFavoriteCarAsync(int userId, int carId)
     {
         using var connection = OpenConnection();
-        string sql = "INSERT INTO UserFavorite (UserId, CarId, IsFavorite) VALUES (@UserId, @CarId, @IsFavorite)";
-        await connection.ExecuteAsync(sql, new { UserId = userId, CarId = carId, IsFavorite = true });
+
+        string checkSql = "SELECT COUNT(1) FROM UserFavorite WHERE UserId = @UserId AND CarId = @CarId";
+        var exists = await connection.ExecuteScalarAsync<int>(checkSql, new { UserId = userId, CarId = carId });
+
+        if (exists > 0)
+        {
+            string updateCarSql = "UPDATE Cars SET IsFavorite = @IsFavorite WHERE Id = @CarId";
+            await connection.ExecuteAsync(updateCarSql, new { CarId = carId, IsFavorite = false });
+        }
     }
 
 
     public async Task RemoveFavoriteCarAsync(int userId, int carId)
     {
         using var connection = OpenConnection();
-        string sql = "UPDATE UserFavorite SET IsFavorite = 0 WHERE UserId = @UserId AND CarId = @CarId";
-        await connection.ExecuteAsync(sql, new { UserId = userId, CarId = carId });
+
+        string checkSql = "SELECT COUNT(1) FROM UserFavorite WHERE UserId = @UserId AND CarId = @CarId";
+        var exists = await connection.ExecuteScalarAsync<int>(checkSql, new { UserId = userId, CarId = carId });
+
+        if (exists > 0)
+        {
+            string updateCarSql = "UPDATE Cars SET IsFavorite = @IsFavorite WHERE Id = @CarId";
+            await connection.ExecuteAsync(updateCarSql, new { CarId = carId, IsFavorite = true });
+        }
     }
 
 
-    public async Task<IEnumerable<Car>> GetUserCarsAsync(int userId)
+    //public async Task<IEnumerable<Car>> GetUserCarsAsync(int userId)
+    //{
+    //}
+
+    public async Task<List<Car>> GetUserFavoritesAsync(int userId)
     {
-        using var connection = OpenConnection();
-        string sql = @"SELECT c.Id, c.Brand, c.Model, c.Year, c.Price, 
-                          c.Fuel, c.Transmission, c.Miles, 
-                          c.Color, c.VIN, c.Text 
-                   FROM UserCars uc
-                   JOIN Cars c ON uc.CarId = c.Id
-                   WHERE uc.UserId = @UserId";
-        return await connection.QueryAsync<Car>(sql, new { UserId = userId });
+        var cars = await _context.Cars
+        .Where(c => c.FavoritedByUsers.Any(f => f.UserId == userId))
+        .Include(c => c.CarImagePaths)
+        .ToListAsync();
+
+        return cars;
     }
 
     //public async Task RemoveUserCarAsync(int userId, int carId)

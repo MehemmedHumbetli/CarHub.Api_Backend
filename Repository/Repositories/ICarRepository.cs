@@ -8,7 +8,7 @@ public interface ICarRepository
 {
     Task AddAsync(Car car);
     void Update(Car car);
-    Task RemoveAsync(int id);
+    Task Remove(int id);
     IQueryable<Car> GetAll();
     Task<Car> GetByIdAsync(int id);
 
@@ -23,6 +23,4 @@ public interface ICarRepository
     Task<IEnumerable<Car>> GetByBodyAsync(BodyTypes body);
     Task<IEnumerable<Car>> GetByColorAsync(string color);
     Task<IEnumerable<string>> GetImagePathsAsync(int carId);
-    Task AddImagePathAsync(int carId, string imagePath);
-    Task RemoveImagePathAsync(int carId, string imagePath);
 }
