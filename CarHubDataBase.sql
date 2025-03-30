@@ -41,6 +41,7 @@ CREATE TABLE [dbo].[Cars] (
     [UpdatedBy]      INT            NULL,
     [DeletedDate]    DATETIME       NULL,
     [DeletedBy]      INT            NULL,
+    [IsFavorite] BIT DEFAULT ((0)) NOT NULL,
     [UserId]         INT            NOT NULL,
     CONSTRAINT [PK_Cars] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Cars_Users] FOREIGN KEY ([UserId]) REFERENCES [dbo].[Users] ([Id]) ON DELETE CASCADE
@@ -52,7 +53,6 @@ CREATE TABLE [dbo].[UserFavorite] (
     [Id]         INT IDENTITY (1, 1) NOT NULL,
     [UserId]     INT NOT NULL,
     [CarId]      INT NOT NULL,
-    [IsFavorite] BIT DEFAULT ((0)) NOT NULL,
     PRIMARY KEY CLUSTERED ([UserId] ASC, [CarId] ASC),
     FOREIGN KEY ([UserId]) REFERENCES [dbo].[Users] ([Id]),
     FOREIGN KEY ([CarId]) REFERENCES [dbo].[Cars] ([Id])

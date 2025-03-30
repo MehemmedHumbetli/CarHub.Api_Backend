@@ -38,10 +38,6 @@ public class AddFavoriteCar
 
             var existingFavorite = currentUser.Favorites.FirstOrDefault(c => c.CarId == request.CarId);
 
-            if (existingFavorite != null)
-            {
-                throw new BadRequestException("This car was previously removed from favorites or already favorited");
-            }
 
             await _unitOfWork.UserRepository.AddFavoriteCarAsync(request.UserId, request.CarId);
             await _unitOfWork.SaveChangeAsync();

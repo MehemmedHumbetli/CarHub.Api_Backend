@@ -33,18 +33,20 @@ public class RemoveFavoriteCar
                 throw new BadRequestException("User or Car not found");
             }
 
+            // UserFavorit cədvəlində bu maşın favoritlərdə varmı yoxlayırıq
             var existingFavorite = currentUser.Favorites.FirstOrDefault(c => c.CarId == request.CarId);
 
+            // Əgər favoritlərdə yoxdursa heç bir əməliyyat etmirik
             if (existingFavorite == null)
             {
                 throw new BadRequestException("Car is not in the favorites.");
             }
 
+            // Silmə əməliyyatı həyata keçiririk
             await _unitOfWork.UserRepository.RemoveFavoriteCarAsync(request.UserId, request.CarId);
             await _unitOfWork.SaveChangeAsync();
 
             return new Result<Unit> { Errors = [], IsSuccess = true };
-
         }
     }
 }
