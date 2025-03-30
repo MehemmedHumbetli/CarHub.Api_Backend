@@ -29,5 +29,14 @@ public class MappingProfile : Profile
         CreateMap<Car, AddDto>();
         CreateMap<Car, CarGetAllDto>();
         CreateMap<Car, CarUpdateDto>();
-     }
+        CreateMap<Car, GetByBodyDto>();
+        CreateMap<Car, GetByBrandDto>();
+        CreateMap<Car, GetByFuelDto>();
+        CreateMap<Car, GetByColorDto>();
+        CreateMap<Car, GetByTransmissionDto>();
+        CreateMap<Car, GetByModelDto>();
+        CreateMap<Car, GetByPriceDto>();
+        CreateMap<Car, GetByMilesDto>();
+        CreateMap<Car, GetByYearDto>();
+    }
 }

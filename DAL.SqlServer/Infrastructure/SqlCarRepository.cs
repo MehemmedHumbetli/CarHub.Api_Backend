@@ -1,4 +1,5 @@
 ﻿using DAL.SqlServer.Context;
+using Dapper;
 using Domain.Entities;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -38,24 +39,32 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
             .Include(c => c.CarImagePaths);
     }
 
-    public Task<IEnumerable<Car>> GetByBodyAsync(BodyTypes body)
+    public async Task<IEnumerable<Car>> GetByBodyAsync(BodyTypes body)
     {
-        throw new NotImplementedException();
+        await using var connection = OpenConnection();
+        string query = "SELECT * FROM Cars WHERE Body = @Body";
+        return await connection.QueryAsync<Car>(query, new { Body = (int)body });
     }
 
-    public Task<IEnumerable<Car>> GetByBrandAsync(string brand)
+    public async Task<IEnumerable<Car>> GetByBrandAsync(string brand)
     {
-        throw new NotImplementedException();
+        await using var connection = OpenConnection();
+        string query = "SELECT * FROM Cars WHERE Brand = @Brand";
+        return await connection.QueryAsync<Car>(query, new { Brand = brand });
     }
 
-    public Task<IEnumerable<Car>> GetByColorAsync(string color)
+    public async Task<IEnumerable<Car>> GetByColorAsync(string color)
     {
-        throw new NotImplementedException();
+        await using var connection = OpenConnection();
+        string query = "SELECT * FROM Cars WHERE Color = @Color";
+        return await connection.QueryAsync<Car>(query, new { Color = color });
     }
 
-    public Task<IEnumerable<Car>> GetByFuelAsync(FuelTypes fuel)
+    public async Task<IEnumerable<Car>> GetByFuelAsync(FuelTypes fuel)
     {
-        throw new NotImplementedException();
+        await using var connection = OpenConnection();
+        string query = "SELECT * FROM Cars WHERE Fuel = @Fuel";
+        return await connection.QueryAsync<Car>(query, new { Fuel = (int)fuel });
     }
 
     public async Task<Car> GetByIdAsync(int id)
@@ -63,33 +72,40 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
         return (await _context.Cars.FirstOrDefaultAsync(u => u.Id == id))!;
     }
 
-    public Task<IEnumerable<Car>> GetByMilesAsync(double miles)
+    public async Task<IEnumerable<Car>> GetByMilesAsync(decimal minMiles, decimal maxMiles)
     {
-        throw new NotImplementedException();
+        await using var connection = OpenConnection();
+        string query = "SELECT * FROM Cars WHERE Miles BETWEEN @MinMiles AND @MaxMiles";
+        return await connection.QueryAsync<Car>(query, new { MinMiles = minMiles, MaxMiles = maxMiles });
     }
 
-    public Task<IEnumerable<Car>> GetByModelAsync(string model)
+    public async  Task<IEnumerable<Car>> GetByModelAsync(string model)
     {
-        throw new NotImplementedException();
+        await using var connection = OpenConnection();
+        string query = "SELECT * FROM Cars WHERE LOWER(Model) LIKE LOWER(@Model)";
+        return await connection.QueryAsync<Car>(query, new { Model = model.ToLower() + "%" });
     }
 
-    public Task<IEnumerable<Car>> GetByPriceAsync(int price)
+    public async Task<IEnumerable<Car>> GetByPriceAsync(decimal minPrice, decimal maxPrice)
     {
-        throw new NotImplementedException();
+        await using var connection = OpenConnection();
+        string query = "SELECT * FROM Cars WHERE Price BETWEEN @MinPrice AND @MaxPrice /*ORDER BY  Price DESC*/";
+        return await connection.QueryAsync<Car>(query, new { MinPrice = minPrice, MaxPrice = maxPrice });
     }
 
-    public Task<IEnumerable<Car>> GetByTransmissionAsync(TransmissionTypes transmission)
+    public async Task<IEnumerable<Car>> GetByTransmissionAsync(TransmissionTypes transmission)
     {
-        throw new NotImplementedException();
+        await using var connection = OpenConnection();
+        string query = "SELECT * FROM Cars WHERE Transmission = @Transmission";
+        return await connection.QueryAsync<Car>(query, new { Transmission = (int)transmission });
     }
 
-    public Task<IEnumerable<Car>> GetByYearAsync(int year)
+    public async Task<IEnumerable<Car>> GetByYearAsync(int minYear, int maxYear)
     {
-        throw new NotImplementedException();
+        await using var connection = OpenConnection();  
+        string query = "SELECT * FROM Cars WHERE Year BETWEEN @MInYear AND @MaxYear";
+        return await connection.QueryAsync<Car>(query, new { MinYear = minYear, MaxYear = maxYear });
     }
 
-    public Task<IEnumerable<string>> GetImagePathsAsync(int carId)
-    {
-        throw new NotImplementedException();
-    }
+    
 }

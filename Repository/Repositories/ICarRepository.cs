@@ -13,14 +13,14 @@ public interface ICarRepository
     Task<Car> GetByIdAsync(int id);
 
     //Dapper Operations
-    Task<IEnumerable<Car>> GetByBrandAsync(string brand);
-    Task<IEnumerable<Car>> GetByModelAsync(string model);
-    Task<IEnumerable<Car>> GetByYearAsync(int year);
-    Task<IEnumerable<Car>> GetByPriceAsync(int price);
-    Task<IEnumerable<Car>> GetByFuelAsync(FuelTypes fuel);
-    Task<IEnumerable<Car>> GetByTransmissionAsync(TransmissionTypes transmission);
-    Task<IEnumerable<Car>> GetByMilesAsync(double miles);
-    Task<IEnumerable<Car>> GetByBodyAsync(BodyTypes body);
-    Task<IEnumerable<Car>> GetByColorAsync(string color);
-    Task<IEnumerable<string>> GetImagePathsAsync(int carId);
+    Task<IEnumerable<Car>> GetByBrandAsync(string brand); //
+    Task<IEnumerable<Car>> GetByModelAsync(string model); //
+    Task<IEnumerable<Car>> GetByYearAsync(int minYear, int maxYear); 
+    Task<IEnumerable<Car>> GetByPriceAsync(decimal minPrice, decimal maxPrice);
+    Task<IEnumerable<Car>> GetByFuelAsync(FuelTypes fuel); // 
+    Task<IEnumerable<Car>> GetByTransmissionAsync(TransmissionTypes transmission); //
+    Task<IEnumerable<Car>> GetByMilesAsync(decimal minMiles, decimal maxMiles); 
+    Task<IEnumerable<Car>> GetByBodyAsync(BodyTypes body); // 
+    Task<IEnumerable<Car>> GetByColorAsync(string color); //
+  
 }
