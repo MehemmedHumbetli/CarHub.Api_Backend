@@ -49,18 +49,15 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
     {
         using var connection = OpenConnection();
 
-        // 1. UserFavorite cədvəlində bu maşının olub-olmadığını yoxla
         string checkSql = "SELECT COUNT(1) FROM UserFavorite WHERE UserId = @UserId AND CarId = @CarId";
         var exists = await connection.ExecuteScalarAsync<int>(checkSql, new { UserId = userId, CarId = carId });
 
-        if (exists == 0) // Əgər favoritlərə əlavə olunmayıbsa
+        if (exists == 0)
         {
-            // 2. UserFavorite cədvəlinə yeni sətir əlavə et
             string insertSql = "INSERT INTO UserFavorite (UserId, CarId) VALUES (@UserId, @CarId)";
             await connection.ExecuteAsync(insertSql, new { UserId = userId, CarId = carId });
         }
 
-        // 3. Cars cədvəlində isFavorite statusunu yenilə
         string updateCarSql = "UPDATE Cars SET IsFavorite = @IsFavorite WHERE Id = @CarId";
         await connection.ExecuteAsync(updateCarSql, new { CarId = carId, IsFavorite = true });
     }
