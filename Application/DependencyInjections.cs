@@ -1,11 +1,14 @@
 using Application.AutoMapper;
-using Application.Services.BackgroundServices; 
-using AutoMapper; 
-using MediatR;
+
+using Application.PipelineBehaviour;
+using AutoMapper;
 using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using Application.PipelineBehaviour;
+
+using Application.Services.BackgroundServices; 
+
 
 namespace Application;
 
@@ -32,3 +35,4 @@ public static class DependencyInjections
         return services;
     }
 }
+
