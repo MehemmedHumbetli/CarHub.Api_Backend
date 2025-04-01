@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+
 using System.ComponentModel.DataAnnotations;
 using ValidationException = FluentValidation.ValidationException;
 

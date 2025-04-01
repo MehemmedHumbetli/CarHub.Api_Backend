@@ -6,6 +6,11 @@ public interface IUnitOfWork
 {
     public ICategoryRepository CategoryRepository { get; }
     public IProductRepository ProductRepository { get; }
+    
+    public ICarRepository CarRepository { get; }
+    public IUserRepository UserRepository { get; }
+    public IRefreshTokenRepository RefreshTokenRepository { get; }
     Task CompleteAsync();
     Task<int> SaveChangeAsync();
+  
 }
