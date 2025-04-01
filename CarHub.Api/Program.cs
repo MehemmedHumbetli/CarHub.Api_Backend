@@ -1,25 +1,45 @@
+using DAL.SqlServer;
+using Application;
+using CarHub.Api.Infrastructure.Middlewares;
+
+using CarHub.Api.Security;
+using Application.Security;
+using CarHub.Api.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllWithCredentials",
+        policy => policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSwaggerService();
+builder.Services.AddScoped<IUserContext, HttpUserContext>();
+
+var conn = builder.Configuration.GetConnectionString("MyConn");
+builder.Services.AddSqlServerServices(conn!);
+builder.Services.AddApplicationServices();
+builder.Services.AddAuthenticationService(builder.Configuration);
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("AllowAllWithCredentials"); // CORS'u aktif et
+
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.Run();

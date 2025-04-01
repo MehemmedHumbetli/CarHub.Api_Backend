@@ -1,0 +1,21 @@
+﻿using Domain.Entities;
+
+namespace Repository.Repositories;
+
+public interface IUserRepository
+{
+    Task RegisterAsync(User user);
+    void Update(User user);
+    Task Remove(int id);
+    IQueryable<User> GetAll();
+    Task<User> GetByIdAsync(int id);
+    Task<User> GetUserByEmailAsync(string email);
+    Task<List<Car>> GetUserFavoritesAsync(int userId);
+    //Task AddUserCarAsync(int userId, Car car);
+    //Task RemoveUserCarAsync(int userId, int carId);
+
+    
+    Task AddFavoriteCarAsync(int userId, int carId);           
+    Task RemoveFavoriteCarAsync(int userId, int carId);        
+  
+}
