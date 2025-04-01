@@ -8,9 +8,9 @@ using Repository.Common;
 
 namespace Application.CQRS.Cars.Handlers;
 
-public class Add
+public class CarAdd
 {
-    public class AddCommand : IRequest<Result<AddDto>>
+    public class CarAddCommand : IRequest<Result<CarAddDto>>
     {
         public int UserId { get; set; }
         public string Brand { get; set; }
@@ -27,11 +27,11 @@ public class Add
         public string Text { get; set; }
     }
 
-    public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<AddCommand, Result<AddDto>>
+    public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<CarAddCommand, Result<CarAddDto>>
     {
         private readonly IMapper _mapper = mapper;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<Result<AddDto>> Handle(AddCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CarAddDto>> Handle(CarAddCommand request, CancellationToken cancellationToken)
         {
             
             var car = _mapper.Map<Car>(request);
@@ -52,9 +52,9 @@ public class Add
             car.CreatedBy = car.UserId;
             await _unitOfWork.CarRepository.AddAsync(car);
 
-            var response = _mapper.Map<AddDto>(car);
+            var response = _mapper.Map<CarAddDto>(car);
 
-            return new Result<AddDto>
+            return new Result<CarAddDto>
             {
                 Data = response,
                 Errors = [],

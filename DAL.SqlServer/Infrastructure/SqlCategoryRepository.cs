@@ -3,7 +3,7 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Repository.Repositories;
 
-namespace DAL.SqlServer.Infracture;
+namespace DAL.SqlServer.Infrastructure;
 
 public class SqlCategoryRepository(string connectionString, AppDbContext context) : BaseSqlRepository(connectionString), ICategoryRepository
 {
@@ -55,7 +55,7 @@ public class SqlCategoryRepository(string connectionString, AppDbContext context
 
     }
 
-    
+
 }
 
 

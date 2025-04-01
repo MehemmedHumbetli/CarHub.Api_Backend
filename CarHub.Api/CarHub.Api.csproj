@@ -17,6 +17,7 @@
     <Folder Include="Infrastructure\Middleware\" />
   </ItemGroup>
 
+  <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\DAL.SqlServer\DAL.SqlServer.csproj" />
 

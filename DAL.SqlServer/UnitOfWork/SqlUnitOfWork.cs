@@ -1,7 +1,5 @@
 ﻿using DAL.SqlServer.Context;
 
-using DAL.SqlServer.Infracture;
-
 using DAL.SqlServer.Infrastructure;
 
 using Repository.Common;

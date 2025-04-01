@@ -9,18 +9,18 @@ namespace Application.CQRS.Categories.Handlers;
 
 public class AddCategory
 {
-    public class AddCommand : IRequest<Result<AddDto>>
+    public class AddCommand : IRequest<Result<CategoryAddDto>>
     {
         public string Name { get; set; }
         public string Description { get; set; }
     }
 
-    public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<AddCommand, Result<AddDto>>
+    public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<AddCommand, Result<CategoryAddDto>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<Result<AddDto>> Handle(AddCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CategoryAddDto>> Handle(AddCommand request, CancellationToken cancellationToken)
         {
 
             var newCategory = _mapper.Map<Domain.Entities.Category>(request);
@@ -35,10 +35,10 @@ public class AddCategory
             await _unitOfWork.CategoryRepository.AddAsync(newCategory);
 
 
-            var response = _mapper.Map<AddDto>(newCategory);
+            var response = _mapper.Map<CategoryAddDto>(newCategory);
 
 
-            return new Result<AddDto>
+            return new Result<CategoryAddDto>
             {
                 Data = response,
                 Errors = new List<string>(),

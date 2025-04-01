@@ -5,7 +5,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Repository.Repositories;
 
-namespace DAL.SqlServer.Infracture;
+namespace DAL.SqlServer.Infrastructure;
 
 public class SqlProductRepository(string connectionString, AppDbContext context) : BaseSqlRepository(connectionString), IProductRepository
 {
@@ -23,8 +23,8 @@ public class SqlProductRepository(string connectionString, AppDbContext context)
         product.IsDeleted = true;
         product.DeletedDate = DateTime.Now;
         product.DeletedBy = 0;
-        
-        
+
+
     }
 
     public IQueryable<Product> GetAll()
@@ -47,7 +47,7 @@ public class SqlProductRepository(string connectionString, AppDbContext context)
 
     }
 
-    public Task <Product> GetByNameAsync(string productName)
+    public Task<Product> GetByNameAsync(string productName)
     {
         var product = _context.Products.FirstOrDefaultAsync(p => p.Name == productName);
         return product;
@@ -65,6 +65,6 @@ public class SqlProductRepository(string connectionString, AppDbContext context)
         _context.SaveChanges();
     }
 
-   
+
 }
 

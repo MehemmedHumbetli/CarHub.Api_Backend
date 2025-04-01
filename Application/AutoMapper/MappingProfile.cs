@@ -10,7 +10,7 @@ using Application.CQRS.Products.ResponsesDto;
 ﻿using Application.CQRS.Users.ResponseDtos;
 using static Application.CQRS.Users.Handlers.Register;
 using static Application.CQRS.Users.Handlers.Update;
-using static Application.CQRS.Cars.Handlers.Add;
+
 using Application.CQRS.Cars.ResponseDtos;
 using Application.CQRS.Users.Handlers;
 
@@ -23,11 +23,11 @@ public class MappingProfile : Profile
     {
         
         //Category Mapping
-        CreateMap<Category, AddDto>();
+        CreateMap<Category, CategoryAddDto>();
         CreateMap<AddCommand, Category>();
 
-        CreateMap<Category, GetAllDto>();
-        CreateMap<GetAllDto, Category>();
+        CreateMap<Category, CategoryGetAllDto>();
+        CreateMap<CategoryGetAllDto, Category>();
 
         CreateMap<Category, UpdateDto>();
         CreateMap<UpdateDto, Category>();
@@ -71,7 +71,7 @@ public class MappingProfile : Profile
 
         //Car Mapping
         CreateMap<AddCommand, Car>().ReverseMap();
-        CreateMap<Car, AddDto>();
+        CreateMap<Car, CarAddDto>();
         CreateMap<Car, CarGetAllDto>();
         CreateMap<Car, CarUpdateDto>();
         CreateMap<Car, GetByBodyDto>();

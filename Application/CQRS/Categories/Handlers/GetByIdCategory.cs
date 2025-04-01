@@ -7,23 +7,23 @@ namespace Application.CQRS.Categories.Handlers;
 
 public class GetByIdCategory
 {
-    public class CategoryGetByIdCommand : IRequest<Result<GetByIdDto>>
+    public class CategoryGetByIdCommand : IRequest<Result<CategoryGetByIdDto>>
     {
         public int Id { get; set; }
     }
 
-    public class Handler(IUnitOfWork unitOfWork) : IRequestHandler<CategoryGetByIdCommand, Result<GetByIdDto>>
+    public class Handler(IUnitOfWork unitOfWork) : IRequestHandler<CategoryGetByIdCommand, Result<CategoryGetByIdDto>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public async Task<Result<GetByIdDto>> Handle(CategoryGetByIdCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CategoryGetByIdDto>> Handle(CategoryGetByIdCommand request, CancellationToken cancellationToken)
         {
             var currentCategory = await _unitOfWork.CategoryRepository.GetByIdAsync(request.Id);
             if (currentCategory == null)
             {
-                return new Result<GetByIdDto>() { Errors = ["User tapilmadi"], IsSuccess = true };
+                return new Result<CategoryGetByIdDto>() { Errors = ["User tapilmadi"], IsSuccess = true };
             }
-            GetByIdDto response = new()
+            CategoryGetByIdDto response = new()
             {
                 Id = currentCategory.Id,
                 Name = currentCategory.Name,
@@ -31,7 +31,7 @@ public class GetByIdCategory
 
             };
 
-            return new Result<GetByIdDto> { Data = response, Errors = [], IsSuccess = true };
+            return new Result<CategoryGetByIdDto> { Data = response, Errors = [], IsSuccess = true };
         }
     }
 }
