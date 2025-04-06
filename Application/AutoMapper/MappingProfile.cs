@@ -1,4 +1,3 @@
-
 using AutoMapper;
 using Domain.Entities;
 using static Application.CQRS.Categories.Handlers.AddCategory;
