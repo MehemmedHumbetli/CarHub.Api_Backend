@@ -22,4 +22,9 @@
     <ProjectReference Include="..\Repository\Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CQRS\Favorites\Validators\" />
+    <Folder Include="CQRS\Favorites\ResponseDtos\" />
+  </ItemGroup>
+
 </Project>

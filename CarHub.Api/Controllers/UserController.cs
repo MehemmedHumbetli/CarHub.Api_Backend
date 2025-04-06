@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.CQRS.Users.Handlers;
 using System.Reflection;
 using Application.Services;
+using Application.CQRS.Favorites.Handlers;
 
 namespace CarHub.Api.Controllers;
 
@@ -63,25 +64,10 @@ public class UserController(ISender sender) : Controller
         return Ok(await _sender.Send(request));
     }
 
-    [HttpGet("AddUserFavorites")]
-    [AllowAnonymous]
-
-    public async Task<IActionResult> AddUserFavorites([FromQuery] AddFavoriteCar.AddFavoriteCarCommand request)
-    {
-        return Ok(await _sender.Send(request));
-    }
-
     [HttpGet("GetUserFavorites")]
     [AllowAnonymous]
 
     public async Task<IActionResult> GetUserFavorites([FromQuery] GetUserFavorites.GetUserFavoritesCommand request)
-    {
-        return Ok(await _sender.Send(request));
-    }
-
-    [HttpDelete("RemoveFavoriteCar")]
-    [AllowAnonymous]
-    public async Task<IActionResult> RemoveFavoriteCar([FromQuery] RemoveFavoriteCar.RemoveFavoriteCarCommand request)
     {
         return Ok(await _sender.Send(request));
     }

@@ -2,9 +2,9 @@
 using Common.GlobalResponses.Generics;
 using MediatR;
 using Repository.Common;
-using static Application.CQRS.Users.Handlers.RemoveFavoriteCar;
+using static Application.CQRS.Favorites.Handlers.RemoveFavoriteCar;
 
-namespace Application.CQRS.Users.Handlers;
+namespace Application.CQRS.Favorites.Handlers;
 
 public class RemoveFavoriteCar
 {
@@ -33,17 +33,14 @@ public class RemoveFavoriteCar
                 throw new BadRequestException("User or Car not found");
             }
 
-            // UserFavorit cədvəlində bu maşın favoritlərdə varmı yoxlayırıq
             var existingFavorite = currentUser.Favorites.FirstOrDefault(c => c.CarId == request.CarId);
 
-            // Əgər favoritlərdə yoxdursa heç bir əməliyyat etmirik
             if (existingFavorite == null)
             {
                 throw new BadRequestException("Car is not in the favorites.");
             }
 
-            // Silmə əməliyyatı həyata keçiririk
-            await _unitOfWork.UserRepository.RemoveFavoriteCarAsync(request.UserId, request.CarId);
+            await _unitOfWork.FavoriteRepository.RemoveFavoriteCarAsync(request.UserId, request.CarId);
             await _unitOfWork.SaveChangeAsync();
 
             return new Result<Unit> { Errors = [], IsSuccess = true };

@@ -5,9 +5,9 @@ using Common.GlobalResponses.Generics;
 using Domain.Entities;
 using MediatR;
 using Repository.Common;
-using static Application.CQRS.Users.Handlers.AddFavoriteCar;
+using static Application.CQRS.Favorites.Handlers.AddFavoriteCar;
 
-namespace Application.CQRS.Users.Handlers;
+namespace Application.CQRS.Favorites.Handlers;
 
 public class AddFavoriteCar
 {
@@ -39,7 +39,7 @@ public class AddFavoriteCar
             var existingFavorite = currentUser.Favorites.FirstOrDefault(c => c.CarId == request.CarId);
 
 
-            await _unitOfWork.UserRepository.AddFavoriteCarAsync(request.UserId, request.CarId);
+            await _unitOfWork.FavoriteRepository.AddFavoriteCarAsync(request.UserId, request.CarId);
             await _unitOfWork.SaveChangeAsync();
 
             return new Result<Unit> { Errors = [], IsSuccess = true };

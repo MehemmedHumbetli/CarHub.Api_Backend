@@ -22,4 +22,6 @@ public class AppDbContext : DbContext
     public DbSet<Cart> Carts { get; set; }
     public DbSet<CartLine> CartLines { get; set; }
 
+    public DbSet<UserFavorite> UserFavorites { get; set; }
+
 }

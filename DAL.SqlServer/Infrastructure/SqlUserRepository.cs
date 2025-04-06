@@ -45,37 +45,6 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
         user.DeletedBy = 0;
     }
 
-    public async Task AddFavoriteCarAsync(int userId, int carId)
-    {
-        using var connection = OpenConnection();
-
-        string checkSql = "SELECT COUNT(1) FROM UserFavorite WHERE UserId = @UserId AND CarId = @CarId";
-        var exists = await connection.ExecuteScalarAsync<int>(checkSql, new { UserId = userId, CarId = carId });
-
-        if (exists == 0)
-        {
-            string insertSql = "INSERT INTO UserFavorite (UserId, CarId) VALUES (@UserId, @CarId)";
-            await connection.ExecuteAsync(insertSql, new { UserId = userId, CarId = carId });
-        }
-
-        string updateCarSql = "UPDATE Cars SET IsFavorite = @IsFavorite WHERE Id = @CarId";
-        await connection.ExecuteAsync(updateCarSql, new { CarId = carId, IsFavorite = true });
-    }
-
-    public async Task RemoveFavoriteCarAsync(int userId, int carId)
-    {
-        using var connection = OpenConnection();
-
-        string checkSql = "SELECT COUNT(1) FROM UserFavorite WHERE UserId = @UserId AND CarId = @CarId";
-        var exists = await connection.ExecuteScalarAsync<int>(checkSql, new { UserId = userId, CarId = carId });
-
-        if (exists > 0)
-        {
-            string updateCarSql = "UPDATE Cars SET IsFavorite = @IsFavorite WHERE Id = @CarId";
-            await connection.ExecuteAsync(updateCarSql, new { CarId = carId, IsFavorite = false });
-        }
-    }
-
 
     //public async Task<IEnumerable<Car>> GetUserCarsAsync(int userId)
     //{
@@ -84,7 +53,7 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
     public async Task<List<Car>> GetUserFavoritesAsync(int userId)
     {
         var cars = await _context.Cars
-        .Where(c => c.FavoritedByUsers.Any(f => f.UserId == userId))
+        //.Where(c => c.FavoritedByUsers.Any(f => f.UserId == userId))
         .Include(c => c.CarImagePaths)
         .ToListAsync();
 
