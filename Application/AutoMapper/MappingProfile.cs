@@ -12,6 +12,8 @@ using static Application.CQRS.Users.Handlers.Update;
 
 using Application.CQRS.Cars.ResponseDtos;
 using Application.CQRS.Users.Handlers;
+using Application.CQRS.Cart.ResponseDtos;
+using static Application.CQRS.Cart.Handlers.AddCart;
 
 
 namespace Application.AutoMapper;
@@ -82,5 +84,11 @@ public class MappingProfile : Profile
         CreateMap<Car, GetByPriceDto>();
         CreateMap<Car, GetByMilesDto>();
         CreateMap<Car, GetByYearDto>();
+
+
+        //Cart
+        
+        CreateMap<AddCartCommand, Cart>();
+        CreateMap<Cart, AddCartDto>();
     }
 }

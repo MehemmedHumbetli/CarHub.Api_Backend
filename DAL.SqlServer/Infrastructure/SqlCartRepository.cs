@@ -12,7 +12,7 @@ public class SqlCartRepository(string connectionString , AppDbContext context) :
 
     public async Task AddAsync(Cart cart)
     {
-        await _context.Carts.AddRangeAsync(cart);
+        await _context.Carts.AddAsync(cart);
         await _context.SaveChangesAsync();
         
     }
@@ -40,7 +40,7 @@ public class SqlCartRepository(string connectionString , AppDbContext context) :
         await _context.SaveChangesAsync();
     }
 
-    public async Task ClearCartAsync(int cartId)
+    public async Task ClearCartLineAsync(int cartId)
     {
         var carts = await  _context.Carts.Include(c => c.CartLines).FirstOrDefaultAsync(c => c.Id == cartId);
         _context.CartLines.RemoveRange(carts.CartLines);
@@ -50,38 +50,39 @@ public class SqlCartRepository(string connectionString , AppDbContext context) :
 
     public async Task DeleteAsync(int cartId)
     {
-        await _context.Carts.FirstOrDefaultAsync(c => c.Id == cartId);
+        var cart = await _context.Carts.FirstOrDefaultAsync(c => c.CartId == cartId);
+        cart.IsDeleted = true;
+        cart.DeletedDate = DateTime.Now;
+        cart.DeletedBy = 0;
         await _context.SaveChangesAsync();
     }
 
-    public IQueryable<Cart> GetAll()
+    public async Task<Cart> GetCartWithLinesAsync(int cartId)
     {
-        return _context.Carts;
+        return await _context.Carts.Include(c => c.CartLines.Where(cl => !cl.IsDeleted)).FirstOrDefaultAsync(c => c.CartId == cartId && !c.IsDeleted);
+
+    }  
+
+    public async Task<decimal> GetTotalPriceAsync(int cartId)
+    {
+        var cart = await _context.Carts.Include(c => c.CartLines).FirstOrDefaultAsync(c => c.Id == cartId);
+        return cart.CartLines.Sum(cl => cl.Quantity * cl.UnitPrice);
     }
 
-    public Task<Cart> GetByIdAsync(int id)
+    public async Task<Cart> GetUserCartAsync(int userId)
     {
-        throw new NotImplementedException();
+        return await _context.Carts.Include(c => c.CartLines).ThenInclude(cl => cl.Product).FirstOrDefaultAsync(c => c.UserId == userId);
     }
 
-    public Task<Cart> GetCartWithLinesAsync(int cartId)
+    public async Task RemoveProductFromCartAsync(int cartId, int productId)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<decimal> GetTotalPriceAsync(int cartId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Cart> GetUserCartAsync(string userId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task RemoveProductFromCartAsync(int cartId, int productId)
-    {
-        throw new NotImplementedException();
+        var cart = await _context.Carts.Include(c => c.CartLines).FirstOrDefaultAsync(c => c.CartId == cartId);
+        var cartLine = cart.CartLines.FirstOrDefault(cl => cl.ProductId == productId);
+        _context.CartLines.Remove(cartLine);
+        cartLine.IsDeleted = true;
+        cartLine.DeletedDate = DateTime.Now;
+        cartLine.DeletedBy = 0;
+        await _context.SaveChangesAsync();
     }
 
     public void Update(Cart cart)
