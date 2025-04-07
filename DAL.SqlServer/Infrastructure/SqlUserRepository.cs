@@ -53,7 +53,7 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
     public async Task<List<Car>> GetUserFavoritesAsync(int userId)
     {
         var cars = await _context.Cars
-        //.Where(c => c.FavoritedByUsers.Any(f => f.UserId == userId))
+        .Where(c => c.FavoritedByUsers.Any(f => f.UserId == userId))
         .Include(c => c.CarImagePaths)
         .ToListAsync();
 

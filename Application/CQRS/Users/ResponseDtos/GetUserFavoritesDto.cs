@@ -20,5 +20,4 @@ public class GetUserFavoritesDto
     public string Text { get; set; }
     public List<CarImage> CarImagePaths { get; set; }
 
-
 }

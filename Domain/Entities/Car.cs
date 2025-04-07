@@ -22,7 +22,6 @@ public class Car : BaseEntity
     public List<UserFavorite> FavoritedByUsers { get; set; } = new List<UserFavorite>();
     public int UserId { get; set; }
     public User User { get; set; }
-    public bool IsFavorite { get; set; }
 
     public Car()
     {
