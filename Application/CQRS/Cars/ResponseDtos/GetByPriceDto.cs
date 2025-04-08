@@ -21,5 +21,4 @@ public class GetByPriceDto
     public string VIN { get; set; }
     public string Text { get; set; }
     public List<UserFavorite> FavoritedByUsers { get; set; }
-    public bool IsFavorite { get; set; }
 }

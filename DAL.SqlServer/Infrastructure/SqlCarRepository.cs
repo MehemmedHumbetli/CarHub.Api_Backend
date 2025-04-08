@@ -69,7 +69,7 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
 
     public async Task<Car> GetByIdAsync(int id)
     {
-        return (await _context.Cars.FirstOrDefaultAsync(u => u.Id == id))!;
+        return (await _context.Cars.Include(x => x.CarImagePaths).FirstOrDefaultAsync(u => u.Id == id));
     }
 
     public async Task<IEnumerable<Car>> GetByMilesAsync(decimal minMiles, decimal maxMiles)

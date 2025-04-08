@@ -3,7 +3,7 @@ using Domain.Enums;
 
 namespace Application.CQRS.Cars.ResponseDtos;
 
-public class GetByTransmissionDto
+public class CarGetByIdDto
 {
     public int Id { get; set; }
     public string Brand { get; set; }

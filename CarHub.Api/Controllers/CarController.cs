@@ -3,6 +3,7 @@ using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static Application.CQRS.Cars.Handlers.CarGetById;
 using static Application.CQRS.Cars.Handlers.GetByBody;
 
 namespace CarHub.Api.Controllers;
@@ -44,6 +45,12 @@ public class CarController(ISender sender) : Controller
         }
 
         return Ok(result.Data);
+    }
+
+    [HttpGet("GetById")]
+    public async Task<IActionResult> GetById([FromQuery] CarGetByIdCommand request)
+    {
+        return Ok(await _sender.Send(request));
     }
 
     [HttpGet("GetByBody")]
