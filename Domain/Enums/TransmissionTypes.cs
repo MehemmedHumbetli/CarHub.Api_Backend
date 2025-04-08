@@ -1,6 +1,6 @@
 ﻿namespace Domain.Enums;
 
-public enum TransmissionTypes : int
+public enum TransmissionTypes 
 {
     Automatic = 1,
     Manual = 2

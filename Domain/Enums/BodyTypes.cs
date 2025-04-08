@@ -1,6 +1,6 @@
 ﻿namespace Domain.Enums;
 
-public enum BodyTypes : int
+public enum BodyTypes 
 {
     Suv = 1,
     Sedan = 2,

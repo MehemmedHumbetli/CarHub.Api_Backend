@@ -19,15 +19,9 @@ public class SqlFavoriteRepository(AppDbContext context) : IFavoriteRepository
             favorite = new UserFavorite
             {
                 UserId = userId,
-                CarId = carId,
-                IsFavorite = true
+                CarId = carId
             };
             await _context.UserFavorites.AddAsync(favorite);
-        }
-        else
-        {
-            favorite.IsFavorite = true;
-            _context.UserFavorites.Update(favorite);
         }
 
         await _context.SaveChangesAsync();
@@ -40,7 +34,7 @@ public class SqlFavoriteRepository(AppDbContext context) : IFavoriteRepository
 
         if (favorite != null)
         {
-            favorite.IsFavorite = false;
+
             _context.UserFavorites.Update(favorite);
             await _context.SaveChangesAsync();
         }

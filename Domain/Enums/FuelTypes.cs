@@ -1,6 +1,6 @@
 ﻿namespace Domain.Enums;
 
-public enum FuelTypes : int
+public enum FuelTypes 
 {
     Diesel = 1,
     Petrol = 2,
