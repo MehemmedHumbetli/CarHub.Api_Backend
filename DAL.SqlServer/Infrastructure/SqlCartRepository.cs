@@ -50,7 +50,7 @@ public class SqlCartRepository(string connectionString , AppDbContext context) :
 
     public async Task DeleteAsync(int cartId)
     {
-        var cart = await _context.Carts.FirstOrDefaultAsync(c => c.CartId == cartId);
+        var cart = await _context.Carts.FirstOrDefaultAsync(c => c.Id == cartId);
         cart.IsDeleted = true;
         cart.DeletedDate = DateTime.Now;
         cart.DeletedBy = 0;
@@ -59,7 +59,7 @@ public class SqlCartRepository(string connectionString , AppDbContext context) :
 
     public async Task<Cart> GetCartWithLinesAsync(int cartId)
     {
-        return await _context.Carts.Include(c => c.CartLines.Where(cl => !cl.IsDeleted)).FirstOrDefaultAsync(c => c.CartId == cartId && !c.IsDeleted);
+        return await _context.Carts.Include(c => c.CartLines.Where(cl => !cl.IsDeleted)).FirstOrDefaultAsync(c => c.Id == cartId && !c.IsDeleted);
 
     }  
 
@@ -76,7 +76,7 @@ public class SqlCartRepository(string connectionString , AppDbContext context) :
 
     public async Task RemoveProductFromCartAsync(int cartId, int productId)
     {
-        var cart = await _context.Carts.Include(c => c.CartLines).FirstOrDefaultAsync(c => c.CartId == cartId);
+        var cart = await _context.Carts.Include(c => c.CartLines).FirstOrDefaultAsync(c => c.Id == cartId);
         var cartLine = cart.CartLines.FirstOrDefault(cl => cl.ProductId == productId);
         _context.CartLines.Remove(cartLine);
         cartLine.IsDeleted = true;
