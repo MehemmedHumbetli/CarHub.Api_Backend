@@ -46,8 +46,7 @@ public class CarGetById
                 BodyTypeImage = currentCar.BodyTypeImage,
                 VIN = currentCar.VIN,
                 Text = currentCar.Text,
-                FavoritedByUsers = currentCar.FavoritedByUsers,
-                //.Select(f => f.UserId).ToList()
+                CreatedBy = currentCar.CreatedBy,
 
             };
 

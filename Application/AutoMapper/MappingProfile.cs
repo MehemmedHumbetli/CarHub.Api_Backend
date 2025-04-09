@@ -17,6 +17,7 @@ using static Application.CQRS.Cart.Handlers.AddCart;
 using static Application.CQRS.Cart.Handlers.AddProductToCart;
 using Application.CQRS.Carts.Handlers;
 using static Application.CQRS.Carts.Handlers.GetCartWithLinesByUserId;
+using static Application.CQRS.Cars.Handlers.CarAdd;
 
 
 namespace Application.AutoMapper;
@@ -71,22 +72,13 @@ public class MappingProfile : Profile
         CreateMap<User, GetByIdDto>();
         CreateMap<Car, GetUserFavoritesDto>();
         CreateMap<Car, GetUserCarsDto>();
-
+        CreateMap<Car, GetFilteredCarsAsyncDto>();
 
         //Car Mapping
-        CreateMap<AddCommand, Car>().ReverseMap();
+        CreateMap<CarAddCommand, Car>().ReverseMap();
         CreateMap<Car, CarAddDto>();
         CreateMap<Car, CarGetAllDto>();
         CreateMap<Car, CarUpdateDto>();
-        CreateMap<Car, GetByBodyDto>();
-        CreateMap<Car, GetByBrandDto>();
-        CreateMap<Car, GetByFuelDto>();
-        CreateMap<Car, GetByColorDto>();
-        CreateMap<Car, GetByTransmissionDto>();
-        CreateMap<Car, GetByModelDto>();
-        CreateMap<Car, GetByPriceDto>();
-        CreateMap<Car, GetByMilesDto>();
-        CreateMap<Car, GetByYearDto>();
 
 
         //Cart

@@ -35,7 +35,7 @@ public class SqlFavoriteRepository(AppDbContext context) : IFavoriteRepository
         if (favorite != null)
         {
 
-            _context.UserFavorites.Update(favorite);
+            _context.UserFavorites.Remove(favorite);
             await _context.SaveChangesAsync();
         }
     }

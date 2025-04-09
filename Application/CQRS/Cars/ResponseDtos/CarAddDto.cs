@@ -17,4 +17,5 @@ public class CarAddDto
     public string Color { get; set; }
     public string VIN { get; set; }
     public string Text { get; set; }
+
 }

@@ -39,73 +39,103 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
             .Include(c => c.CarImagePaths);
     }
 
-    public async Task<IEnumerable<Car>> GetByBodyAsync(BodyTypes body)
-    {
-        await using var connection = OpenConnection();
-        string query = "SELECT * FROM Cars WHERE Body = @Body";
-        return await connection.QueryAsync<Car>(query, new { Body = (int)body });
-    }
-
-    public async Task<IEnumerable<Car>> GetByBrandAsync(string brand)
-    {
-        await using var connection = OpenConnection();
-        string query = "SELECT * FROM Cars WHERE Brand = @Brand";
-        return await connection.QueryAsync<Car>(query, new { Brand = brand });
-    }
-
-    public async Task<IEnumerable<Car>> GetByColorAsync(string color)
-    {
-        await using var connection = OpenConnection();
-        string query = "SELECT * FROM Cars WHERE Color = @Color";
-        return await connection.QueryAsync<Car>(query, new { Color = color });
-    }
-
-    public async Task<IEnumerable<Car>> GetByFuelAsync(FuelTypes fuel)
-    {
-        await using var connection = OpenConnection();
-        string query = "SELECT * FROM Cars WHERE Fuel = @Fuel";
-        return await connection.QueryAsync<Car>(query, new { Fuel = (int)fuel });
-    }
-
     public async Task<Car> GetByIdAsync(int id)
     {
         return (await _context.Cars.Include(x => x.CarImagePaths).FirstOrDefaultAsync(u => u.Id == id));
     }
 
-    public async Task<IEnumerable<Car>> GetByMilesAsync(decimal minMiles, decimal maxMiles)
+    public async Task<IEnumerable<Car>> GetFilteredCarsAsync(Car filter)
     {
         await using var connection = OpenConnection();
-        string query = "SELECT * FROM Cars WHERE Miles BETWEEN @MinMiles AND @MaxMiles";
-        return await connection.QueryAsync<Car>(query, new { MinMiles = minMiles, MaxMiles = maxMiles });
+
+        var sql = @"
+        SELECT c.*, ci.* 
+        FROM Cars c
+        LEFT JOIN CarImage ci ON ci.CarId = c.Id
+        WHERE 1=1";
+
+        var parameters = new DynamicParameters();
+
+        if (!string.IsNullOrWhiteSpace(filter.Brand))
+        {
+            sql += " AND c.Brand = @Brand";
+            parameters.Add("Brand", filter.Brand);
+        }
+
+        if (!string.IsNullOrWhiteSpace(filter.Model))
+        {
+            sql += " AND LOWER(c.Model) LIKE LOWER(@Model)";
+            parameters.Add("Model", filter.Model.ToLower() + "%");
+        }
+
+        if (filter.Year > 0)
+        {
+            sql += " AND c.Year = @Year";
+            parameters.Add("Year", filter.Year);
+        }
+
+        if (filter.Price > 0)
+        {
+            sql += " AND c.Price <= @Price";
+            parameters.Add("Price", filter.Price);
+        }
+
+        if (filter.Fuel != 0)
+        {
+            sql += " AND c.Fuel = @Fuel";
+            parameters.Add("Fuel", (int)filter.Fuel);
+        }
+
+        if (filter.Transmission != 0)
+        {
+            sql += " AND c.Transmission = @Transmission";
+            parameters.Add("Transmission", (int)filter.Transmission);
+        }
+
+        if (filter.Miles > 0)
+        {
+            sql += " AND c.Miles <= @Miles";
+            parameters.Add("Miles", filter.Miles);
+        }
+
+        if (filter.Body != 0)
+        {
+            sql += " AND c.Body = @Body";
+            parameters.Add("Body", (int)filter.Body);
+        }
+
+        if (!string.IsNullOrWhiteSpace(filter.Color))
+        {
+            sql += " AND c.Color = @Color";
+            parameters.Add("Color", filter.Color);
+        }
+
+        var carDictionary = new Dictionary<int, Car>();
+
+        var result = await connection.QueryAsync<Car, CarImage, Car>(
+            sql,
+            (car, carImage) =>
+            {
+                if (!carDictionary.TryGetValue(car.Id, out var currentCar))
+                {
+                    currentCar = car;
+                    currentCar.CarImagePaths = new List<CarImage>();
+                    carDictionary.Add(currentCar.Id, currentCar);
+                }
+
+                if (carImage != null)
+                {
+                    currentCar.CarImagePaths.Add(carImage);
+                }
+
+                return currentCar;
+            },
+            param: parameters,
+            splitOn: "Id"
+        );
+
+        return carDictionary.Values;
     }
 
-    public async  Task<IEnumerable<Car>> GetByModelAsync(string model)
-    {
-        await using var connection = OpenConnection();
-        string query = "SELECT * FROM Cars WHERE LOWER(Model) LIKE LOWER(@Model)";
-        return await connection.QueryAsync<Car>(query, new { Model = model.ToLower() + "%" });
-    }
 
-    public async Task<IEnumerable<Car>> GetByPriceAsync(decimal minPrice, decimal maxPrice)
-    {
-        await using var connection = OpenConnection();
-        string query = "SELECT * FROM Cars WHERE Price BETWEEN @MinPrice AND @MaxPrice /*ORDER BY  Price DESC*/";
-        return await connection.QueryAsync<Car>(query, new { MinPrice = minPrice, MaxPrice = maxPrice });
-    }
-
-    public async Task<IEnumerable<Car>> GetByTransmissionAsync(TransmissionTypes transmission)
-    {
-        await using var connection = OpenConnection();
-        string query = "SELECT * FROM Cars WHERE Transmission = @Transmission";
-        return await connection.QueryAsync<Car>(query, new { Transmission = (int)transmission });
-    }
-
-    public async Task<IEnumerable<Car>> GetByYearAsync(int minYear, int maxYear)
-    {
-        await using var connection = OpenConnection();  
-        string query = "SELECT * FROM Cars WHERE Year BETWEEN @MInYear AND @MaxYear";
-        return await connection.QueryAsync<Car>(query, new { MinYear = minYear, MaxYear = maxYear });
-    }
-
-    
 }
