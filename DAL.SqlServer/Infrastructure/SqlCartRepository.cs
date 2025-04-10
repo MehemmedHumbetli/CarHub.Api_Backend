@@ -10,14 +10,20 @@ public class SqlCartRepository(string connectionString , AppDbContext context) :
 {
     private readonly AppDbContext _context = context;
 
-    public async Task AddAsync(Cart cart)
+    public async Task AddAsync(Cart cart) 
     {
+        //var existingCart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == cart.UserId && !c.IsDeleted);
+        //if (existingCart != null)
+        //{
+        //    throw new BadRequestException("User already has a cart.");
+        //}
+        
         await _context.Carts.AddAsync(cart);
         await _context.SaveChangesAsync();
-        
+
     }
 
-    public async Task AddProductToCartAsync(int cartId, int productId, int quantity, decimal unitPrice)
+    public async Task AddProductToCartAsync(int cartId, int productId, int quantity, decimal unitPrice) 
     {
        var cart =  await _context.Carts.Include(c => c.CartLines).FirstOrDefaultAsync(c => c.Id == cartId);
        var existingCartLine = cart.CartLines.FirstOrDefault(cl => cl.ProductId == productId);
@@ -63,26 +69,30 @@ public class SqlCartRepository(string connectionString , AppDbContext context) :
 
     }  
 
-    public async Task<decimal> GetTotalPriceAsync(int cartId)
+    public async Task<decimal> GetTotalPriceAsync(int cartId) 
     {
         var cart = await _context.Carts.Include(c => c.CartLines).FirstOrDefaultAsync(c => c.Id == cartId);
         return cart.CartLines.Sum(cl => cl.Quantity * cl.UnitPrice);
     }
 
-    public async Task<Cart> GetUserCartAsync(int userId)
+    public async Task<Cart> GetCartWithLinesByUserId(int userId)
     {
         return await _context.Carts.Include(c => c.CartLines).ThenInclude(cl => cl.Product).FirstOrDefaultAsync(c => c.UserId == userId);
     }
 
     public async Task RemoveProductFromCartAsync(int cartId, int productId)
     {
+        
         var cart = await _context.Carts.Include(c => c.CartLines).FirstOrDefaultAsync(c => c.Id == cartId);
-        var cartLine = cart.CartLines.FirstOrDefault(cl => cl.ProductId == productId);
-        _context.CartLines.Remove(cartLine);
-        cartLine.IsDeleted = true;
-        cartLine.DeletedDate = DateTime.Now;
-        cartLine.DeletedBy = 0;
-        await _context.SaveChangesAsync();
+        var cartLine = cart?.CartLines.FirstOrDefault(cl => cl.ProductId == productId);
+
+        if (cartLine != null)
+        {
+            cartLine.IsDeleted = true;
+            cartLine.DeletedDate = DateTime.Now;
+            cartLine.DeletedBy = 0; 
+            await _context.SaveChangesAsync();
+        }
     }
 
     public void Update(Cart cart)

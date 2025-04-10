@@ -18,6 +18,7 @@ using static Application.CQRS.Cart.Handlers.AddProductToCart;
 using Application.CQRS.Carts.Handlers;
 using static Application.CQRS.Carts.Handlers.GetCartWithLinesByUserId;
 using static Application.CQRS.Cars.Handlers.CarAdd;
+using static Application.CQRS.Cart.Handlers.GetCartWithLines;
 
 
 namespace Application.AutoMapper;
@@ -90,7 +91,10 @@ public class MappingProfile : Profile
         CreateMap<Cart, AddProductToCartDto>();
 
         CreateMap<Cart, GetCartWithLinesByUserIdDto>();
-        CreateMap<GetCartWithLinesByUserIdCommand, Cart>();
+        CreateMap<GetCartWithLinesByUserIdQuery, Cart>();
+
+        CreateMap<Cart, GetCartWithLinesDto>();
+        CreateMap<GetCartWithLinesQuery, Cart>();
 
     }
 }

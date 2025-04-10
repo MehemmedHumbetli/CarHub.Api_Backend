@@ -22,7 +22,7 @@ public class AddCart
         public async Task<Result<AddCartDto>> Handle(AddCartCommand request, CancellationToken cancellationToken)
         {
             
-            var existingCart = await _unitOfWork.CartRepository.GetUserCartAsync(request.UserId);
+            var existingCart = await _unitOfWork.CartRepository.GetCartWithLinesByUserId(request.UserId);
 
             if (existingCart != null)
             {

@@ -18,16 +18,10 @@ public class AddProductToCart
         public int Quantity { get; set; }
     }
 
-    public sealed class Handler : IRequestHandler<AddProductToCartCommand, Result<AddCartDto>>
+    public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<AddProductToCartCommand, Result<AddCartDto>>
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-
-        public Handler(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<Result<AddCartDto>> Handle(AddProductToCartCommand request, CancellationToken cancellationToken)
         {

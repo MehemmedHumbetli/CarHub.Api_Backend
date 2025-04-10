@@ -3,36 +3,31 @@ using Common.GlobalResponses.Generics;
 using MediatR;
 using Repository.Common;
 
-namespace Application.CQRS.Carts.Handlers;
+namespace Application.CQRS.Cart.Handlers;
 
-
-public class GetCartWithLinesByUserId
+public class GetCartWithLines
 {
-    public class GetCartWithLinesByUserIdQuery : IRequest<Result<GetCartWithLinesByUserIdDto>>
-    {
-        public int UserId { get; set; }
-    }
 
-    public class Handler(IUnitOfWork unitOfWork) : IRequestHandler<GetCartWithLinesByUserIdQuery, Result<GetCartWithLinesByUserIdDto>>
+    public class GetCartWithLinesQuery : IRequest<Result<GetCartWithLinesDto>>
+    {
+        public int CartId { get; set; }
+    }
+    
+    public sealed class Handler(IUnitOfWork unitOfWork) : IRequestHandler<GetCartWithLinesQuery, Result<GetCartWithLinesDto>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
-        public async Task<Result<GetCartWithLinesByUserIdDto>> Handle(GetCartWithLinesByUserIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<GetCartWithLinesDto>> Handle(GetCartWithLinesQuery request, CancellationToken cancellationToken)
         {
-           
-            var cart = await _unitOfWork.CartRepository.GetCartWithLinesAsync(request.UserId);
-
+            var cart = await _unitOfWork.CartRepository.GetCartWithLinesAsync(request.CartId);
             if (cart == null)
             {
-                return new Result<GetCartWithLinesByUserIdDto>()
+                return new Result<GetCartWithLinesDto>()
                 {
-                    Errors = { "User's cart not found" },
+                    Errors = { "Cartline's not found" },
                     IsSuccess = false
                 };
             }
-
-           
-            var response = new GetCartWithLinesByUserIdDto
+            var response = new GetCartWithLinesDto
             {
                 UserId = cart.UserId,
                 CartLines = cart.CartLines.Select(cl => new Domain.Entities.CartLine
@@ -43,8 +38,7 @@ public class GetCartWithLinesByUserId
                     UnitPrice = cl.UnitPrice
                 }).ToList()
             };
-
-            return new Result<GetCartWithLinesByUserIdDto>
+            return new Result<GetCartWithLinesDto>
             {
                 Data = response,
                 Errors = new List<string>(),
@@ -53,4 +47,3 @@ public class GetCartWithLinesByUserId
         }
     }
 }
-

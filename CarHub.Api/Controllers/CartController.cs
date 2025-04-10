@@ -4,55 +4,78 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CarHub.Api.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CartController(ISender sender) : ControllerBase
-    {
-        private readonly ISender _sender = sender;
+namespace CarHub.Api.Controllers;
 
-        [HttpPost]
-        public async Task<IActionResult> AddCart([FromBody] Application.CQRS.Cart.Handlers.AddCart.AddCartCommand request)
+[Route("api/[controller]")]
+[ApiController]
+public class CartController(ISender sender) : ControllerBase
+{
+    private readonly ISender _sender = sender;
+
+    [HttpPost]
+    public async Task<IActionResult> AddCart([FromBody] Application.CQRS.Cart.Handlers.AddCart.AddCartCommand request)
+    {
+        var result = await _sender.Send(request);
+        return Ok(result);
+    }
+    [HttpPost("AddProductToCart")]
+    public async Task<IActionResult> AddProductToCart([FromBody] AddProductToCart.AddProductToCartCommand request)
+    {
+        var result = await _sender.Send(request);
+        if (result.IsSuccess)
         {
-            var result = await _sender.Send(request);
             return Ok(result);
         }
-        [HttpPost("add-product")]
-        public async Task<IActionResult> AddProductToCart([FromBody] AddProductToCart.AddProductToCartCommand request)
+        return BadRequest(result);
+    }
+
+    [HttpDelete("ClearCartLines")]
+    public async Task<IActionResult> ClearCartLines([FromBody] ClearCartLineCommand request)
+    {
+        var result = await _sender.Send(request);
+
+        if (result.IsSuccess)
         {
-            var result = await _sender.Send(request);
-            if (result.IsSuccess)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
+            return Ok(new { message = "Cart lines cleared successfully" });
         }
 
-        [HttpDelete("ClearCartLines")]
-        public async Task<IActionResult> ClearCartLines([FromBody] ClearCartLineCommand request)
+        return BadRequest(new { errors = result.Errors });
+    }
+
+    [HttpGet("GetCartWithLinesByUserId")]
+    public async Task<IActionResult> GetCartWithLinesByUserId([FromQuery] int userId)
+    {
+        var request = new GetCartWithLinesByUserId.GetCartWithLinesByUserIdQuery { UserId = userId };
+        var result = await _sender.Send(request);
+        if (!result.IsSuccess)
         {
-            var result = await _sender.Send(request);
-
-            if (result.IsSuccess)
-            {
-                return Ok(new { message = "Cart lines cleared successfully" });
-            }
-
-            return BadRequest(new { errors = result.Errors });
+            return NotFound(result.Errors);
         }
+        return Ok(result.Data);
+    }
 
-        [HttpGet("GetCartWithLinesByUserId")]
-        public async Task<IActionResult> GetCartWithLinesByUserId([FromQuery] int userId)
+    [HttpGet("GetCartWithLines")]
+    public async Task<IActionResult> GetCartWithLines([FromQuery] int cartId)
+    {
+        var request = new GetCartWithLines.GetCartWithLinesQuery { CartId = cartId };
+        var result = await _sender.Send(request);
+
+        if (!result.IsSuccess)
+            return NotFound(result.Errors);
+
+        return Ok(result.Data);
+    }
+    [HttpDelete("RemoveProductFromCart")]
+    public async Task<IActionResult> RemoveProductFromCart([FromBody] RemoveProductFromCart.RemoveProductFromCartCommand request)
+    {
+        var result = await _sender.Send(request);
+        if (result.IsSuccess)
         {
-            var request = new GetCartWithLinesByUserId.GetCartWithLinesByUserIdCommand { UserId = userId };
-            var result = await _sender.Send(request);
-            if (!result.IsSuccess)
-            {
-                return NotFound(result.Errors);
-            }
-            return Ok(result.Data);
+            return Ok(new { message = "Product removed from cart successfully" });
         }
+        return BadRequest(result);
 
     }
+  
+
 }
