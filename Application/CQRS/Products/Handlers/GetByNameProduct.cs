@@ -2,40 +2,49 @@
 using Common.GlobalResponses.Generics;
 using MediatR;
 using Repository.Common;
+using AutoMapper;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
-namespace Application.CQRS.Products.Handlers;
-
-public class GetByNameProduct
+namespace Application.CQRS.Products.Handlers
 {
-    public class ProductGetByNameCommand : IRequest<Result<GetByNameProductDto>>
+    public class GetByNameProduct
     {
-        public string Name { get; set; }
-    }
-
-    public class Handler(IUnitOfWork unitOfWork) : IRequestHandler<ProductGetByNameCommand, Result<GetByNameProductDto>>
-    {
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
-        public async Task<Result<GetByNameProductDto>> Handle(ProductGetByNameCommand request, CancellationToken cancellationToken)
+        public class ProductGetByNameQuery : IRequest<Result<List<GetByNameProductDto>>>
         {
-            var currentproduct = await _unitOfWork.ProductRepository.GetByNameAsync(request.Name);
-            if (currentproduct == null)
+            public string Name { get; set; }
+        }
+
+        public class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<ProductGetByNameQuery, Result<List<GetByNameProductDto>>>
+        {
+            private readonly IUnitOfWork _unitOfWork = unitOfWork;
+            private readonly IMapper _mapper = mapper;
+
+            public async Task<Result<List<GetByNameProductDto>>> Handle(ProductGetByNameQuery request, CancellationToken cancellationToken)
             {
-                return new Result<GetByNameProductDto>() { Errors = ["Product tapilmadi"], IsSuccess = true };
+              
+                var productsQuery = _unitOfWork.ProductRepository
+                    .GetAll()
+                    .Where(p => p.Name.ToLower().Contains(request.Name.ToLower()));
+
+                var products = await productsQuery.ToListAsync();
+
+                if (products == null || !products.Any())
+                {
+                    return new Result<List<GetByNameProductDto>>()
+                    {
+                        Errors = { "No products found matching the search criteria." },
+                        IsSuccess = false
+                    };
+                }
+                var response = _mapper.Map<List<GetByNameProductDto>>(products);
+                return new Result<List<GetByNameProductDto>>
+                {
+                    Data = response,
+                    Errors =  { },
+                    IsSuccess = true
+                };
             }
-            GetByNameProductDto response = new()
-            {
-                Id = currentproduct.Id,
-                Name = currentproduct.Name,
-                Description = currentproduct.Description,
-                ImagePath = currentproduct.ImagePath,
-                UnitPrice = currentproduct.UnitPrice,
-                UnitsInStock = currentproduct.UnitsInStock
-
-
-            };
-
-            return new Result<GetByNameProductDto> { Data = response, Errors = [], IsSuccess = true };
         }
     }
 }

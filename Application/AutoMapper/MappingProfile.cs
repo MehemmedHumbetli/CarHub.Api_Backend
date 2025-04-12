@@ -22,6 +22,7 @@ using static Application.CQRS.Cart.Handlers.GetCartWithLines;
 using static Application.CQRS.Cart.Handlers.UpdateProductQuantityInCart;
 using Application.CQRS.Cart.Queries;
 using static Application.CQRS.Cart.Queries.GetCartTotalPrice;
+using static Application.CQRS.Products.Handlers.GetByNameProduct;
 
 
 namespace Application.AutoMapper;
@@ -60,7 +61,7 @@ public class MappingProfile : Profile
         CreateMap<UpdateProductDto, Product>();
 
         CreateMap<Product, GetByNameProductDto>();
-        CreateMap<GetByNameProductDto, Product>();
+        CreateMap<ProductGetByNameQuery, Product>();
 
         CreateMap<Product , ProductResponseDto>();
         CreateMap<ProductResponseDto, Product>();

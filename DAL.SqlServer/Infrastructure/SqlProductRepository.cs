@@ -47,10 +47,10 @@ public class SqlProductRepository(string connectionString, AppDbContext context)
 
     }
 
-    public Task<Product> GetByNameAsync(string productName)
+    public Task<List<Product>> GetByNameAsync(string productName)
     {
-        var product = _context.Products.FirstOrDefaultAsync(p => p.Name == productName);
-        return product;
+        var products = _context.Products.Where(p => p.Name.Contains(productName)).ToListAsync();
+        return products;
     }
 
     public async Task<List<Product>> GetProductsByPriceRange(decimal minPrice, decimal maxPrice)

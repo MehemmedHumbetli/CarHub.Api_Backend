@@ -72,7 +72,7 @@ public class ProductController(ISender sender) : ControllerBase
     [HttpGet("GetByNameProduct")]
     public async Task<IActionResult> GetByNameProduct([FromQuery] string name)
     {
-        var request = new GetByNameProduct.ProductGetByNameCommand { Name = name };
+        var request = new GetByNameProduct.ProductGetByNameQuery { Name = name };
         var result = await _sender.Send(request);
         if (!result.IsSuccess)
         {
@@ -82,13 +82,6 @@ public class ProductController(ISender sender) : ControllerBase
     }
 
     [HttpGet("GetProductsByPriceRange")]
-    //public async Task<IActionResult> GetProductsByPriceRange([FromQuery] decimal minPrice, [FromQuery] decimal maxPrice)
-    //{
-    //    var query = new GetProductsByPriceRange.ProductRangeCommand(minPrice, maxPrice);
-    //    var products = await _sender.Send(query);
-    //    return Ok(products);
-    //}
-
     public async Task<IActionResult> GetProductsByPriceRange([FromQuery] decimal maxPrice)
     {
         var query = new GetProductsByPriceRange.ProductRangeCommand(maxPrice);

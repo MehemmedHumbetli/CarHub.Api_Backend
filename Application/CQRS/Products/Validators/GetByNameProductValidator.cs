@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.CQRS.Products.Validators;
 
-public class GetByNameProductValidator : AbstractValidator<GetByNameProduct.ProductGetByNameCommand>
+public class GetByNameProductValidator : AbstractValidator<GetByNameProduct.ProductGetByNameQuery>
 {
     public GetByNameProductValidator()
     {
