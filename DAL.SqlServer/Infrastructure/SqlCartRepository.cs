@@ -95,8 +95,38 @@ public class SqlCartRepository(string connectionString , AppDbContext context) :
         }
     }
 
-    public void Update(Cart cart)
+    public async Task UpdateProductQuantityInCartAsync(int cartId, int productId, bool increase)
     {
-        throw new NotImplementedException();
+        var cart = await _context.Carts.Include(c => c.CartLines).FirstOrDefaultAsync(c => c.Id == cartId && !c.IsDeleted);
+
+        if (cart == null)
+            throw new Exception("Cart not found");
+
+        var cartLine = cart.CartLines.FirstOrDefault(cl => cl.ProductId == productId && !cl.IsDeleted);
+
+        if (cartLine == null)
+            throw new Exception("Product not found in cart");
+
+        if (increase)
+        {
+            cartLine.Quantity++;
+        }
+        else
+        {
+            cartLine.Quantity--;
+
+            if (cartLine.Quantity <= 0)
+            {
+                cartLine.IsDeleted = true;
+                cartLine.DeletedDate = DateTime.Now;
+                cartLine.DeletedBy = 0;
+            }
+        }
+
+        
+        //cartLine.TotalPrice = cartLine.Quantity * cartLine.UnitPrice;
+
+        await _context.SaveChangesAsync();
     }
+
 }

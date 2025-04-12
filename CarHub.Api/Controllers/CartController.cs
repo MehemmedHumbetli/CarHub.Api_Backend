@@ -1,4 +1,5 @@
 ﻿using Application.CQRS.Cart.Handlers;
+using Application.CQRS.Cart.Queries;
 using Application.CQRS.Carts.Handlers;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -76,6 +77,27 @@ public class CartController(ISender sender) : ControllerBase
         return BadRequest(result);
 
     }
-  
 
+    [HttpPut("UpdateProductQuantityInCart")]
+    public async Task<IActionResult> UpdateProductQuantity([FromBody] UpdateProductQuantityInCart.UpdateProductQuantityInCartCommand request)
+    {
+        var result = await _sender.Send(request);
+
+        if (result.IsSuccess)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+
+    [HttpGet("GetCartTotalPrice")]
+    public async Task<IActionResult> GetCartTotalPrice([FromQuery] int cartId)
+    {
+        var request = new GetCartTotalPrice.GetCartTotalPriceQuery(cartId);
+        var result = await _sender.Send(request);
+
+        if (!result.IsSuccess)
+            return NotFound(result.Errors);
+
+        return Ok(result.Data);
+    }
 }
