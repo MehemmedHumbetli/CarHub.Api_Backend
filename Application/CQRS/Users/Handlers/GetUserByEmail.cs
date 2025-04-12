@@ -36,7 +36,7 @@ public class GetUserByEmail
                 Surname = currentUser.Surname,
                 Email = currentUser.Email,
                 Phone = currentUser.Phone,
-                UserRole = currentUser.UserRole,
+                UserRole = currentUser.UserRole.ToString(),
                 Favorites = currentUser.Favorites,
                 UserCars = currentUser.UserCars,
                 UserImagePath = currentUser.UserImagePath,
