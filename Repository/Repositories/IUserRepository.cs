@@ -10,6 +10,7 @@ public interface IUserRepository
     IQueryable<User> GetAll();
     Task<User> GetByIdAsync(int id);
     Task<User> GetUserByEmailAsync(string email);
-    Task<List<Car>> GetUserFavoritesAsync(int userId);     
+    Task<List<Car>> GetUserFavoritesAsync(int userId);
+    Task<List<Car>> GetUserCarAsync(int userId);
   
 }
