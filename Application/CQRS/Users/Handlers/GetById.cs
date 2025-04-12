@@ -39,7 +39,7 @@ public class GetById
                 Surname = currentUser.Surname,
                 Email = currentUser.Email,
                 Phone = currentUser.Phone,
-                UserRole = currentUser.UserRole,
+                UserRole = currentUser.UserRole.ToString(),
                 FavoriteCarIds = currentUser.Favorites.Select(f => f.CarId).ToList(),
                 UserCars = currentUser.UserCars,
                 UserImagePath = currentUser.UserImagePath,

@@ -80,6 +80,7 @@ public class UserController(ISender sender) : Controller
     }
 
     [HttpGet("GetUserCars")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetUserCars([FromQuery] GetUserCars.GetUserCarsQuery request)
     {
         return Ok(await _sender.Send(request));

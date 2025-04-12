@@ -45,11 +45,6 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
         user.DeletedBy = 0;
     }
 
-
-    //public async Task<IEnumerable<Car>> GetUserCarsAsync(int userId)
-    //{
-    //}
-
     public async Task<List<Car>> GetUserFavoritesAsync(int userId)
     {
         var cars = await _context.Cars
@@ -60,18 +55,13 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
         return cars;
     }
 
-    //public async Task RemoveUserCarAsync(int userId, int carId)
-    //{
-    //    using var connection = OpenConnection();
-    //    string sql = "DELETE FROM UserCars WHERE UserId = @UserId AND CarId = @CarId";
-    //    await connection.ExecuteAsync(sql, new { UserId = userId, CarId = carId });
-    //}
+    public async Task<List<Car>> GetUserCarAsync(int userId)
+    {
+        var cars = await _context.Cars
+            .Where(c => c.CreatedBy == userId)
+            .Include(c => c.CarImagePaths)
+            .ToListAsync();
 
-
-    //public async Task AddUserCarAsync(int userId, Car car)
-    //{
-    //    car.UserId = userId;
-
-    //    await _context.Cars.AddAsync(car);
-    //}
+        return cars; 
+    }
 }

@@ -10,10 +10,10 @@ public class GetUserFavoritesDto
     public string Model { get; set; }
     public int Year { get; set; }
     public int Price { get; set; }
-    public FuelTypes Fuel { get; set; }
-    public TransmissionTypes Transmission { get; set; }
+    public string Fuel { get; set; }
+    public string Transmission { get; set; }
     public double Miles { get; set; }
-    public BodyTypes Body { get; set; }
+    public string Body { get; set; }
     public string BodyTypeImage { get; set; }
     public string Color { get; set; }
     public string VIN { get; set; }
