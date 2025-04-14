@@ -41,7 +41,7 @@ public class GetById
                 Phone = currentUser.Phone,
                 UserRole = currentUser.UserRole.ToString(),
                 FavoriteCarIds = currentUser.Favorites.Select(f => f.CarId).ToList(),
-                UserCars = currentUser.UserCars,
+                //UserCars = currentUser.UserCars,
                 UserImagePath = currentUser.UserImagePath,
             
             };

@@ -2,9 +2,9 @@
 using Common.GlobalResponses.Generics;
 using MediatR;
 using Repository.Common;
+using AutoMapper;
 
 namespace Application.CQRS.Carts.Handlers;
-
 
 public class GetCartWithLinesByUserId
 {
@@ -13,44 +13,31 @@ public class GetCartWithLinesByUserId
         public int UserId { get; set; }
     }
 
-    public class Handler(IUnitOfWork unitOfWork) : IRequestHandler<GetCartWithLinesByUserIdQuery, Result<GetCartWithLinesByUserIdDto>>
+    public class Handler(IUnitOfWork unitOfWork, IMapper mapper): IRequestHandler<GetCartWithLinesByUserIdQuery, Result<GetCartWithLinesByUserIdDto>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<Result<GetCartWithLinesByUserIdDto>> Handle(GetCartWithLinesByUserIdQuery request, CancellationToken cancellationToken)
         {
-           
-            var cart = await _unitOfWork.CartRepository.GetCartWithLinesAsync(request.UserId);
+            var cart = await _unitOfWork.CartRepository.GetCartWithLinesByUserId(request.UserId);
 
             if (cart == null)
             {
-                return new Result<GetCartWithLinesByUserIdDto>()
+                return new Result<GetCartWithLinesByUserIdDto>
                 {
                     Errors = { "User's cart not found" },
                     IsSuccess = false
                 };
             }
 
-           
-            var response = new GetCartWithLinesByUserIdDto
-            {
-                UserId = cart.UserId,
-                CartLines = cart.CartLines.Select(cl => new Domain.Entities.CartLine
-                {
-                    Id = cl.Id,
-                    ProductId = cl.ProductId,
-                    Quantity = cl.Quantity,
-                    UnitPrice = cl.UnitPrice
-                }).ToList()
-            };
+            var response = _mapper.Map<GetCartWithLinesByUserIdDto>(cart);
 
             return new Result<GetCartWithLinesByUserIdDto>
             {
                 Data = response,
-                Errors = new List<string>(),
                 IsSuccess = true
             };
         }
     }
 }
-
