@@ -137,5 +137,8 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
         return carDictionary.Values;
     }
 
-
+    public IQueryable<BodyTypes> GetAllBodyTypes()
+    {
+        throw new NotImplementedException();
+    }
 }

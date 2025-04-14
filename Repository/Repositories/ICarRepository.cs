@@ -10,6 +10,7 @@ public interface ICarRepository
     void Update(Car car);
     Task Remove(int id);
     IQueryable<Car> GetAll();
+    IQueryable<BodyTypes> GetAllBodyTypes();
     Task<Car> GetByIdAsync(int id);
 
     //Dapper Operations
