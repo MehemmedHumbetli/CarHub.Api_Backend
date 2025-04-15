@@ -13,7 +13,6 @@ public class CarController(ISender sender) : Controller
 {
     private readonly ISender _sender = sender;
 
-
     [HttpPost]
     public async Task<IActionResult> AddAsync([FromBody] Application.CQRS.Cars.Handlers.CarAdd.CarAddCommand request)
     {
@@ -39,6 +38,19 @@ public class CarController(ISender sender) : Controller
         var result = await _sender.Send(new CarGetAll.GetAllCarsQuery());
 
         if (!result.IsSuccess)
+        {
+            return NotFound(result.Errors);
+        }
+
+        return Ok(result.Data);
+    }
+
+    [HttpGet("GetAllBodyTypes")]
+    public async Task<IActionResult> GetAllBodyTypes()
+    {
+        var result = await _sender.Send(new GetAllBodyTypes.GetAllBodyTypesQuery());
+
+        if(!result.IsSuccess)
         {
             return NotFound(result.Errors);
         }

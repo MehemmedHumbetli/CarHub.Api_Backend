@@ -137,8 +137,11 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
         return carDictionary.Values;
     }
 
-    public IQueryable<BodyTypes> GetAllBodyTypes()
+    public List<(int Id, string Name)> GetAllBodyTypes()
     {
-        throw new NotImplementedException();
+        return Enum.GetValues(typeof(BodyTypes))
+        .Cast<BodyTypes>()
+        .Select(bt => ((int)bt, bt.ToString()))
+        .ToList();
     }
 }

@@ -43,7 +43,6 @@ public class CarGetById
                 CarImagePaths = currentCar.CarImagePaths,
                 Color = currentCar.Color,
                 Body = currentCar.Body.ToString(),
-                BodyTypeImage = currentCar.BodyTypeImage,
                 VIN = currentCar.VIN,
                 Text = currentCar.Text,
                 CreatedBy = currentCar.CreatedBy,

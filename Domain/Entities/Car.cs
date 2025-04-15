@@ -15,7 +15,6 @@ public class Car : BaseEntity
     public double Miles { get; set; }
     public List<CarImage> CarImagePaths { get; set; } = new List<CarImage>();
     public BodyTypes Body { get; set; }
-    public string BodyTypeImage { get; set; }
     public string Color { get; set; }
     public string VIN { get; set; }
     public string Text { get; set; }
@@ -26,6 +25,5 @@ public class Car : BaseEntity
     public Car()
     {
         BrandImagePath = "None";
-        BodyTypeImage = "None";
     }
 }
