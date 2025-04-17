@@ -11,7 +11,7 @@ namespace Repository.Repositories
         Task DeleteAsync(int id);
 
         Task<Category> GetByNameAsync(string name);
-        Task<IEnumerable<Category>> GetCategoriesWithProducts(); // category icinde ki produclarnan birlikde getirir
+        Task<IEnumerable<Category>> GetCategoriesWithProducts(); 
         
     }
 }

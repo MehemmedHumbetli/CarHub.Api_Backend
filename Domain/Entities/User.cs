@@ -14,4 +14,9 @@ public class User : BaseEntity
     public List<UserFavorite> Favorites { get; set; } = new List<UserFavorite>();  
     public List<Car> UserCars { get; set; } = new List<Car>();
     public string UserImagePath { get; set; }
+
+    //For SignalR
+    public List<Message> SentMessages { get; set; } = new();
+    public List<Message> ReceivedMessages { get; set; } = new();
+
 }

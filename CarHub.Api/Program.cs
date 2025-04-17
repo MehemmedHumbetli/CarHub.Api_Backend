@@ -6,6 +6,7 @@ using CarHub.Api.Security;
 
 using Application.Security;
 using CarHub.Api.Infrastructure;
+using SignalR.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSwaggerService();
@@ -47,11 +49,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("AllowAllWithCredentials"); // CORS'u aktif et
+app.UseCors("AllowAllWithCredentials"); 
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<MessageHub>("/messageHub");
+
 //app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.Run();

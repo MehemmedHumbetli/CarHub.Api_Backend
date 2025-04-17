@@ -14,9 +14,9 @@ public interface IProductRepository
 
     #endregion
 
-    public Task<List<Product>> GetByNameAsync(string productName); // verilen ad-a uygun olan mehsulu qaytarir
-    IEnumerable<Product> GetByCategoryId(int categoryId); // verilen kateqoriya id-sine uygun olan mehsullari qaytarir
+    public Task<List<Product>> GetByNameAsync(string productName); 
+    IEnumerable<Product> GetByCategoryId(int categoryId); 
 
-    Task<List<Product>> GetProductsByPriceRange(decimal minPrice, decimal maxPrice); // verilen qiymeet araligina uygun olan mehsullari qaytarir
+    Task<List<Product>> GetProductsByPriceRange(decimal minPrice, decimal maxPrice); 
 
 }
