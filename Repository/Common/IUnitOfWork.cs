@@ -4,6 +4,7 @@ namespace Repository.Common;
 
 public interface IUnitOfWork
 {
+    public IChatMessageRepository ChatMessageRepository { get; }
     public IFavoriteRepository FavoriteRepository {  get; } 
     public ICategoryRepository CategoryRepository { get; }
     public IProductRepository ProductRepository { get; }

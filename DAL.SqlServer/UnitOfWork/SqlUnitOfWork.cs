@@ -19,6 +19,7 @@ public class SqlUnitOfWork(string connectionString, AppDbContext context) : IUni
     public SqlRefreshTokenRepository _refreshTokenRepository;
     public SqlCartRepository _cartRepository;
     public SqlFavoriteRepository _favoriteRepository;
+    public SqlChatMessageRepository _chatMessageRepository;
 
     public ICategoryRepository CategoryRepository => _categoryRepository ?? new SqlCategoryRepository(_connectionString, _context);
     public IProductRepository ProductRepository => _productRepository ?? new SqlProductRepository(_connectionString, _context);
@@ -27,6 +28,7 @@ public class SqlUnitOfWork(string connectionString, AppDbContext context) : IUni
     public IRefreshTokenRepository RefreshTokenRepository => _refreshTokenRepository ?? new SqlRefreshTokenRepository(_context);
     public ICartRepository CartRepository => _cartRepository ??= new SqlCartRepository(_connectionString, _context);
     public IFavoriteRepository FavoriteRepository => _favoriteRepository ?? new SqlFavoriteRepository(_context);
+    public IChatMessageRepository ChatMessageRepository => _chatMessageRepository ?? new SqlChatMessageRepository(_context);
 
     public async Task CompleteAsync()
     {

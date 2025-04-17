@@ -7,6 +7,10 @@ using CarHub.Api.Security;
 using Application.Security;
 using CarHub.Api.Infrastructure;
 using SignalR.Hubs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,17 +39,6 @@ builder.Services.AddApplicationServices();
 builder.Services.AddAuthenticationService(builder.Configuration);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAllWithCredentials",
-        policy => policy.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
-});
-
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -56,9 +49,11 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAllWithCredentials"); 
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.MapHub<MessageHub>("/messageHub");
+app.MapHub<ChatHub>("/chathub");
 
 //app.UseMiddleware<ExceptionHandlerMiddleware>();
 

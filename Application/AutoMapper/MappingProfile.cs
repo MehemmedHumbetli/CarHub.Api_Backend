@@ -23,6 +23,7 @@ using static Application.CQRS.Cart.Handlers.UpdateProductQuantityInCart;
 using Application.CQRS.Cart.Queries;
 using static Application.CQRS.Cart.Queries.GetCartTotalPrice;
 using static Application.CQRS.Products.Handlers.GetByNameProduct;
+using Application.CQRS.SignalR.ResponseDtos;
 
 
 namespace Application.AutoMapper;
@@ -102,7 +103,16 @@ public class MappingProfile : Profile
         CreateMap<UpdateProductQuantityInCartCommand ,Cart>();
 
         CreateMap<Cart, GetTotalPriceDto>();
-       
+
+
+        //SignalR
+
+        CreateMap<ChatMessage, ChatMessageDto>();
+        CreateMap<ChatMessage, ChatMessageDto>()
+            .ForMember(dest => dest.SenderId, opt => opt.MapFrom(src => src.SenderId))
+            .ForMember(dest => dest.ReceiverId, opt => opt.MapFrom(src => src.ReceiverId))
+            .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text))
+            .ForMember(dest => dest.SentAt, opt => opt.MapFrom(src => src.SentAt));
 
     }
 }

@@ -2,9 +2,11 @@ using Application.AutoMapper;
 
 using Application.PipelineBehaviour;
 using AutoMapper;
+using DAL.SqlServer.Infrastructure;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Repository.Repositories;
 using System.Reflection;
 
 
@@ -29,7 +31,7 @@ public static class DependencyInjections
         services.AddMediatR(Assembly.GetExecutingAssembly());
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehaviour<,>));
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
+        services.AddScoped<IChatMessageRepository, SqlChatMessageRepository>();
         return services;
     }
 }

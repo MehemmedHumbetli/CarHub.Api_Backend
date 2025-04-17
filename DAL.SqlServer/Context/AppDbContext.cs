@@ -13,24 +13,6 @@ public class AppDbContext : DbContext
     {
     }
     
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<Message>()
-            .HasOne(m => m.Sender)
-            .WithMany(u => u.SentMessages)
-            .HasForeignKey(m => m.SenderId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Message>()
-            .HasOne(m => m.Receiver)
-            .WithMany(u => u.ReceivedMessages)
-            .HasForeignKey(m => m.ReceiverId)
-            .OnDelete(DeleteBehavior.Restrict);
-    }
-
     public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products { get; set; }
 
@@ -43,7 +25,6 @@ public class AppDbContext : DbContext
 
     public DbSet<UserFavorite> UserFavorites { get; set; }
 
-    public DbSet<Message> Messages { get; set; }
-
+    public DbSet<ChatMessage> ChatMessages { get; set; }
 
 }
