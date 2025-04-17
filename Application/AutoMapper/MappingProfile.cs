@@ -94,11 +94,9 @@ public class MappingProfile : Profile
         CreateMap<AddProductToCartCommand, Cart > ();
         CreateMap<Cart, AddProductToCartDto>();
 
-        CreateMap<Cart, GetCartWithLinesByUserIdDto>();
-        CreateMap<GetCartWithLinesByUserIdQuery, Cart>();
+        CreateMap<Cart, GetCartWithLinesByUserIdDto>().ForMember(dest => dest.CartId, opt => opt.MapFrom(src => src.Id));
 
         CreateMap<Cart, GetCartWithLinesDto>();
-        CreateMap<GetCartWithLinesQuery, Cart>();
 
         CreateMap<Cart, UpdateProductQuantityInCartDto>();
         CreateMap<UpdateProductQuantityInCartCommand ,Cart>();
