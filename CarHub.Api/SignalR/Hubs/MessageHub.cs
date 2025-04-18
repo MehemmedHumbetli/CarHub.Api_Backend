@@ -1,6 +1,4 @@
-﻿
-
-namespace SignalR.Hubs;
+﻿namespace SignalR.Hubs;
 
 using Microsoft.AspNetCore.SignalR;
 using MediatR;
@@ -15,13 +13,43 @@ public class ChatHub : Hub
         _mediator = mediator;
     }
 
+    public override async Task OnConnectedAsync()
+    {
+        var userId = Context.UserIdentifier;
+
+        if (!string.IsNullOrEmpty(userId))
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+        }
+
+        await base.OnConnectedAsync();
+    }
+
+    public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+        var userId = Context.UserIdentifier;
+
+        if (!string.IsNullOrEmpty(userId))
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, userId);
+        }
+
+        await base.OnDisconnectedAsync(exception);
+    }
+
     public async Task SendMessage(string receiverUserId, string message)
     {
-        var senderUserId = Context.UserIdentifier; 
+        var senderUserId = Context.UserIdentifier;
+
+        if (string.IsNullOrEmpty(senderUserId))
+        {
+            await Clients.Caller.SendAsync("Error", "İstifadəçi identifikatoru tapılmadı");
+            return;
+        }
 
         var sendMessageCommand = new SendMessage.SendMessageCommand
         {
-            SenderId = int.Parse(senderUserId), 
+            SenderId = int.Parse(senderUserId),
             ReceiverId = int.Parse(receiverUserId),
             Text = message
         };
@@ -30,7 +58,9 @@ public class ChatHub : Hub
 
         if (result.IsSuccess)
         {
-            await Clients.User(receiverUserId).SendAsync("ReceiveMessage", senderUserId, message);
+            await Clients.Group(senderUserId).SendAsync("ReceiveMessage", senderUserId, receiverUserId, message);
+            await Clients.Group(receiverUserId).SendAsync("ReceiveMessage", senderUserId, receiverUserId, message);
+
         }
         else
         {

@@ -17,11 +17,11 @@ public class ChatController(ISender sender) : ControllerBase
     private readonly ISender _sender = sender;
 
     [HttpPost("send")]
-    public async Task<ActionResult<Result<ChatMessageDto>>> SendMessage([FromBody] SendMessage.SendMessageCommand command)
-    {
-        var result = await _sender.Send(command);
-        return Ok(result);
-    }
+        public async Task<ActionResult<Result<ChatMessageDto>>> SendMessage([FromBody] SendMessage.SendMessageCommand command)
+        {
+            var result = await _sender.Send(command);
+            return Ok(result);
+        }
 
     [HttpGet("getMessages")]
     public async Task<IActionResult> GetMessages([FromQuery] int senderId, [FromQuery] int receiverId)

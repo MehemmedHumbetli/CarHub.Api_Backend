@@ -1,6 +1,6 @@
-﻿
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 namespace CarHub.Api.Security;
@@ -19,16 +19,33 @@ public static class AuthenticationService
             cfg.RequireHttpsMetadata = false;
             cfg.SaveToken = true;
 
-            cfg.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+            cfg.TokenValidationParameters = new TokenValidationParameters()
             {
                 ValidIssuer = configuration["JWT:ValidIssuer"],
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!)),
                 ValidAudience = configuration["JWT:ValidAudience"],
+                NameClaimType = ClaimTypes.NameIdentifier
+
                 //ValidateIssuer = false,
                 //ValidateIssuerSigningKey = false,
-                //ValidateAudience=false
+                //ValidateAudience = false
             };
-            //cfg.IncludeErrorDetails=true;
+
+            cfg.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    var accessToken = context.Request.Query["access_token"];
+                    var path = context.HttpContext.Request.Path;
+
+                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chathub"))
+                    {
+                        context.Token = accessToken;
+                    }
+
+                    return Task.CompletedTask;
+                }
+            };
         });
 
         return service;
