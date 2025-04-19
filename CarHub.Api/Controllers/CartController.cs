@@ -70,12 +70,13 @@ public class CartController(ISender sender) : ControllerBase
     public async Task<IActionResult> RemoveProductFromCart([FromBody] RemoveProductFromCart.RemoveProductFromCartCommand request)
     {
         var result = await _sender.Send(request);
+
         if (result.IsSuccess)
         {
             return Ok(new { message = "Product removed from cart successfully" });
         }
-        return BadRequest(result);
 
+        return BadRequest(result);
     }
 
     [HttpPut("UpdateProductQuantityInCart")]

@@ -82,17 +82,21 @@ public class SqlCartRepository(string connectionString , AppDbContext context) :
 
     public async Task RemoveProductFromCartAsync(int cartId, int productId)
     {
-        
-        var cart = await _context.Carts.Include(c => c.CartLines).FirstOrDefaultAsync(c => c.Id == cartId);
-        var cartLine = cart?.CartLines.FirstOrDefault(cl => cl.ProductId == productId);
+        var cart = await _context.Carts
+            .Include(c => c.CartLines)
+            .FirstOrDefaultAsync(c => c.Id == cartId);
 
-        if (cartLine != null)
-        {
-            cartLine.IsDeleted = true;
-            cartLine.DeletedDate = DateTime.Now;
-            cartLine.DeletedBy = 0; 
-            await _context.SaveChangesAsync();
-        }
+        if (cart == null)
+            throw new Exception("Cart not found");
+
+        var cartLine = cart.CartLines.FirstOrDefault(cl => cl.ProductId == productId);
+
+        if (cartLine == null)
+            throw new Exception("Product not found in cart");
+
+        _context.CartLines.Remove(cartLine); 
+
+        await _context.SaveChangesAsync();
     }
 
     public async Task UpdateProductQuantityInCartAsync(int cartId, int productId, bool increase)
