@@ -8,6 +8,14 @@ public static class AddSwaggerGenService
     {
         services.AddSwaggerGen(option =>
         {
+            // ✨ ƏSAS Swagger sənədləşmə
+            option.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "CarHub API",
+                Version = "v1"
+            });
+
+            // 🔐 JWT security configuration
             option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
@@ -24,11 +32,11 @@ public static class AddSwaggerGenService
                     {
                         Reference = new OpenApiReference
                         {
-                            Type=ReferenceType.SecurityScheme,
-                            Id="Bearer"
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
                         }
                     },
-                    new string[]{}
+                    new string[] {}
                 }
             });
         });
