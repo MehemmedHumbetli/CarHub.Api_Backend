@@ -44,7 +44,7 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
         return (await _context.Cars.Include(x => x.CarImagePaths).FirstOrDefaultAsync(u => u.Id == id));
     }
 
-    public async Task<IEnumerable<Car>> GetFilteredCarsAsync(Car filter)
+    public async Task<IEnumerable<Car>> GetFilteredCarsAsync(CarFilterModel filter)
     {
         await using var connection = OpenConnection();
 
@@ -68,17 +68,30 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
             parameters.Add("Model", filter.Model.ToLower() + "%");
         }
 
-        if (filter.Year > 0)
+        if (filter.MinYear.HasValue)
         {
-            sql += " AND c.Year = @Year";
-            parameters.Add("Year", filter.Year);
+            sql += " AND c.Year >= @MinYear";
+            parameters.Add("MinYear", filter.MinYear.Value);
         }
 
-        if (filter.Price > 0)
+        if (filter.MaxYear.HasValue)
         {
-            sql += " AND c.Price <= @Price";
-            parameters.Add("Price", filter.Price);
+            sql += " AND c.Year <= @MaxYear";
+            parameters.Add("MaxYear", filter.MaxYear.Value);
         }
+
+        if (filter.MinPrice.HasValue)
+        {
+            sql += " AND c.Price >= @MinPrice";
+            parameters.Add("MinPrice", filter.MinPrice.Value);
+        }
+
+        if (filter.MaxPrice.HasValue)
+        {
+            sql += " AND c.Price <= @MaxPrice";
+            parameters.Add("MaxPrice", filter.MaxPrice.Value);
+        }
+
 
         if (filter.Fuel != 0)
         {
@@ -92,11 +105,18 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
             parameters.Add("Transmission", (int)filter.Transmission);
         }
 
-        if (filter.Miles > 0)
+        if (filter.MinMiles.HasValue)
         {
-            sql += " AND c.Miles <= @Miles";
-            parameters.Add("Miles", filter.Miles);
+            sql += " AND c.Miles >= @MinMiles";
+            parameters.Add("MinMiles", filter.MinMiles.Value);
         }
+
+        if (filter.MaxMiles.HasValue)
+        {
+            sql += " AND c.Miles <= @MaxMiles";
+            parameters.Add("MaxMiles", filter.MaxMiles.Value);
+        }
+
 
         if (filter.Body != 0)
         {

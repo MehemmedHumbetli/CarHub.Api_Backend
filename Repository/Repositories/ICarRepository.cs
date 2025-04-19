@@ -14,7 +14,7 @@ public interface ICarRepository
     Task<Car> GetByIdAsync(int id);
 
     //Dapper Operations
-    Task<IEnumerable<Car>> GetFilteredCarsAsync(Car filter);
+    Task<IEnumerable<Car>> GetFilteredCarsAsync(CarFilterModel filter);
 
 
 }

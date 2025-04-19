@@ -19,11 +19,11 @@ public class GetFilteredCars
         public int? MaxYear { get; set; }
         public int? MinPrice { get; set; }
         public int? MaxPrice { get; set; }
-        public string? Fuel { get; set; }
-        public string? Transmission { get; set; }
+        public FuelTypes Fuel { get; set; }
+        public TransmissionTypes Transmission { get; set; }
         public double? MinMiles { get; set; }
         public double? MaxMiles { get; set; }
-        public string? Body { get; set; }
+        public BodyTypes Body { get; set; }
         public string? Color { get; set; }
     }
 
@@ -34,20 +34,24 @@ public class GetFilteredCars
 
         public async Task<Result<List<GetFilteredCarsAsyncDto>>> Handle(CarGetFilteredCommand request, CancellationToken cancellationToken)
         {
-            Car filter = new()
+            var filter = new CarFilterModel
             {
                 Brand = request.Brand,
                 Model = request.Model,
-                Year = request.MaxPrice ?? 0, 
-                Price = request.MaxPrice ?? 0,
-                Fuel = Enum.TryParse<FuelTypes>(request.Fuel, true, out var fuel) ? fuel : 0,
-                Transmission = Enum.TryParse<TransmissionTypes>(request.Transmission, true, out var transmission) ? transmission : 0,
-                Miles = request.MaxMiles ?? 0,
-                Body = Enum.TryParse<BodyTypes>(request.Body, true, out var body) ? body : 0,
+                MinYear = request.MinYear,
+                MaxYear = request.MaxYear,
+                MinPrice = request.MinPrice,
+                MaxPrice = request.MaxPrice,
+                Fuel = request.Fuel,
+                Transmission = request.Transmission,
+                MinMiles = request.MinMiles,
+                MaxMiles = request.MaxMiles,
+                Body = request.Body,
                 Color = request.Color
             };
 
             var filteredCars = await _unitOfWork.CarRepository.GetFilteredCarsAsync(filter);
+
 
             var response = _mapper.Map<List<GetFilteredCarsAsyncDto>>(filteredCars);
 
