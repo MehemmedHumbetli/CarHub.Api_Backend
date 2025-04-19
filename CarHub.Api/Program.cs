@@ -18,10 +18,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllWithCredentials", policy =>
     {
-        policy.AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials() 
-              .WithOrigins("http://localhost:5175"); 
+        policy
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .SetIsOriginAllowed(origin => origin.StartsWith("http://localhost"));
     });
 });
 
