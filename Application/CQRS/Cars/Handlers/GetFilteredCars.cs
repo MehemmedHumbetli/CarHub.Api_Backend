@@ -38,7 +38,7 @@ public class GetFilteredCars
             {
                 Brand = request.Brand,
                 Model = request.Model,
-                Year = request.MinYear ?? 0, 
+                Year = request.MaxPrice ?? 0, 
                 Price = request.MaxPrice ?? 0,
                 Fuel = Enum.TryParse<FuelTypes>(request.Fuel, true, out var fuel) ? fuel : 0,
                 Transmission = Enum.TryParse<TransmissionTypes>(request.Transmission, true, out var transmission) ? transmission : 0,

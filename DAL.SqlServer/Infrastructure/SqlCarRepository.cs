@@ -49,10 +49,10 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
         await using var connection = OpenConnection();
 
         var sql = @"
-        SELECT c.*, ci.* 
-        FROM Cars c
-        LEFT JOIN CarImage ci ON ci.CarId = c.Id
-        WHERE 1=1";
+    SELECT c.*, ci.* 
+    FROM Cars c
+    LEFT JOIN CarImage ci ON ci.CarId = c.Id
+    WHERE 1=1";
 
         var parameters = new DynamicParameters();
 

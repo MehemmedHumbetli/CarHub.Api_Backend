@@ -58,6 +58,7 @@ public class ChatHub : Hub
 
         if (result.IsSuccess)
         {
+            await Clients.User(receiverUserId).SendAsync("ReceiveTyping", senderUserId);
             await Clients.Group(senderUserId).SendAsync("ReceiveMessage", senderUserId, receiverUserId, message);
             await Clients.Group(receiverUserId).SendAsync("ReceiveMessage", senderUserId, receiverUserId, message);
 

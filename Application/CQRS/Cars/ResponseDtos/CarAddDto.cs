@@ -7,7 +7,6 @@ public class CarAddDto
 {
     public string Brand { get; set; }
     public string Model { get; set; }
-    public int Year { get; set; }
     public int Price { get; set; }
     public FuelTypes Fuel { get; set; }
     public TransmissionTypes Transmission { get; set; }
