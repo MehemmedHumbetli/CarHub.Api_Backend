@@ -1,40 +1,33 @@
-﻿//using Microsoft.AspNetCore.Http;
-//using System.IO;
-//using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
-//namespace Application.Services
-//{
-//    public static class UserImageService
-//    {
-//        public static async Task<string> SaveUserImageAsync(IFormFile userImage)
-//        {
-//            
-//            var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-//            var uploadDirectory = Path.Combine(desktopPath, "uploads"); 
+namespace Application.Services
+{
+    public static class ImageService
+    {
+        public static async Task<string> SaveImageAsync(IFormFile imageFile, string folderName = "uploads")
+        {
+            if (imageFile == null || imageFile.Length == 0)
+                throw new ArgumentException("Fayl göndərilməyib.");
 
-//            if (!Directory.Exists(uploadDirectory))
-//            {
-//                Directory.CreateDirectory(uploadDirectory);
-//            }
+            var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            var uploadPath = Path.Combine(wwwrootPath, folderName);
 
-//            var fileName = $"{Guid.NewGuid()}.jpg";
-//            var filePath = Path.Combine(uploadDirectory, fileName);
+            if (!Directory.Exists(uploadPath))
+                Directory.CreateDirectory(uploadPath);
 
-//            try
-//            {
-//                using (var stream = new FileStream(filePath, FileMode.Create))
-//                {
-//                    await userImage.CopyToAsync(stream);
-//                }
+            var fileExtension = Path.GetExtension(imageFile.FileName);
+            var fileName = $"{Guid.NewGuid()}{fileExtension}";
+            var filePath = Path.Combine(uploadPath, fileName);
 
-//                return Path.Combine("uploads", fileName);
-//            }
-//            catch (Exception ex)
-//            {
-//                throw new Exception($"Error saving image: {ex.Message}");
-//            }
-//        }
-//    }
-//}
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(stream);
+            }
 
-
+            return Path.Combine(folderName, fileName).Replace("\\", "/");
+        }
+    }
+}

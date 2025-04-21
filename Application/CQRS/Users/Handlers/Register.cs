@@ -19,8 +19,7 @@ public class Register
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Password { get; set; }
-        public string UserImagePath { get; set; }
-        //public IFormFile UserImage { get; set; }
+        public IFormFile UserImage { get; set; }
     }
 
     public sealed class Handler : IRequestHandler<RegisterCommand, Result<RegisterDto>>
@@ -45,12 +44,11 @@ public class Register
             user.PasswordHash = hashPassword;
             user.CreatedBy = user.Id;
 
-            
-            //if (request.UserImage != null)
-            //{
-            //    var userImagePath = await UserImageService.SaveUserImageAsync(request.UserImage);
-            //    user.UserImagePath = userImagePath;
-            //}
+            if (request.UserImage != null)
+            {
+                var userImagePath = await ImageService.SaveImageAsync(request.UserImage, "uploads");
+                user.UserImagePath = userImagePath;
+            }
 
             await _unitOfWork.UserRepository.RegisterAsync(user);
 

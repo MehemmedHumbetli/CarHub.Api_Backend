@@ -9,7 +9,6 @@ public class RegisterDto
     public string Surname { get; set; }
     public string Email { get; set; }
     public string Phone { get; set; }
-    public string UserImagePath { get; set; }
-    //public IFormFile UserImage { get; set; }
+    public IFormFile UserImage { get; set; }
 
 }

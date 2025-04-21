@@ -1,10 +1,12 @@
 ﻿using Application.CQRS.Cars.ResponseDtos;
-using AutoMapper;
+using Application.Services;
 using Common.GlobalResponses.Generics;
 using Domain.Entities;
 using Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Repository.Common;
+using System.Linq;
 
 namespace Application.CQRS.Cars.Handlers;
 
@@ -20,44 +22,78 @@ public class CarAdd
         public FuelTypes Fuel { get; set; }
         public TransmissionTypes Transmission { get; set; }
         public double Miles { get; set; }
-        public List<CarImage> CarImagePaths { get; set; }
+        public List<IFormFile> CarImagePaths { get; set; }
         public BodyTypes Body { get; set; }
         public string Color { get; set; }
         public string VIN { get; set; }
         public string Text { get; set; }
     }
 
-    public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<CarAddCommand, Result<CarAddDto>>
+    public sealed class Handler : IRequestHandler<CarAddCommand, Result<CarAddDto>>
     {
-        private readonly IMapper _mapper = mapper;
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public Handler(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+
         public async Task<Result<CarAddDto>> Handle(CarAddCommand request, CancellationToken cancellationToken)
         {
-            
-            var car = _mapper.Map<Car>(request);
-            car.UserId = request.UserId;
-            car.Brand = request.Brand;
-            car.Model = request.Model;
-            car.Year = request.Year;
-            car.Price = request.Price;
-            car.Fuel = request.Fuel;
-            car.Transmission = request.Transmission;
-            car.Miles = request.Miles;
-            car.CarImagePaths = request.CarImagePaths;
-            car.Body = request.Body;
-            car.Color = request.Color;
-            car.VIN = request.VIN;
-            car.Text = request.Text;
+            var car = new Car
+            {
+                UserId = request.UserId,
+                Brand = request.Brand,
+                Model = request.Model,
+                Year = request.Year,
+                Price = request.Price,
+                Fuel = request.Fuel,
+                Transmission = request.Transmission,
+                Miles = request.Miles,
+                Body = request.Body,
+                Color = request.Color,
+                VIN = request.VIN,
+                Text = request.Text,
+                CreatedBy = request.UserId,
+                CarImagePaths = new List<CarImage>()
+            };
 
-            car.CreatedBy = car.UserId;
+            if (request.CarImagePaths != null && request.CarImagePaths.Any())
+            {
+                foreach (var image in request.CarImagePaths)
+                {
+                    var imagePath = await ImageService.SaveImageAsync(image, "uploads/cars");
+
+                    car.CarImagePaths.Add(new CarImage
+                    {
+                        ImagePath = imagePath
+                    });
+                }
+            }
+
             await _unitOfWork.CarRepository.AddAsync(car);
 
-            var response = _mapper.Map<CarAddDto>(car);
+            var carAddDto = new CarAddDto
+            {
+                Id = car.Id,
+                Brand = car.Brand,
+                Model = car.Model,
+                Year = car.Year,
+                Price = car.Price,
+                Fuel = car.Fuel,
+                Transmission = car.Transmission,
+                Miles = car.Miles,
+                Body = car.Body,
+                Color = car.Color,
+                VIN = car.VIN,
+                Text = car.Text,
+                CarImagePaths = car.CarImagePaths.Select(ci => ci.ImagePath).ToList() // manual mapping for image paths
+            };
 
             return new Result<CarAddDto>
             {
-                Data = response,
-                Errors = [],
+                Data = carAddDto,
+                Errors = new List<string>(),
                 IsSuccess = true
             };
         }

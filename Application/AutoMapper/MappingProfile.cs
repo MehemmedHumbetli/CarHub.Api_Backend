@@ -24,6 +24,7 @@ using Application.CQRS.Cart.Queries;
 using static Application.CQRS.Cart.Queries.GetCartTotalPrice;
 using static Application.CQRS.Products.Handlers.GetByNameProduct;
 using Application.CQRS.SignalR.ResponseDtos;
+using Microsoft.AspNetCore.Http;
 
 
 namespace Application.AutoMapper;
@@ -81,8 +82,7 @@ public class MappingProfile : Profile
         CreateMap<Car, GetFilteredCarsAsyncDto>();
 
         //Car Mapping
-        CreateMap<CarAddCommand, Car>().ReverseMap();
-        CreateMap<Car, CarAddDto>();
+        
         CreateMap<Car, CarGetAllDto>();
         CreateMap<Car, CarUpdateDto>();
 

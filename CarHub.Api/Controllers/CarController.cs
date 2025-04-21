@@ -14,7 +14,7 @@ public class CarController(ISender sender) : Controller
     private readonly ISender _sender = sender;
 
     [HttpPost]
-    public async Task<IActionResult> AddAsync([FromBody] Application.CQRS.Cars.Handlers.CarAdd.CarAddCommand request)
+    public async Task<IActionResult> AddAsync([FromForm] Application.CQRS.Cars.Handlers.CarAdd.CarAddCommand request)
     {
         return Ok(await _sender.Send(request));
     }

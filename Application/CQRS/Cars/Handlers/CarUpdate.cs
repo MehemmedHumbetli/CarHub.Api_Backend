@@ -36,7 +36,8 @@ public class CarUpdate
         public async Task<Result<CarUpdateDto>> Handle(UpdateCarCommand request, CancellationToken cancellationToken)
         {
             var currentCar = await _unitOfWork.CarRepository.GetByIdAsync(request.CarId);
-            if (currentCar == null) throw new BadRequestException($"User does not exist with id {request.CarId}");
+            if (currentCar == null) throw new BadRequestException($"Car does not exist with id {request.CarId}");
+
 
             currentCar.Brand = request.Brand;
             currentCar.Model = request.Model;
@@ -45,19 +46,22 @@ public class CarUpdate
             currentCar.Fuel = request.Fuel;
             currentCar.Transmission = request.Transmission;
             currentCar.Miles = request.Miles;
-            currentCar.CarImagePaths = request.CarImagePaths;
             currentCar.Body = request.Body;
             currentCar.Color = request.Color;
             currentCar.VIN = request.VIN;
             currentCar.Text = request.Text;
-            
             currentCar.UpdatedBy = currentCar.UserId;
+
+            if (request.CarImagePaths != null && request.CarImagePaths.Any())
+            {
+                currentCar.CarImagePaths = request.CarImagePaths;
+            }
 
             _unitOfWork.CarRepository.Update(currentCar);
 
             var response = _mapper.Map<CarUpdateDto>(currentCar);
 
-            return new Result<CarUpdateDto>()
+            return new Result<CarUpdateDto>
             {
                 Data = response,
                 Errors = [],
@@ -65,4 +69,5 @@ public class CarUpdate
             };
         }
     }
+
 }

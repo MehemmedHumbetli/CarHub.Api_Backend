@@ -28,8 +28,8 @@ public class RegisterValidator : AbstractValidator<Register.RegisterCommand>
             .MaximumLength(20)
             .Matches(@"^\+?[0-9\s-]*$");
 
-        RuleFor(u => u.UserImagePath)
-            .MaximumLength(500);
+        //RuleFor(u => u.UserImagePath)
+        //    .MaximumLength(500);
 
     }
 }

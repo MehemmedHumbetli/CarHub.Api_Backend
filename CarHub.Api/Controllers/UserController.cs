@@ -17,13 +17,14 @@ public class UserController(ISender sender) : Controller
 
     [HttpPost("Register")]
     [AllowAnonymous]
-    public async Task<IActionResult> RegisterAsync([FromBody] Register.RegisterCommand request)
+    public async Task<IActionResult> RegisterAsync([FromForm] Register.RegisterCommand request)
     {
         return Ok(await _sender.Send(request));
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update([FromBody] Application.CQRS.Users.Handlers.Update.Command request)
+    [AllowAnonymous]
+    public async Task<IActionResult> Update([FromForm] Application.CQRS.Users.Handlers.Update.Command request)
     {
         return Ok(await _sender.Send(request));
     }
