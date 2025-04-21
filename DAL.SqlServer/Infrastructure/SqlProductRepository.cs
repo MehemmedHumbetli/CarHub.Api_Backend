@@ -4,6 +4,7 @@ using Domain.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Repository.Repositories;
+using System.Text.Json;
 
 namespace DAL.SqlServer.Infrastructure;
 
@@ -34,10 +35,24 @@ public class SqlProductRepository(string connectionString, AppDbContext context)
 
     public IEnumerable<Product> GetByCategoryId(int categoryId)
     {
-        var sql = @" SELECT p.* FROM Products p
-        WHERE p.CategoryId = @CategoryId";
+        var sql = @"SELECT Id, Name, CategoryId, UnitPrice, UnitsInStock, Description, ImagePath FROM Products WHERE CategoryId = @CategoryId";
         using var connection = OpenConnection();
-        return connection.Query<Product>(sql, new { CategoryId = categoryId });
+
+        var rawProducts = connection.Query<dynamic>(sql, new { CategoryId = categoryId });
+
+
+        var products = rawProducts.Select(p => new Product
+        {
+            Id = p.Id,
+            Name = p.Name,
+            CategoryId = p.CategoryId,
+            UnitPrice = p.UnitPrice,
+            UnitsInStock = p.UnitsInStock,
+            Description = p.Description,
+            ImagePath = JsonSerializer.Deserialize<List<string>>(p.ImagePath)
+        });
+
+        return products;
     }
 
     public Task<Product> GetByIdAsync(int id)
