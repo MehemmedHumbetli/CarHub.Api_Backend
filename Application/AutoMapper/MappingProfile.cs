@@ -25,6 +25,8 @@ using static Application.CQRS.Cart.Queries.GetCartTotalPrice;
 using static Application.CQRS.Products.Handlers.GetByNameProduct;
 using Application.CQRS.SignalR.ResponseDtos;
 using Microsoft.AspNetCore.Http;
+using Application.CQRS.Order.ResponseDtos;
+using static CreateOrder;
 
 
 namespace Application.AutoMapper;
@@ -113,6 +115,13 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.ReceiverId, opt => opt.MapFrom(src => src.ReceiverId))
             .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text))
             .ForMember(dest => dest.SentAt, opt => opt.MapFrom(src => src.SentAt));
+
+
+        //Order
+        CreateMap<Order, CreateOrderDto>();
+        CreateMap<CreateOrderCommand, Order>();
+
+        CreateMap<Order, OrderDto>();
 
     }
 }
