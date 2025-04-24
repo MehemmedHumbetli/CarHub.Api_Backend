@@ -2,45 +2,49 @@
 using Common.GlobalResponses.Generics;
 using MediatR;
 using Repository.Common;
+using AutoMapper;
 
 namespace Application.CQRS.Order.Commands;
 
-public class UpdateOrderStatusCommand : IRequest<Result<Unit>>
+public class UpdateOrderStatusCommand : IRequest<Result<OrderDto>>
 {
-    public OrderDto Order { get; set; }
+    public int? OrderId { get; set; }
+    public int UserId { get; set; }
+    public string NewStatus { get; set; }
 
-    public class Handler : IRequestHandler<UpdateOrderStatusCommand, Result<Unit>>
+    public class Handler : IRequestHandler<UpdateOrderStatusCommand, Result<OrderDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public Handler(IUnitOfWork unitOfWork)
+        public Handler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public async Task<Result<Unit>> Handle(UpdateOrderStatusCommand request, CancellationToken cancellationToken)
+        public async Task<Result<OrderDto>> Handle(UpdateOrderStatusCommand request, CancellationToken cancellationToken)
         {
-            var isUpdated = await _unitOfWork.OrderRepository.UpdateOrderStatusAsync(
-                request.Order.Id,
-                request.Order.Status
-            );
+            var order = request.OrderId.HasValue
+    ? await _unitOfWork.OrderRepository.GetOrderByIdAsync(request.OrderId.Value)
+    : (await _unitOfWork.OrderRepository.GetOrdersByUserIdAsync(request.UserId)).FirstOrDefault(); // varsayalım son siparişi çekiyor
 
-            if (!isUpdated)
+            if (order == null || order.IsDeleted)
             {
-                return new Result<Unit>
+                return new Result<OrderDto>
                 {
                     IsSuccess = false,
                     Errors = new List<string> { "Sifariş tapılmadı və ya silinmişdir." }
                 };
             }
 
+            order.Status = request.NewStatus;
+            order.UpdatedDate = DateTime.Now;
+
             await _unitOfWork.CompleteAsync();
 
-            return new Result<Unit>
-            {
-                IsSuccess = true,
-                Data = Unit.Value
-            };
+            var dto = _mapper.Map<OrderDto>(order);
+            return new Result<OrderDto> { IsSuccess = true, Data = dto };
         }
     }
 }

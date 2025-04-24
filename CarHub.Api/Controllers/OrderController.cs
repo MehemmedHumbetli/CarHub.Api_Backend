@@ -79,9 +79,8 @@ namespace CarHub.Api.Controllers
         }
 
         [HttpPut("UpdateOrderStatus")]
-        public async Task<IActionResult> UpdateStatus([FromBody] OrderDto dto)
+        public async Task<IActionResult> UpdateStatus([FromBody] UpdateOrderStatusCommand command)
         {
-            var command = new UpdateOrderStatusCommand { Order = dto };
             var result = await _sender.Send(command);
 
             if (!result.IsSuccess)
