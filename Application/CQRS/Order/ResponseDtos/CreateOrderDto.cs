@@ -4,6 +4,10 @@ namespace Application.CQRS.Order.ResponseDtos;
 
 public class CreateOrderDto
 {
+    public string CheckoutUrl { get; set; }
+    public string CardNumber { get; set; }
+    public string ExpirationDate { get; set; }
+    public string CVV { get; set; }
     public int UserId { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }

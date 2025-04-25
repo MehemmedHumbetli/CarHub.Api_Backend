@@ -14,6 +14,8 @@ public interface IUnitOfWork
     public IRefreshTokenRepository RefreshTokenRepository { get; }
     public IFileUploadRepository FileUploadRepository { get; }
 
+    public IPaymentRepository PaymentRepository { get; }
+
     public IOrderRepository OrderRepository { get; }
     Task CompleteAsync();
     Task<int> SaveChangeAsync();

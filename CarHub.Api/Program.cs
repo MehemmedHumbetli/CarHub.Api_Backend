@@ -40,6 +40,7 @@ builder.Services.AddSqlServerServices(conn!);
 builder.Services.AddApplicationServices();
 builder.Services.AddAuthenticationService(builder.Configuration);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 var app = builder.Build();
 
