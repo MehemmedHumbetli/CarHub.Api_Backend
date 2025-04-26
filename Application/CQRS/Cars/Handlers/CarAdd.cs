@@ -87,7 +87,7 @@ public class CarAdd
                 Color = car.Color,
                 VIN = car.VIN,
                 Text = car.Text,
-                CarImagePaths = car.CarImagePaths.Select(ci => ci.ImagePath).ToList() // manual mapping for image paths
+                CarImagePaths = car.CarImagePaths.Select(ci => ci.ImagePath).ToList()
             };
 
             return new Result<CarAddDto>

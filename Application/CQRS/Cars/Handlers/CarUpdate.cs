@@ -1,17 +1,21 @@
 ﻿using Application.CQRS.Cars.ResponseDtos;
+using Application.Services;
 using AutoMapper;
 using Common.Exceptions;
 using Common.GlobalResponses.Generics;
 using Domain.Entities;
 using Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Repository.Common;
+using static System.Net.Mime.MediaTypeNames;
+using System.Drawing;
 
 namespace Application.CQRS.Cars.Handlers;
 
 public class CarUpdate
 {
-    public record struct UpdateCarCommand : IRequest<Result<CarUpdateDto>>
+    public class UpdateCarCommand : IRequest<Result<CarUpdateDto>>
     {
         public int CarId { get; set; }
         public string Brand { get; set; }
@@ -21,7 +25,7 @@ public class CarUpdate
         public FuelTypes Fuel { get; set; }
         public TransmissionTypes Transmission { get; set; }
         public double Miles { get; set; }
-        public List<CarImage> CarImagePaths { get; set; }
+        public List<IFormFile> CarImagePaths { get; set; }
         public BodyTypes Body { get; set; }
         public string Color { get; set; }
         public string VIN { get; set; }
@@ -54,16 +58,39 @@ public class CarUpdate
 
             if (request.CarImagePaths != null && request.CarImagePaths.Any())
             {
-                currentCar.CarImagePaths = request.CarImagePaths;
+                foreach (var image in request.CarImagePaths)
+                {
+                    var imagePath = await ImageService.SaveImageAsync(image, "uploads/cars");
+
+                    currentCar.CarImagePaths.Add(new CarImage
+                    {
+                        ImagePath = imagePath
+                    });
+                }
             }
 
             _unitOfWork.CarRepository.Update(currentCar);
 
-            var response = _mapper.Map<CarUpdateDto>(currentCar);
+            var carUpdateDto = new CarUpdateDto
+            {
+                Brand = currentCar.Brand,
+                Model = currentCar.Model,
+                Year = currentCar.Year,
+                Price = currentCar.Price,
+                Fuel = currentCar.Fuel,
+                Transmission = currentCar.Transmission,
+                Miles = currentCar.Miles,
+                Body = currentCar.Body,
+                Color = currentCar.Color,
+                VIN = currentCar.VIN,
+                Text = currentCar.Text,
+                CarImagePaths = currentCar.CarImagePaths.Select(ci => ci.ImagePath).ToList()
+            };
+
 
             return new Result<CarUpdateDto>
             {
-                Data = response,
+                Data = carUpdateDto,
                 Errors = [],
                 IsSuccess = true
             };

@@ -13,7 +13,7 @@ public class CarUpdateDto
     public FuelTypes Fuel { get; set; }
     public TransmissionTypes Transmission { get; set; }
     public double Miles { get; set; }
-    public List<IFormFile> CarImagePaths { get; set; }
+    public List<string> CarImagePaths { get; set; }
     public BodyTypes Body { get; set; }
     public string Color { get; set; }
     public string VIN { get; set; }

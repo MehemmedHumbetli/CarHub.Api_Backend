@@ -86,8 +86,6 @@ public class MappingProfile : Profile
         //Car Mapping
         
         CreateMap<Car, CarGetAllDto>();
-        CreateMap<Car, CarUpdateDto>();
-
 
         //Cart
         

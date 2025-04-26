@@ -20,7 +20,7 @@ public class CarController(ISender sender) : Controller
     }
 
     [HttpPut("CarUpdate")]
-    public async Task<IActionResult> CarUpdate([FromBody] Application.CQRS.Cars.Handlers.CarUpdate.UpdateCarCommand request)
+    public async Task<IActionResult> CarUpdate([FromForm] Application.CQRS.Cars.Handlers.CarUpdate.UpdateCarCommand request)
     {
         return Ok(await _sender.Send(request));
     }
