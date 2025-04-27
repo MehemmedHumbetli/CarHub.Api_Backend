@@ -1,71 +1,85 @@
-﻿namespace SignalR.Hubs;
-
-using Microsoft.AspNetCore.SignalR;
-using MediatR;
-using Application.CQRS.SignalR.Handlers;
-
-public class ChatHub : Hub
+﻿namespace SignalR.Hubs
 {
-    private readonly IMediator _mediator;
+    using Microsoft.AspNetCore.SignalR;
+    using MediatR;
+    using Application.CQRS.SignalR.Handlers;
 
-    public ChatHub(IMediator mediator)
+    public class ChatHub : Hub
     {
-        _mediator = mediator;
-    }
+        private readonly IMediator _mediator;
 
-    public override async Task OnConnectedAsync()
-    {
-        var userId = Context.UserIdentifier;
-
-        if (!string.IsNullOrEmpty(userId))
+        public ChatHub(IMediator mediator)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+            _mediator = mediator;
         }
 
-        await base.OnConnectedAsync();
-    }
-
-    public override async Task OnDisconnectedAsync(Exception? exception)
-    {
-        var userId = Context.UserIdentifier;
-
-        if (!string.IsNullOrEmpty(userId))
+        public override async Task OnConnectedAsync()
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, userId);
+            var userId = Context.UserIdentifier;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+            }
+
+            await base.OnConnectedAsync();
         }
 
-        await base.OnDisconnectedAsync(exception);
-    }
-
-    public async Task SendMessage(string receiverUserId, string message)
-    {
-        var senderUserId = Context.UserIdentifier;
-
-        if (string.IsNullOrEmpty(senderUserId))
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            await Clients.Caller.SendAsync("Error", "İstifadəçi identifikatoru tapılmadı");
-            return;
+            var userId = Context.UserIdentifier;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, userId);
+            }
+
+            await base.OnDisconnectedAsync(exception);
         }
 
-        var sendMessageCommand = new SendMessage.SendMessageCommand
+        public async Task SendMessage(string receiverUserId, string message)
         {
-            SenderId = int.Parse(senderUserId),
-            ReceiverId = int.Parse(receiverUserId),
-            Text = message
-        };
+            var senderUserId = Context.UserIdentifier;
 
-        var result = await _mediator.Send(sendMessageCommand);
+            if (string.IsNullOrEmpty(senderUserId))
+            {
+                await Clients.Caller.SendAsync("Error", "İstifadəçi id-si tapılmadı");
+                return;
+            }
 
-        if (result.IsSuccess)
+            var sendMessageCommand = new SendMessage.SendMessageCommand
+            {
+                SenderId = int.Parse(senderUserId),
+                ReceiverId = int.Parse(receiverUserId),
+                Text = message
+            };
+
+            var result = await _mediator.Send(sendMessageCommand);
+
+            if (result.IsSuccess)
+            {
+                await Clients.User(receiverUserId).SendAsync("ReceiveTyping", senderUserId);
+
+                await Clients.Group(senderUserId).SendAsync("ReceiveMessage", senderUserId, receiverUserId, message);
+                await Clients.Group(receiverUserId).SendAsync("ReceiveMessage", senderUserId, receiverUserId, message);
+            }
+            else
+            {
+                await Clients.Caller.SendAsync("Error", "Mesaj göndərilərkən xəta baş verdi");
+            }
+        }
+
+        public async Task SendTyping(string receiverUserId)
         {
+            var senderUserId = Context.UserIdentifier;
+
+            if (string.IsNullOrEmpty(senderUserId))
+            {
+                await Clients.Caller.SendAsync("Error", "İstifadəçi id-si tapılmadı");
+                return;
+            }
+
             await Clients.User(receiverUserId).SendAsync("ReceiveTyping", senderUserId);
-            await Clients.Group(senderUserId).SendAsync("ReceiveMessage", senderUserId, receiverUserId, message);
-            await Clients.Group(receiverUserId).SendAsync("ReceiveMessage", senderUserId, receiverUserId, message);
-
-        }
-        else
-        {
-            await Clients.Caller.SendAsync("Error", "Mesaj göndərilərkən xəta baş verdi");
         }
     }
 }
