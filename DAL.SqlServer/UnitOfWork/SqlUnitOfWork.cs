@@ -22,6 +22,7 @@ public class SqlUnitOfWork(string connectionString, AppDbContext context) : IUni
     public SqlChatMessageRepository _chatMessageRepository;
     public SqlFileUploadRepository _uploadRepository;
     public SqlOrderRepository _orderRepository;
+    public SqlAuctionRepository _auctionRepository;
 
     public ICategoryRepository CategoryRepository => _categoryRepository ?? new SqlCategoryRepository(_connectionString, _context);
     public IProductRepository ProductRepository => _productRepository ?? new SqlProductRepository(_connectionString, _context);
@@ -34,7 +35,7 @@ public class SqlUnitOfWork(string connectionString, AppDbContext context) : IUni
     public IFileUploadRepository FileUploadRepository => _uploadRepository ?? new SqlFileUploadRepository(_context);
 
     public IOrderRepository OrderRepository => _orderRepository ?? new SqlOrderRepository(_connectionString, _context);
-
+    public IAuctionRepository AuctionRepository => _auctionRepository ?? new SqlAuctionRepository(_context);
 
 
     public async Task CompleteAsync()

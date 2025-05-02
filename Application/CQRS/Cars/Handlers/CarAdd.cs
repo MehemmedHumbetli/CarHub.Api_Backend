@@ -68,7 +68,6 @@ public class CarAdd
                     images.Add(imagePath);
                 }
 
-                // Şəkilləri sıraya uyğun doldururuq
                 var carImage = new CarImage
                 {
                     MainImage = images.ElementAtOrDefault(0),

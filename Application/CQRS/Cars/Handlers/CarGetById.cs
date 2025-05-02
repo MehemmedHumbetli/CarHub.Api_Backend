@@ -1,5 +1,7 @@
 ﻿using Application.CQRS.Cars.ResponseDtos;
+using AutoMapper;
 using Common.GlobalResponses.Generics;
+using Domain.Entities;
 using MediatR;
 using Repository.Common;
 
@@ -15,9 +17,11 @@ public class CarGetById
     public sealed class Handler : IRequestHandler<CarGetByIdCommand, Result<CarGetByIdDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public Handler(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public Handler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<Result<CarGetByIdDto>> Handle(CarGetByIdCommand request, CancellationToken cancellationToken)
@@ -29,25 +33,7 @@ public class CarGetById
                 return new Result<CarGetByIdDto>() { Errors = ["Car not found"], IsSuccess = false };
             }
 
-            CarGetByIdDto response = new()
-            {
-                Id = currentCar.Id,
-                Brand = currentCar.Brand,
-                BrandImagePath = currentCar.BrandImagePath,
-                Model = currentCar.Model,
-                Year = currentCar.Year,
-                Price = currentCar.Price,
-                Fuel = currentCar.Fuel.ToString(),
-                Transmission = currentCar.Transmission.ToString(),
-                Miles = currentCar.Miles,
-                CarImagePaths = currentCar.CarImagePaths,
-                Color = currentCar.Color,
-                Body = currentCar.Body.ToString(),
-                VIN = currentCar.VIN,
-                Text = currentCar.Text,
-                CreatedBy = currentCar.CreatedBy,
-
-            };
+            var response = _mapper.Map<CarGetByIdDto>(currentCar);
 
             return new Result<CarGetByIdDto>() { Data = response, Errors = [], IsSuccess = true };
         }

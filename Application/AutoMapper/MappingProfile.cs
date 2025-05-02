@@ -27,6 +27,7 @@ using Application.CQRS.SignalR.ResponseDtos;
 using Microsoft.AspNetCore.Http;
 using Application.CQRS.Order.ResponseDtos;
 using static CreateOrder;
+using Application.CQRS.Auctions.ResponseDtos;
 
 
 namespace Application.AutoMapper;
@@ -35,6 +36,9 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        //Auctions Mapping
+        CreateMap<Auction, AuctionResponseDto>();
+
         
         //Category Mapping
         CreateMap<Category, CategoryAddDto>();
@@ -86,6 +90,7 @@ public class MappingProfile : Profile
         //Car Mapping
         
         CreateMap<Car, CarGetAllDto>();
+        CreateMap<Car, CarGetByIdDto>();
 
         //Cart
         
