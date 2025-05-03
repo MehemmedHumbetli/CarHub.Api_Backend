@@ -35,7 +35,7 @@ namespace DAL.SqlServer.Infrastructure
         public async Task<List<Auction>> GetAllActiveAsync()
         {
             return await _context.Auctions
-                                 .Where(a => a.IsActive && a.EndTime >= DateTime.Now)
+                                 .Where(a => a.IsActive)
                                  .Include(a => a.Car) 
                                  .ToListAsync();
         }
@@ -62,9 +62,5 @@ namespace DAL.SqlServer.Infrastructure
                                  .ToListAsync();
         }
 
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
     }
 }

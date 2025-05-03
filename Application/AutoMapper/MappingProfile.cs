@@ -38,6 +38,7 @@ public class MappingProfile : Profile
     {
         //Auctions Mapping
         CreateMap<Auction, AuctionResponseDto>();
+        CreateMap<Auction, GetAllActiveAsyncDto>();
 
         
         //Category Mapping

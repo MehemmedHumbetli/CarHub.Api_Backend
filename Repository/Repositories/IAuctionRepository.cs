@@ -16,6 +16,5 @@ public interface IAuctionRepository
     Task<List<Auction>> GetBySellerIdAsync(int sellerId);
     Task<bool> ExistsAsync(int id);
     Task<bool> DeleteAsync(int id);
-    Task SaveChangesAsync();
 }
 
