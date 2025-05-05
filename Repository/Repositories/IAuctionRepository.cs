@@ -10,6 +10,7 @@ namespace Repository.Repositories;
 public interface IAuctionRepository
 {
     Task<Auction> CreateAsync(Auction auction);
+    Task<Auction> SetIsActiveAsync(int auctionId);
     Task<Auction> GetByIdAsync(int id);
     Task<List<Auction>> GetAllActiveAsync();
     Task<List<Auction>> GetAllAsync();

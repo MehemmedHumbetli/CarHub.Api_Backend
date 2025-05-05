@@ -17,6 +17,21 @@ namespace DAL.SqlServer.Infrastructure
             return auction; 
         }
 
+        public async Task<Auction> SetIsActiveAsync(int auctionId)
+        {
+            var auction = await _context.Auctions
+                .Include(c => c.Seller)
+                .Include(c => c.Car)
+                .ThenInclude(c => c.CarImagePaths)
+                .FirstOrDefaultAsync(a => a.Id == auctionId);
+
+            auction.IsActive = true;
+            _context.Auctions.Update(auction);
+            await _context.SaveChangesAsync();
+
+            return auction;
+        }
+
         public async Task<bool> DeleteAsync(int id)
         {
             var auction = await _context.Auctions.FindAsync(id);
@@ -36,7 +51,8 @@ namespace DAL.SqlServer.Infrastructure
         {
             return await _context.Auctions
                                  .Where(a => a.IsActive)
-                                 .Include(a => a.Car) 
+                                 .Include(a => a.Car)
+                                 .ThenInclude(a => a.CarImagePaths)
                                  .ToListAsync();
         }
 
@@ -44,6 +60,7 @@ namespace DAL.SqlServer.Infrastructure
         {
             return await _context.Auctions
                                  .Include(a => a.Car)
+                                 .ThenInclude(a => a.CarImagePaths)
                                  .ToListAsync();
         }
 

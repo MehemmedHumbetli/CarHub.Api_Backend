@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     {
     }
     
+    public DbSet<Notification> Notifications { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Car> Cars { get; set; }

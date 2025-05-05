@@ -28,6 +28,7 @@ using Microsoft.AspNetCore.Http;
 using Application.CQRS.Order.ResponseDtos;
 using static CreateOrder;
 using Application.CQRS.Auctions.ResponseDtos;
+using Application.CQRS.Notifications.ResponseDtos;
 
 
 namespace Application.AutoMapper;
@@ -36,9 +37,13 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        //Notifications Mapping
+        CreateMap<Notification, GetAllNotificationsDto>();
+
         //Auctions Mapping
         CreateMap<Auction, AuctionResponseDto>();
         CreateMap<Auction, GetAllActiveAsyncDto>();
+        CreateMap<Auction, AuctionActivatedNotificationDto>();
 
         
         //Category Mapping

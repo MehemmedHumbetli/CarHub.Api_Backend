@@ -35,7 +35,7 @@ public class CreateAuction
                 StartTime = request.StartTime,
                 EndTime = request.EndTime,
                 StartingPrice = request.StartingPrice,
-                IsActive = true 
+                IsActive = false
             };
 
             var car = await _unitOfWork.CarRepository.GetByIdAsync(request.CarId);

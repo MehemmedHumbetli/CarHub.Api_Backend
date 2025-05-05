@@ -1,4 +1,5 @@
 ﻿using Application.CQRS.Auctions.Handler;
+using Application.CQRS.Auctions.Handlers;
 using Application.CQRS.Cars.Handlers;
 using Azure.Core;
 using MediatR;
@@ -45,10 +46,30 @@ public class AuctionController(ISender sender) : Controller
         return Ok(result.Data);
     }
 
+    [HttpGet("GetAllAuctions")]
+    public async Task<IActionResult> GetAllAuctions()
+    {
+        var result = await _sender.Send(new GetAllAuctions.GetAllAuctionsCommand());
+
+        if (!result.IsSuccess)
+        {
+            return NotFound(result.Errors);
+        }
+
+        return Ok(result.Data);
+    }
+
     [HttpDelete("DeleteAuction")]
     public async Task<IActionResult> DeleteAuction([FromQuery] int id)
     {
         var request = new Application.CQRS.Auctions.Handler.AuctionDelete.DeleteAuctionCommand { Id = id };
         return Ok(await _sender.Send(request));
     }
+
+    [HttpPut("SetIsActive")]
+    public async Task<IActionResult> SetIsActive([FromQuery] SetIsActiveAsync.SetIsActiveCommand request)
+    {
+        return Ok(await _sender.Send(request));
+    }
+
 }
