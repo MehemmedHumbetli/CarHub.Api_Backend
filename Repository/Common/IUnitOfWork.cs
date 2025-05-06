@@ -15,6 +15,8 @@ public interface IUnitOfWork
     public ICartRepository CartRepository { get; }
     public IRefreshTokenRepository RefreshTokenRepository { get; }
 
+    public IPaymentRepository PaymentRepository { get; }
+
     public IOrderRepository OrderRepository { get; }
     Task CompleteAsync();
     Task<int> SaveChangeAsync();

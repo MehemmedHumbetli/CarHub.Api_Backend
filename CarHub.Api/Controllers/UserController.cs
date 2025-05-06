@@ -39,6 +39,7 @@ public class UserController(ISender sender) : Controller
 
     [HttpGet("GetAll")]
     [Authorize(Roles = "Admin")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAllUsers()
     {
         var result = await _sender.Send(new UserGetAll.GetAllUsersQuery());

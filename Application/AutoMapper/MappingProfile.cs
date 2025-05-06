@@ -68,7 +68,8 @@ public class MappingProfile : Profile
         CreateMap<Product, AddProductDto>();
         CreateMap<AddProductCommand, Product>();
 
-        CreateMap<Product, GetAllProductDto>().ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.ImagePath));
+        //CreateMap<Product, GetAllProductDto>().ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.ImagePath));
+        CreateMap<Product, GetAllProductDto>();
         CreateMap<GetAllProductDto, Product>();
 
         CreateMap<Product, UpdateProductDto>();

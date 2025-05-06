@@ -21,8 +21,12 @@ public class SqlUnitOfWork(string connectionString, AppDbContext context) : IUni
     public SqlFavoriteRepository _favoriteRepository;
     public SqlChatMessageRepository _chatMessageRepository;
     public SqlOrderRepository _orderRepository;
+
+    public SqlStripePaymentRepository _paymentRepository;
+
     public SqlAuctionRepository _auctionRepository;
     public SqlNotificationRepository _notificationRepository;
+
 
     public ICategoryRepository CategoryRepository => _categoryRepository ?? new SqlCategoryRepository(_connectionString, _context);
     public IProductRepository ProductRepository => _productRepository ?? new SqlProductRepository(_connectionString, _context);
@@ -33,8 +37,13 @@ public class SqlUnitOfWork(string connectionString, AppDbContext context) : IUni
     public IFavoriteRepository FavoriteRepository => _favoriteRepository ?? new SqlFavoriteRepository(_context);
     public IChatMessageRepository ChatMessageRepository => _chatMessageRepository ?? new SqlChatMessageRepository(_context);
     public IOrderRepository OrderRepository => _orderRepository ?? new SqlOrderRepository(_connectionString, _context);
+
+
+    public IPaymentRepository PaymentRepository => _paymentRepository ??= new SqlStripePaymentRepository(_context);
+
     public IAuctionRepository AuctionRepository => _auctionRepository ?? new SqlAuctionRepository(_context);
     public INotificationRepository NotificationRepository => _notificationRepository ?? new SqlNotificationRepository(_context);
+
 
     public async Task CompleteAsync()
     {
