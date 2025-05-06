@@ -29,5 +29,19 @@ namespace Application.Services
 
             return Path.Combine(folderName, fileName).Replace("\\", "/");
         }
+
+        public static async Task DeleteImageAsync(string relativeImagePath)
+        {
+            if (string.IsNullOrEmpty(relativeImagePath))
+                return;
+
+            var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            var fullPath = Path.Combine(wwwrootPath, relativeImagePath.Replace("/", Path.DirectorySeparatorChar.ToString()));
+
+            if (File.Exists(fullPath))
+            {
+                await Task.Run(() => File.Delete(fullPath));
+            }
+        }
     }
 }

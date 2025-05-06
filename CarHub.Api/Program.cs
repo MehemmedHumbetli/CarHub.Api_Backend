@@ -12,6 +12,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.FileProviders;
+using Application.Services;
+using CarHub.Api.Services;
+using CarHub.Api.SignalR.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +43,11 @@ builder.Services.AddSqlServerServices(conn!);
 builder.Services.AddApplicationServices();
 builder.Services.AddAuthenticationService(builder.Configuration);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
 
 var app = builder.Build();
 
@@ -63,7 +70,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHub<ChatHub>("/chathub");
-
+app.MapHub<NotificationHub>("/notificationHub");
 //app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.Run();

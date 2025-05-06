@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     {
     }
     
+    public DbSet<Notification> Notifications { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Car> Cars { get; set; }
@@ -24,5 +25,6 @@ public class AppDbContext : DbContext
     public DbSet<ChatMessage> ChatMessages { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderLine> OrderLines { get; set; }
+    public DbSet<Auction> Auctions { get; set; }
 
 }

@@ -14,5 +14,6 @@ public class User : BaseEntity
     public List<UserFavorite> Favorites { get; set; } = new List<UserFavorite>();  
     public List<Car> UserCars { get; set; } = new List<Car>();
     public string UserImagePath { get; set; }
+    public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
 }

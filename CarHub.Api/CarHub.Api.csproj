@@ -17,8 +17,6 @@
   <ItemGroup>
 
     <Folder Include="Infrastructure\Middleware\" />
-
-    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -41,7 +41,8 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
 
     public async Task<Car> GetByIdAsync(int id)
     {
-        return (await _context.Cars.Include(x => x.CarImagePaths).FirstOrDefaultAsync(u => u.Id == id));
+        return (await _context.Cars.Where(c => !c.IsDeleted).
+            Include(x => x.CarImagePaths).FirstOrDefaultAsync(u => u.Id == id));
     }
 
     public async Task<IEnumerable<Car>> GetFilteredCarsAsync(CarFilterModel filter)

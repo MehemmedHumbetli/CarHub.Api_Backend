@@ -60,15 +60,24 @@ public class CarAdd
 
             if (request.CarImagePaths != null && request.CarImagePaths.Any())
             {
+                var images = new List<string>();
+
                 foreach (var image in request.CarImagePaths)
                 {
                     var imagePath = await ImageService.SaveImageAsync(image, "uploads/cars");
-
-                    car.CarImagePaths.Add(new CarImage
-                    {
-                        ImagePath = imagePath
-                    });
+                    images.Add(imagePath);
                 }
+
+                var carImage = new CarImage
+                {
+                    MainImage = images.ElementAtOrDefault(0),
+                    FirstSideImage = images.ElementAtOrDefault(1),
+                    SecondSideImage = images.ElementAtOrDefault(2),
+                    EngineImage = images.ElementAtOrDefault(3),
+                    SalonImage = images.ElementAtOrDefault(4)
+                };
+
+                car.CarImagePaths.Add(carImage);
             }
 
             await _unitOfWork.CarRepository.AddAsync(car);
@@ -87,7 +96,17 @@ public class CarAdd
                 Color = car.Color,
                 VIN = car.VIN,
                 Text = car.Text,
-                CarImagePaths = car.CarImagePaths.Select(ci => ci.ImagePath).ToList() // manual mapping for image paths
+                CarImagePaths = car.CarImagePaths
+                    .SelectMany(ci => new List<string>
+                    {
+                        ci.MainImage,
+                        ci.FirstSideImage,
+                        ci.SecondSideImage,
+                        ci.EngineImage,
+                        ci.SalonImage
+                    })
+                    .Where(path => !string.IsNullOrEmpty(path))
+                    .ToList()
             };
 
             return new Result<CarAddDto>
