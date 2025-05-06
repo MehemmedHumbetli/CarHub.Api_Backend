@@ -6,7 +6,7 @@ namespace Application.CQRS.Auctions.ResponseDtos;
 
 public class AuctionActivatedNotificationDto
 {
-    public int AuctionId { get; set; }
+    public int Id { get; set; }
     public int CarId { get; set; }
     public CarGetByIdDto Car { get; set; }
     public GetByIdDto User { get; set; }

@@ -19,25 +19,30 @@ public class NotificationService : INotificationService
     }
 
     public async Task SendAuctionActivatedNotificationAsync(AuctionActivatedNotificationDto data)
-{
-    var users = _context.Users.ToList();
-
-    foreach (var user in users)
     {
-        var notification = new Notification
+        var users = _context.Users.ToList();
+
+        foreach (var user in users)
         {
-            UserId = user.Id,
-            Title = $"XETA NOTICATION SERVICE LINE 30",
-            Message = $"{data.Car.Brand} {data.Car.Model} have been auction",
-        };
+            var notification = new Notification
+            {
+                UserId = user.Id,
+                Title = "Auction Notification",
+                Message = $"{data.Car.Brand} {data.Car.Model} have been auction",
+            };
 
-        _context.Notifications.Add(notification);
+            _context.Notifications.Add(notification);
+        }
 
-        await _hubContext.Clients.All.SendAsync("ReceiveNotification", notification.Message);
-    }
+        await _hubContext.Clients.All.SendAsync("ReceiveNotification", new
+        {
+            id = Guid.NewGuid().ToString(),
+            message = $"{data.Car.Brand} {data.Car.Model} have been auction"
+        });
 
         await _context.SaveChangesAsync();
-}
+    }
+
 
 }
 
