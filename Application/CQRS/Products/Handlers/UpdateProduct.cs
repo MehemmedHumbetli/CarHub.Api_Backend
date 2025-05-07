@@ -1,15 +1,15 @@
 ﻿using Application.CQRS.Products.ResponsesDto;
+using Application.Services;
 using AutoMapper;
 using Common.Exceptions;
 using Common.GlobalResponses.Generics;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Repository.Common;
-
-namespace Application.CQRS.Products.Handlers;
 
 public class UpdateProduct
 {
-    public record struct UpdateProductCommand : IRequest<Result<UpdateProductDto>>
+    public class UpdateProductCommand : IRequest<Result<UpdateProductDto>>
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -17,7 +17,10 @@ public class UpdateProduct
         public decimal UnitPrice { get; set; }
         public int UnitsInStock { get; set; }
         public string Description { get; set; }
-        public List<string> ImagePath { get; set; }
+
+        public IFormFile? NewImage { get; set; }
+
+        public int? IndexToUpdate { get; set; }
     }
 
     public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<UpdateProductCommand, Result<UpdateProductDto>>
@@ -27,22 +30,41 @@ public class UpdateProduct
 
         public async Task<Result<UpdateProductDto>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var currentproduct = await _unitOfWork.ProductRepository.GetByIdAsync(request.Id);
-            if (currentproduct == null) throw new BadRequestException($"User does not exist with id {request.Id}");
+            var product = await _unitOfWork.ProductRepository.GetByIdAsync(request.Id);
+            if (product == null)
+                throw new BadRequestException($"Product not found with id {request.Id}");
 
-            currentproduct.Name = request.Name;
-            currentproduct.CategoryId = request.CategoryId;
-            currentproduct.UnitPrice = request.UnitPrice;
-            currentproduct.UnitsInStock = request.UnitsInStock;
-            currentproduct.ImagePath = request.ImagePath;
-            currentproduct.Description = request.Description;
+            var imagePaths = product.ImagePath ?? new List<string>();
 
+            if (request.IndexToUpdate is not null && request.NewImage != null)
+            {
+                var index = request.IndexToUpdate.Value;
 
-            _unitOfWork.ProductRepository.Update(currentproduct);
+                if (index >= 0 && index < imagePaths.Count)
+                {
+                    var newImagePath = await ImageService.SaveImageAsync(request.NewImage, "uploads/products");
 
-            var response = _mapper.Map<UpdateProductDto>(currentproduct);
+                    imagePaths[index] = newImagePath;
+                }
+                else
+                {
+                    throw new BadRequestException($"Image index {index} is out of range.");
+                }
+            }
 
-            return new Result<UpdateProductDto>()
+            product.Name = request.Name;
+            product.CategoryId = request.CategoryId;
+            product.UnitPrice = request.UnitPrice;
+            product.UnitsInStock = request.UnitsInStock;
+            product.Description = request.Description;
+            product.ImagePath = imagePaths;
+
+            _unitOfWork.ProductRepository.Update(product);
+            await _unitOfWork.CompleteAsync();
+
+            var response = _mapper.Map<UpdateProductDto>(product);
+
+            return new Result<UpdateProductDto>
             {
                 Data = response,
                 Errors = [],

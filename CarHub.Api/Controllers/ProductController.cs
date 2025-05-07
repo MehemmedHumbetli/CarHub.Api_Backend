@@ -13,7 +13,7 @@ public class ProductController(ISender sender) : ControllerBase
     private readonly ISender _sender = sender;
 
     [HttpPost("AddProduct")]
-    public async Task<IActionResult> AddProduct([FromBody] AddProduct.AddProductCommand request)
+    public async Task<IActionResult> AddProduct([FromForm] AddProduct.AddProductCommand request)
     {
         var result = await _sender.Send(request);
         return Ok(result);
@@ -51,7 +51,7 @@ public class ProductController(ISender sender) : ControllerBase
         return Ok(result.Data);
     }
     [HttpPut("UpdateProduct")]
-    public async Task<IActionResult> Update([FromBody] UpdateProduct.UpdateProductCommand request)
+    public async Task<IActionResult> Update([FromForm] UpdateProduct.UpdateProductCommand request)
     {
         return Ok(await _sender.Send(request));
     }
