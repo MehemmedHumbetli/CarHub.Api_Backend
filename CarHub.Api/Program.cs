@@ -47,6 +47,8 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IAuctionService, AuctionService>();
+
 
 
 var app = builder.Build();
@@ -71,6 +73,7 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHub<ChatHub>("/chathub");
 app.MapHub<NotificationHub>("/notificationHub");
+app.MapHub<AuctionHub>("/auctionHub");
 //app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.Run();
