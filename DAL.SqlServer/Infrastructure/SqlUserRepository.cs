@@ -12,7 +12,8 @@ public class SqlUserRepository(string connectionString, AppDbContext context) : 
 
     public IQueryable<User> GetAll()
     {
-        return _context.Users;
+        return _context.Users
+            .Where(c => !c.IsDeleted);
     }
 
     public async Task<User> GetByIdAsync(int id)

@@ -2,6 +2,7 @@
 using AutoMapper;
 using Common.Exceptions;
 using Common.GlobalResponses.Generics;
+using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Repository.Common;
@@ -18,8 +19,7 @@ public class Update
         public string Email { get; set; }
         public string Phone { get; set; }
         public IFormFile? UserImage { get; set; } 
-
-        //public string PasswordHash { get; set; }
+        public UserRoles Roles { get; set; }
     }
 
     public sealed class Handler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<Command, Result<UpdateDto>>
@@ -50,6 +50,7 @@ public class Update
             currentUser.Surname = request.Surname;
             currentUser.Email = request.Email;
             currentUser.Phone = request.Phone;
+            currentUser.UserRole = request.Roles;
             currentUser.UpdatedBy = currentUser.Id;
 
             _unitOfWork.UserRepository.Update(currentUser);

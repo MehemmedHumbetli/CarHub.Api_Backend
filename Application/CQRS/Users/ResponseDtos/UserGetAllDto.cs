@@ -13,4 +13,6 @@ public class UserGetAllDto
     public string UserRole { get; set; }
     public List<Car> UserCars { get; set; }
     public string UserImagePath { get; set; }
+    public DateTime? CreatedDate { get; set; }
+    public DateTime? UpdatedDate { get; set; }
 }
