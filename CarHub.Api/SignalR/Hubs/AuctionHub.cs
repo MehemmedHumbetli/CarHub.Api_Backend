@@ -1,11 +1,13 @@
 ﻿using Application.Services;
 using Microsoft.AspNetCore.SignalR;
+using System.Collections.Concurrent;
 
 namespace CarHub.Api.SignalR.Hubs
 {
     public class AuctionHub : Hub
     {
         private readonly IAuctionService _auctionService;
+        private static readonly ConcurrentDictionary<string, string> ConnectedUsers = new();
 
         public AuctionHub(IAuctionService auctionService)
         {
@@ -14,8 +16,12 @@ namespace CarHub.Api.SignalR.Hubs
 
         public async Task JoinAuction(string userId, string fullName)
         {
-            await Clients.All.SendAsync("UserJoinedAuction", new { userId, fullName });
+            ConnectedUsers[Context.ConnectionId] = fullName;
+
+            var users = ConnectedUsers.Values.ToList();
+            await Clients.All.SendAsync("UserJoinedAuction", new { userId, fullName, users });
         }
+
 
         public async Task IncreasePrice(int auctionId, int amount)
         {
@@ -32,9 +38,11 @@ namespace CarHub.Api.SignalR.Hubs
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            var userId = Context.UserIdentifier;
-            Console.WriteLine($"User disconnected: {userId}");
+            ConnectedUsers.TryRemove(Context.ConnectionId, out var removedUser);
+            var users = ConnectedUsers.Values.ToList();
+            await Clients.All.SendAsync("UserLeftAuction", new { fullName = removedUser, users });
             await base.OnDisconnectedAsync(exception);
         }
+
     }
 }

@@ -67,7 +67,8 @@ namespace DAL.SqlServer.Infrastructure
         public async Task<Auction> GetByIdAsync(int id)
         {
             return await _context.Auctions
-                                 .Include(a => a.Car) 
+                                 .Include(a => a.Car)
+                                 .ThenInclude(a => a.CarImagePaths)
                                  .FirstOrDefaultAsync(a => a.Id == id);
         }
 
