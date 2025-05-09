@@ -7,20 +7,26 @@ namespace CarHub.Api.SignalR.Hubs
     public class AuctionHub : Hub
     {
         private readonly IAuctionService _auctionService;
-        private static readonly ConcurrentDictionary<string, string> ConnectedUsers = new();
+        private static readonly ConcurrentDictionary<int, ConcurrentDictionary<string, string>> AuctionUsers = new();
+
 
         public AuctionHub(IAuctionService auctionService)
         {
             _auctionService = auctionService;
         }
 
-        public async Task JoinAuction(string userId, string fullName)
+        public async Task JoinAuction(int auctionId, int userId, string fullName)
         {
-            ConnectedUsers[Context.ConnectionId] = fullName;
+            var usersDict = AuctionUsers.GetOrAdd(auctionId, _ => new ConcurrentDictionary<string, string>());
+            usersDict[Context.ConnectionId] = fullName;
 
-            var users = ConnectedUsers.Values.ToList();
-            await Clients.All.SendAsync("UserJoinedAuction", new { userId, fullName, users });
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"auction-{auctionId}");
+
+            var users = usersDict.Values.ToList();
+            await Clients.Group($"auction-{auctionId}").SendAsync("UserJoinedAuction", new { userId, fullName, users });
+
         }
+
 
 
         public async Task IncreasePrice(int auctionId, int amount)
@@ -38,11 +44,23 @@ namespace CarHub.Api.SignalR.Hubs
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            ConnectedUsers.TryRemove(Context.ConnectionId, out var removedUser);
-            var users = ConnectedUsers.Values.ToList();
-            await Clients.All.SendAsync("UserLeftAuction", new { fullName = removedUser, users });
+            foreach (var auction in AuctionUsers)
+            {
+                var auctionId = auction.Key;
+                var usersDict = auction.Value;
+
+                if (usersDict.TryRemove(Context.ConnectionId, out var removedUser))
+                {
+                    var users = usersDict.Values.ToList();
+
+                    await Clients.Group($"auction-{auctionId}")
+                        .SendAsync("UserLeftAuction", new { fullName = removedUser, users });
+                }
+            }
+
             await base.OnDisconnectedAsync(exception);
         }
+
 
     }
 }

@@ -16,4 +16,7 @@ public class Auction : BaseEntity
 
     public decimal StartingPrice { get; set; }
     public bool IsActive { get; set; } = true;
+
+    public List<AuctionParticipant> Participants { get; set; }
+
 }

@@ -14,6 +14,8 @@ public interface IUnitOfWork
     public IUserRepository UserRepository { get; }
     public ICartRepository CartRepository { get; }
     public IRefreshTokenRepository RefreshTokenRepository { get; }
+    
+    public IParticipantRepository ParticipantRepository { get; }
 
     public IPaymentRepository PaymentRepository { get; }
 

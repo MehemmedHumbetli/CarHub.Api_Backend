@@ -26,5 +26,6 @@ public class AppDbContext : DbContext
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderLine> OrderLines { get; set; }
     public DbSet<Auction> Auctions { get; set; }
+    public DbSet<AuctionParticipant> AuctionParticipants { get; set; }
 
 }
