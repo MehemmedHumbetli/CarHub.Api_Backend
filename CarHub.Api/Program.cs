@@ -51,6 +51,7 @@ builder.Services.AddScoped<IAuctionService, AuctionService>();
 
 
 
+
 var app = builder.Build();
 
 app.UseSwagger();
