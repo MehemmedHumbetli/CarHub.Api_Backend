@@ -30,8 +30,8 @@ public class JoinAuction
         public async Task<Result<JoinAuctionDto>> Handle(JoinAuctionCommand request, CancellationToken cancellationToken)
         {
             var auction = await _unitOfWork.AuctionRepository.GetByIdAsync(request.AuctionId);
-            
-            
+            var userInfo = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId);
+
             if (auction == null || !auction.IsActive)
             {
                 return new Result<JoinAuctionDto>() { Errors = ["Auction not found or is not active."], IsSuccess = false };
@@ -41,19 +41,14 @@ public class JoinAuction
             {
                 AuctionId = request.AuctionId,
                 UserId = request.UserId,
-                JoinedAt = DateTime.UtcNow
+                JoinedAt = DateTime.UtcNow,
+                Message = $"{userInfo.Name} {userInfo.Surname} joined the auction."
             };
 
-            await _unitOfWork.ParticipantRepository.JoinAuction(participant);
+            await _unitOfWork.ParticipantRepository.JoinAuction(request.AuctionId, request.UserId);
             await _unitOfWork.SaveChangeAsync();
 
-            var joinAuctionDto = new JoinAuctionDto
-            {
-                AuctionId = request.AuctionId,
-                UserId = request.UserId,
-                JoinedAt = participant.JoinedAt,
-                Message = "User successfully joined the auction."
-            };
+            var joinAuctionDto = _mapper.Map<JoinAuctionDto>(participant);
 
             return new Result<JoinAuctionDto>
             {
@@ -61,8 +56,7 @@ public class JoinAuction
                 Errors = [],
                 IsSuccess = true
             };
-
         }
-    }
 
+    }
 }

@@ -6,6 +6,8 @@ public class AuctionParticipant
     public int AuctionId { get; set; }
     public Auction Auction { get; set; }
 
+    public string Message { get; set; }
+
     public int UserId { get; set; }
     public User User { get; set; }
 

@@ -29,6 +29,7 @@ using Application.CQRS.Order.ResponseDtos;
 using static CreateOrder;
 using Application.CQRS.Auctions.ResponseDtos;
 using Application.CQRS.Notifications.ResponseDtos;
+using Application.CQRS.AuctionParticipants.ResponseDtos;
 
 
 namespace Application.AutoMapper;
@@ -37,6 +38,9 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        //Auction Participants Mapping
+        CreateMap<AuctionParticipant, JoinAuctionDto>();
+
         //Notifications Mapping
         CreateMap<Notification, GetAllNotificationsDto>();
 

@@ -15,6 +15,8 @@ using Microsoft.Extensions.FileProviders;
 using Application.Services;
 using CarHub.Api.Services;
 using CarHub.Api.SignalR.Hubs;
+using DAL.SqlServer.Infrastructure;
+using Repository.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +49,7 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 builder.Services.AddScoped<INotificationService, NotificationService>();
-builder.Services.AddScoped<IAuctionService, AuctionService>();
+builder.Services.AddScoped<IParticipantRepository, SqlParticipantRepository>();
 
 
 
