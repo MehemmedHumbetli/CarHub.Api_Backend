@@ -17,8 +17,6 @@ public class AuctionHub : Hub
 
     public async Task JoinAuction(int auctionId, int userId)
     {
-        Console.WriteLine("Join Auction is working!");
-        // İstifadəçi məlumatlarını əldə et
         var userInfo = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
         if (userInfo == null)
@@ -26,22 +24,34 @@ public class AuctionHub : Hub
             throw new Exception("User not found.");
         }
 
-        // İstifadəçini qrupda qoşuruq
         await Groups.AddToGroupAsync(Context.ConnectionId, $"auction-{auctionId}");
 
-        // İştirakçını yaradın və məlumatı göndərin
-        var participantMessage = $"{userInfo.Name} {userInfo.Surname} joined the auction.";
+        var participantMessage = $"{userInfo.Name} {userInfo.Surname} joined the auction back.";
 
         await Clients.Group($"auction-{auctionId}")
         .SendAsync("ParticipantJoined", participantMessage);
 
-        // əlavə olaraq özünə də göndər:
         await Clients.Caller.SendAsync("ParticipantJoined", participantMessage);
     }
-    public override async Task OnConnectedAsync()
+
+    public async Task LeaveAuction(int auctionId, int userId)
     {
-        await Clients.Caller.SendAsync("ParticipantJoined", "Test mesaj: bağlantı uğurla alındı!");
-        await base.OnConnectedAsync();
+        var userInfo = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+
+        if (userInfo == null)
+        {
+            throw new Exception("User not found.");
+        }
+
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"auction-{auctionId}");
+
+        var leaveMessage = $"{userInfo.Name} {userInfo.Surname} left the auction.";
+
+        await Clients.Group($"auction-{auctionId}")
+            .SendAsync("ParticipantLeft", leaveMessage);
+
+        await Clients.Caller.SendAsync("ParticipantLeft", leaveMessage);
     }
+
 
 }
