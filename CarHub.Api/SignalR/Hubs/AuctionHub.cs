@@ -18,21 +18,23 @@ public class AuctionHub : Hub
     public async Task JoinAuction(int auctionId, int userId)
     {
         var userInfo = await _unitOfWork.UserRepository.GetByIdAsync(userId);
-
         if (userInfo == null)
-        {
             throw new Exception("User not found.");
-        }
 
-        await Groups.AddToGroupAsync(Context.ConnectionId, $"auction-{auctionId}");
+        string groupName = $"auction-{auctionId}";
 
-        var participantMessage = $"{userInfo.Name} {userInfo.Surname} joined the auction back.";
+        await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
-        await Clients.Group($"auction-{auctionId}")
-        .SendAsync("ParticipantJoined", participantMessage);
+        var message = $"{userInfo.Name} {userInfo.Surname} joined the auction.";
 
-        await Clients.Caller.SendAsync("ParticipantJoined", participantMessage);
+        // ✔️ Bu mesajı yalnız digər user-lərə göndər (özünə yox)
+        await Clients.OthersInGroup(groupName).SendAsync("ParticipantJoined", message);
+
+        // ✔️ Caller-a da ayrıca göndər
+        await Clients.Caller.SendAsync("ParticipantJoined", message);
     }
+
+
 
     public async Task LeaveAuction(int auctionId, int userId)
     {
