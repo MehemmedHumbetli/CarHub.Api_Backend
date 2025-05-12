@@ -20,6 +20,8 @@ public interface IUnitOfWork
     public IPaymentRepository PaymentRepository { get; }
 
     public IOrderRepository OrderRepository { get; }
+
+    public ITelegramChatRepository TelegramChatRepository { get; }
     Task CompleteAsync();
     Task<int> SaveChangeAsync();
   

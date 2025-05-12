@@ -55,6 +55,7 @@ builder.Services.AddHostedService<AuctionMonitorService>();
 
 
 
+
 var app = builder.Build();
 
 app.UseSwagger();
