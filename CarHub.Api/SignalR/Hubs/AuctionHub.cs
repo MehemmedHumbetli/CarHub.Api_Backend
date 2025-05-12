@@ -9,6 +9,8 @@ using System.Text.RegularExpressions;
 public class AuctionHub : Hub
 {
     private readonly IUnitOfWork _unitOfWork;
+    public static Dictionary<int, RunningAuction> ActiveAuctions = new();
+
 
     public AuctionHub(IUnitOfWork unitOfWork)
     {
@@ -27,10 +29,8 @@ public class AuctionHub : Hub
 
         var message = $"{userInfo.Name} {userInfo.Surname} joined the auction.";
 
-        // ✔️ Bu mesajı yalnız digər user-lərə göndər (özünə yox)
         await Clients.OthersInGroup(groupName).SendAsync("ParticipantJoined", message);
 
-        // ✔️ Caller-a da ayrıca göndər
         await Clients.Caller.SendAsync("ParticipantJoined", message);
     }
 
@@ -55,5 +55,39 @@ public class AuctionHub : Hub
         await Clients.Caller.SendAsync("ParticipantLeft", leaveMessage);
     }
 
+    public async Task PlaceBid(int auctionId, int userId, decimal bidIncrement)
+    {
+        var auction = await _unitOfWork.AuctionRepository.GetByIdAsync(auctionId);
+        var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+
+        if (auction == null || user == null)
+            throw new Exception("Auction or User not found.");
+
+        if (!ActiveAuctions.ContainsKey(auctionId))
+        {
+            ActiveAuctions[auctionId] = new RunningAuction
+            {
+                AuctionId = auctionId,
+                CurrentPrice = auction.StartingPrice,
+                LastBidderUserName = "",
+                ExpireAt = DateTime.UtcNow.AddSeconds(15)
+            };
+        }
+
+        var running = ActiveAuctions[auctionId];
+
+        decimal newBid = running.CurrentPrice + bidIncrement;
+        running.CurrentPrice = newBid;
+        running.LastBidderUserName = $"{user.Name} {user.Surname}";
+        running.ResetTimer();
+
+        await Clients.Group($"auction-{auctionId}").SendAsync("BidPlaced", new
+        {
+            auctionId,
+            newPrice = newBid,
+            bidder = running.LastBidderUserName,
+            remainingSeconds = running.RemainingSeconds
+        });
+    }
 
 }

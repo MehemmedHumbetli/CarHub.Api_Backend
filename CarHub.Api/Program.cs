@@ -50,6 +50,8 @@ Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IParticipantRepository, SqlParticipantRepository>();
+builder.Services.AddHostedService<AuctionMonitorService>();
+
 
 
 
