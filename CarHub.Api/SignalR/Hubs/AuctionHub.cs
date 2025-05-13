@@ -30,10 +30,17 @@ public class AuctionHub : Hub
         var message = $"{userInfo.Name} {userInfo.Surname} joined the auction.";
 
         await Clients.OthersInGroup(groupName).SendAsync("ParticipantJoined", message);
-
         await Clients.Caller.SendAsync("ParticipantJoined", message);
-    }
 
+        if (ActiveAuctions.TryGetValue(auctionId, out var runningAuction))
+        {
+            await Clients.Caller.SendAsync("InitialAuctionState", new
+            {
+                topBidder = runningAuction.LastBidderUserName,
+                price = runningAuction.CurrentPrice
+            });
+        }
+    }
 
 
     public async Task LeaveAuction(int auctionId, int userId)
