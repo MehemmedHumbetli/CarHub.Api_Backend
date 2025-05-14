@@ -1,5 +1,6 @@
 ﻿using Application.CQRS.Auctions.ResponseDtos;
 using Application.CQRS.Cars.ResponseDtos;
+using Application.Services;
 using AutoMapper;
 using Common.GlobalResponses.Generics;
 using MediatR;
@@ -14,10 +15,10 @@ public class AuctionDelete
         public int Id { get; set; }
     }
 
-    public sealed class Handler(IUnitOfWork unitOfWork) : IRequestHandler<DeleteAuctionCommand, Result<Unit>>
+    public sealed class Handler(IUnitOfWork unitOfWork, INotificationService notificationService) : IRequestHandler<DeleteAuctionCommand, Result<Unit>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
+        private readonly INotificationService _notificationService = notificationService;
         public async Task<Result<Unit>> Handle(DeleteAuctionCommand request, CancellationToken cancellationToken)
         {
             var auction = await _unitOfWork.AuctionRepository.DeleteAsync(request.Id);
@@ -27,7 +28,9 @@ public class AuctionDelete
                 return new Result<Unit>() { Errors = ["Auction not found"], IsSuccess = false };
             }
 
-            await _unitOfWork.SaveChangeAsync(); 
+            await _unitOfWork.SaveChangeAsync();
+            await _notificationService.SendAuctionStoppedNotificationAsync(request.Id);
+
             return new Result<Unit>
             {
                 Errors = [],

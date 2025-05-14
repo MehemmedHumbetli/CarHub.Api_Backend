@@ -5,4 +5,5 @@ namespace Application.Services;
 public interface INotificationService
 {
     Task SendAuctionActivatedNotificationAsync(AuctionActivatedNotificationDto data);
+    Task SendAuctionStoppedNotificationAsync(int auctionId);
 }

@@ -43,6 +43,7 @@ public class SetIsActiveAsync
 
             await _notificationService.SendAuctionActivatedNotificationAsync(auctionNotificationDto);
 
+
             return new Result<AuctionActivatedNotificationDto>
             {
                 Data = auctionNotificationDto,

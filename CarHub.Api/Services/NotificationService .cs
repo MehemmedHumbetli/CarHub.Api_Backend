@@ -4,6 +4,7 @@ using CarHub.Api.SignalR.Hubs;
 using DAL.SqlServer.Context;
 using Domain.Entities;
 using Microsoft.AspNetCore.SignalR;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CarHub.Api.Services;
 
@@ -43,6 +44,32 @@ public class NotificationService : INotificationService
         await _context.SaveChangesAsync();
     }
 
+    public async Task SendAuctionStoppedNotificationAsync(int auctionId)
+    {
+        var users = _context.Users.ToList();
+
+        foreach (var user in users)
+        {
+            var notification = new Notification
+            {
+                UserId = user.Id,
+                Title = "Auction Notification",
+                Message = $"Auction stoped by creator"
+
+            };
+
+            _context.Notifications.Add(notification);
+        }
+
+        await _hubContext.Clients.All.SendAsync("ReceiveNotification", new
+        {
+            id = auctionId,
+            message = $"Auction stoped by creator"
+        });
+
+        await _context.SaveChangesAsync();
+
+    }
 
 }
 
