@@ -44,28 +44,53 @@ public class NotificationService : INotificationService
         await _context.SaveChangesAsync();
     }
 
-    public async Task SendAuctionStoppedNotificationAsync(int auctionId)
+    public async Task SendAuctionStoppedNotificationAsync(int auctionId, string msgReason, User winner)
     {
         var users = _context.Users.ToList();
-
-        foreach (var user in users)
+        
+        if (msgReason == "win")
         {
             var notification = new Notification
             {
-                UserId = user.Id,
+                UserId = winner.Id,
                 Title = "Auction Notification",
-                Message = $"Auction stoped by creator"
-
+                Message = $"{winner.Name} {winner.Surname} won Auction!"
             };
 
             _context.Notifications.Add(notification);
         }
 
-        await _hubContext.Clients.All.SendAsync("ReceiveNotification", new
+        foreach (var user in users)
         {
-            id = auctionId,
-            message = $"Auction stoped by creator"
-        });
+            if (msgReason == "time")
+            {
+                var notification = new Notification
+                {
+                    UserId = user.Id,
+                    Title = "Auction Notification",
+                    Message = $"Auction time out"
+                };
+
+                _context.Notifications.Add(notification);
+            }
+        }
+
+        if(msgReason == "win")
+        {
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", new
+            {
+                id = auctionId,
+                message = $"You won the auction!"
+            });
+        }
+        else if(msgReason == "time")
+        {
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", new
+            {
+                id = auctionId,
+                message = $"Auction time out"
+            });
+        }
 
         await _context.SaveChangesAsync();
 

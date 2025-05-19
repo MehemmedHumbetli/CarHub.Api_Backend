@@ -13,6 +13,8 @@ public class AuctionDelete
     public class DeleteAuctionCommand : IRequest<Result<Unit>>
     {
         public int Id { get; set; }
+        public string MessageReason { get; set; }
+        public int userId { get; set; }
     }
 
     public sealed class Handler(IUnitOfWork unitOfWork, INotificationService notificationService) : IRequestHandler<DeleteAuctionCommand, Result<Unit>>
@@ -22,6 +24,7 @@ public class AuctionDelete
         public async Task<Result<Unit>> Handle(DeleteAuctionCommand request, CancellationToken cancellationToken)
         {
             var auction = await _unitOfWork.AuctionRepository.DeleteAsync(request.Id);
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(request.userId);
 
             if (auction == null)
             {
@@ -29,8 +32,7 @@ public class AuctionDelete
             }
 
             await _unitOfWork.SaveChangeAsync();
-            await _notificationService.SendAuctionStoppedNotificationAsync(request.Id);
-
+            await _notificationService.SendAuctionStoppedNotificationAsync(request.Id, request.MessageReason, user);
             return new Result<Unit>
             {
                 Errors = [],

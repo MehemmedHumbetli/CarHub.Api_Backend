@@ -85,7 +85,7 @@ public class AuctionHub : Hub
 
         decimal newBid = running.CurrentPrice + bidIncrement;
         running.CurrentPrice = newBid;
-        running.LastBidderUserName = $"{user.Name} {user.Surname}";
+        running.LastBidderUserName = $"{user.Name} {user.Surname} {userId}";
         running.ResetTimer();
 
         await Clients.Group($"auction-{auctionId}").SendAsync("BidPlaced", new
