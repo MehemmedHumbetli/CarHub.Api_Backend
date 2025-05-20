@@ -60,7 +60,7 @@ public class AuctionController(ISender sender) : Controller
     }
 
     [HttpDelete("DeleteAuction")]
-    public async Task<IActionResult> DeleteAuction([FromQuery] AuctionDelete.DeleteAuctionCommand request)
+    public async Task<IActionResult> DeleteAuction([FromBody] AuctionDelete.DeleteAuctionCommand request)
     {
         return Ok(await _sender.Send(request));
     }

@@ -77,7 +77,8 @@ public class AuctionHub : Hub
                 AuctionId = auctionId,
                 CurrentPrice = auction.StartingPrice,
                 LastBidderUserName = "",
-                ExpireAt = DateTime.UtcNow.AddSeconds(15)
+                ExpireAt = DateTime.UtcNow.AddSeconds(15),
+                userId = userId
             };
         }
 
@@ -85,7 +86,7 @@ public class AuctionHub : Hub
 
         decimal newBid = running.CurrentPrice + bidIncrement;
         running.CurrentPrice = newBid;
-        running.LastBidderUserName = $"{user.Name} {user.Surname} {userId}";
+        running.LastBidderUserName = $"{user.Name} {user.Surname}";
         running.ResetTimer();
 
         await Clients.Group($"auction-{auctionId}").SendAsync("BidPlaced", new
@@ -93,7 +94,8 @@ public class AuctionHub : Hub
             auctionId,
             newPrice = newBid,
             bidder = running.LastBidderUserName,
-            remainingSeconds = running.RemainingSeconds
+            remainingSeconds = running.RemainingSeconds,
+            userId = running.userId
         });
     }
 

@@ -12,4 +12,5 @@ public class RunningAuction
     public int RemainingSeconds => Math.Max((int)(ExpireAt - DateTime.UtcNow).TotalSeconds, 0);
 
     public bool IsExpired => DateTime.UtcNow >= ExpireAt;
+    public int userId { get; set; }
 }

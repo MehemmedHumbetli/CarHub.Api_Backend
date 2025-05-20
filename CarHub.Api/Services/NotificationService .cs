@@ -58,6 +58,12 @@ public class NotificationService : INotificationService
             };
 
             _context.Notifications.Add(notification);
+
+            await _hubContext.Clients.User(winner.Id.ToString()).SendAsync("ReceiveNotification", new
+            {
+                id = auctionId,
+                message = $"You won the auction!"
+            });
         }
 
         foreach (var user in users)
@@ -72,24 +78,13 @@ public class NotificationService : INotificationService
                 };
 
                 _context.Notifications.Add(notification);
+                
+                await _hubContext.Clients.All.SendAsync("ReceiveNotification", new
+                {
+                    id = auctionId,
+                    message = $"Auction time out"
+                });
             }
-        }
-
-        if(msgReason == "win")
-        {
-            await _hubContext.Clients.All.SendAsync("ReceiveNotification", new
-            {
-                id = auctionId,
-                message = $"You won the auction!"
-            });
-        }
-        else if(msgReason == "time")
-        {
-            await _hubContext.Clients.All.SendAsync("ReceiveNotification", new
-            {
-                id = auctionId,
-                message = $"Auction time out"
-            });
         }
 
         await _context.SaveChangesAsync();

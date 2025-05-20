@@ -30,7 +30,7 @@ public class AuctionMonitorService : BackgroundService
                     {
                         var dbAuction = await unitOfWork.AuctionRepository.GetByIdAsync(running.AuctionId);
                         dbAuction.IsActive = false;
-                        dbAuction.EndTime = DateTime.UtcNow;
+                        dbAuction.EndTime = DateTime.UtcNow;                        
 
                         await unitOfWork.CompleteAsync();
 
@@ -39,7 +39,8 @@ public class AuctionMonitorService : BackgroundService
                             {
                                 auctionId = running.AuctionId,
                                 winner = running.LastBidderUserName,
-                                finalPrice = running.CurrentPrice
+                                finalPrice = running.CurrentPrice,
+                                userId = running.userId,
                             });
 
                         AuctionHub.ActiveAuctions.Remove(running.AuctionId);

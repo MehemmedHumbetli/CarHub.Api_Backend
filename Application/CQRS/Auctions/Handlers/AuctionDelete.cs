@@ -31,7 +31,7 @@ public class AuctionDelete
                 return new Result<Unit>() { Errors = ["Auction not found"], IsSuccess = false };
             }
 
-            await _unitOfWork.SaveChangeAsync();
+            //await _unitOfWork.SaveChangeAsync();
             await _notificationService.SendAuctionStoppedNotificationAsync(request.Id, request.MessageReason, user);
             return new Result<Unit>
             {
