@@ -17,6 +17,8 @@ using CarHub.Api.Services;
 using CarHub.Api.SignalR.Hubs;
 using DAL.SqlServer.Infrastructure;
 using Repository.Repositories;
+using CarHub.Api.SignalR;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,7 +38,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSwaggerService();
 builder.Services.AddScoped<IUserContext, HttpUserContext>();
 
@@ -51,6 +52,8 @@ Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IParticipantRepository, SqlParticipantRepository>();
 builder.Services.AddHostedService<AuctionMonitorService>();
+builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
+
 
 
 

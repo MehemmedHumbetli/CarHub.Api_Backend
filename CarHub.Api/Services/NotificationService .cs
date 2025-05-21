@@ -46,8 +46,6 @@ public class NotificationService : INotificationService
 
     public async Task SendAuctionStoppedNotificationAsync(int auctionId, string msgReason, User winner)
     {
-        var users = _context.Users.ToList();
-        
         if (msgReason == "win")
         {
             var notification = new Notification
@@ -64,11 +62,14 @@ public class NotificationService : INotificationService
                 id = auctionId,
                 message = $"You won the auction!"
             });
-        }
 
-        foreach (var user in users)
+            Console.WriteLine($"Notification sent to user {winner.Id}");
+        }
+        else if (msgReason == "time")
         {
-            if (msgReason == "time")
+            var users = _context.Users.ToList();
+
+            foreach (var user in users)
             {
                 var notification = new Notification
                 {
@@ -78,18 +79,20 @@ public class NotificationService : INotificationService
                 };
 
                 _context.Notifications.Add(notification);
-                
-                await _hubContext.Clients.All.SendAsync("ReceiveNotification", new
-                {
-                    id = auctionId,
-                    message = $"Auction time out"
-                });
             }
+
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", new
+            {
+                id = auctionId,
+                message = $"Auction time out"
+            });
+
+            Console.WriteLine("Notification sent to all users due to time out.");
         }
 
         await _context.SaveChangesAsync();
-
     }
+
 
 }
 

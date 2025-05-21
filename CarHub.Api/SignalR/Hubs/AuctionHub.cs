@@ -37,10 +37,12 @@ public class AuctionHub : Hub
             await Clients.Caller.SendAsync("InitialAuctionState", new
             {
                 topBidder = runningAuction.LastBidderUserName,
-                price = runningAuction.CurrentPrice
+                price = runningAuction.CurrentPrice,
+                remainingSeconds = runningAuction.RemainingSeconds
             });
         }
     }
+
 
 
     public async Task LeaveAuction(int auctionId, int userId)
@@ -77,8 +79,7 @@ public class AuctionHub : Hub
                 AuctionId = auctionId,
                 CurrentPrice = auction.StartingPrice,
                 LastBidderUserName = "",
-                ExpireAt = DateTime.UtcNow.AddSeconds(15),
-                userId = userId
+                ExpireAt = DateTime.UtcNow.AddSeconds(15)
             };
         }
 
@@ -88,15 +89,16 @@ public class AuctionHub : Hub
         running.CurrentPrice = newBid;
         running.LastBidderUserName = $"{user.Name} {user.Surname}";
         running.ResetTimer();
+        running.userId = user.Id;
 
         await Clients.Group($"auction-{auctionId}").SendAsync("BidPlaced", new
         {
             auctionId,
             newPrice = newBid,
             bidder = running.LastBidderUserName,
-            remainingSeconds = running.RemainingSeconds,
-            userId = running.userId
+            remainingSeconds = running.RemainingSeconds
         });
+
     }
 
 }

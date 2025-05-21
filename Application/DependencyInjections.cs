@@ -39,7 +39,6 @@ public static class DependencyInjections
         services.AddMediatR(typeof(SendTelegramMessageCommandHandler).Assembly);
         return services;
 
-        return services;
     }
 }
 
