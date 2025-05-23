@@ -1,4 +1,5 @@
 ﻿
+using Application.CQRS.Messages.Handlers;
 using Application.CQRS.SignalR.Handlers;
 using Application.CQRS.SignalR.ResponseDtos;
 using Common.GlobalResponses.Generics;
@@ -32,6 +33,13 @@ public class ChatController(ISender sender) : ControllerBase
         var messages = await _sender.Send(query);
         Console.WriteLine($"Mesajlar: {messages.Count()}"); 
         return Ok(messages);
+    }
+
+    [HttpGet("getUserMessages")]
+    public async Task<IActionResult> GetUserMessages([FromQuery] GetUserMessages.GetUserMessagesCommand request)
+    {
+        var result = await _sender.Send(request);
+        return Ok(result);
     }
 
 }

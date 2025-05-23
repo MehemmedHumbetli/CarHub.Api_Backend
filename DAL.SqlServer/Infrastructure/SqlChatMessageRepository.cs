@@ -30,4 +30,12 @@ public class SqlChatMessageRepository : IChatMessageRepository
                              .OrderBy(x => x.SentAt)
                              .ToListAsync();
     }
+
+    public async Task<IEnumerable<ChatMessage>> GetUserMessages(int receiverId)
+    {
+        return await _context.ChatMessages
+            .Where(x => x.ReceiverId == receiverId)
+            .OrderBy(x => x.SenderId)
+            .ToListAsync();
+    }
 }
