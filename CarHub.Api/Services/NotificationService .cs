@@ -67,31 +67,37 @@ public class NotificationService : INotificationService
         }
         else if (msgReason == "time")
         {
-            var users = _context.Users.ToList();
+            var joinedUserIds = _context.AuctionParticipants
+                .Where(ap => ap.AuctionId == auctionId)
+                .Select(ap => ap.UserId)
+                .ToList();
 
-            foreach (var user in users)
+            foreach (var userId in joinedUserIds)
             {
                 var notification = new Notification
                 {
-                    UserId = user.Id,
+                    UserId = userId,
                     Title = "Auction Notification",
-                    Message = $"Auction time out"
+                    Message = "Auction time out"
                 };
 
                 _context.Notifications.Add(notification);
             }
 
-            await _hubContext.Clients.All.SendAsync("ReceiveNotification", new
+            var stringUserIds = joinedUserIds.Select(id => id.ToString()).ToList();
+
+            await _hubContext.Clients.Users(stringUserIds).SendAsync("ReceiveNotification", new
             {
                 id = auctionId,
-                message = $"Auction time out"
+                message = "Auction time out"
             });
 
-            Console.WriteLine("Notification sent to all users due to time out.");
+            Console.WriteLine("Notification sent to auction participants due to time out.");
         }
 
         await _context.SaveChangesAsync();
     }
+
 
 
 }

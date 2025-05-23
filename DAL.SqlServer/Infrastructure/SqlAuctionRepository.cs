@@ -38,7 +38,6 @@ namespace DAL.SqlServer.Infrastructure
             if (auction == null) return false;
 
             _context.Auctions.Remove(auction);
-            //await _context.SaveChangesAsync();
             return true; 
         }
 

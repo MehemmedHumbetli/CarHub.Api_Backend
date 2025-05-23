@@ -2,9 +2,12 @@
 using Application.CQRS.SignalR.ResponseDtos;
 using AutoMapper;
 using Common.GlobalResponses.Generics;
+using DAL.SqlServer.Context;
 using Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Repository.Common;
+using System.Reflection;
 
 namespace Application.CQRS.SignalR.Handlers
 {
@@ -21,11 +24,12 @@ namespace Application.CQRS.SignalR.Handlers
         {
             private readonly IMapper _mapper;
             private readonly IUnitOfWork _unitOfWork;
-
-            public Handler(IUnitOfWork unitOfWork, IMapper mapper)
+            private readonly AppDbContext _context;
+            public Handler(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext context)
             {
                 _unitOfWork = unitOfWork;
                 _mapper = mapper;
+                _context = context;
             }
 
             public async Task<Result<ChatMessageDto>> Handle(SendMessageCommand request, CancellationToken cancellationToken)
@@ -38,7 +42,17 @@ namespace Application.CQRS.SignalR.Handlers
                     SentAt = DateTime.UtcNow 
                 };
 
+                var notification = new Notification
+                {
+                    UserId = request.SenderId,
+                    Title = $"{request.ReceiverId}",
+                    Message = request.Text
+                };
+
                 await _unitOfWork.ChatMessageRepository.AddAsync(message);
+                _context.Notifications.Add(notification);
+                await _unitOfWork.SaveChangeAsync();
+
 
                 var response = _mapper.Map<ChatMessageDto>(message);
 

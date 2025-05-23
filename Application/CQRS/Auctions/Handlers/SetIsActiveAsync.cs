@@ -4,6 +4,7 @@ using Repository.Common;
 using Application.Services;
 using Application.CQRS.Auctions.ResponseDtos;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.CQRS.Auctions.Handlers;
 
@@ -42,7 +43,9 @@ public class SetIsActiveAsync
             var auctionNotificationDto = _mapper.Map<AuctionActivatedNotificationDto>(auction);
 
             await _notificationService.SendAuctionActivatedNotificationAsync(auctionNotificationDto);
+            await _unitOfWork.ParticipantRepository.JoinAuction(request.AuctionId, auction.SellerId);
 
+            await _unitOfWork.SaveChangeAsync();
 
             return new Result<AuctionActivatedNotificationDto>
             {

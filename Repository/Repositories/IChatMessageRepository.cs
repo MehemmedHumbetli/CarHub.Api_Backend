@@ -10,6 +10,5 @@ namespace Repository.Repositories;
 public interface IChatMessageRepository
 {
     Task AddAsync(ChatMessage message);
-    Task<ChatMessage> GetByIdAsync(int id);
     Task<IEnumerable<ChatMessage>> GetMessagesByUserIdsAsync(int senderId, int receiverId);
 }

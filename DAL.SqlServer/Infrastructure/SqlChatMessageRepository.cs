@@ -21,11 +21,6 @@ public class SqlChatMessageRepository : IChatMessageRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<ChatMessage> GetByIdAsync(int id)
-    {
-        return await _context.ChatMessages
-                             .FirstOrDefaultAsync(x => x.Id == id);
-    }
 
     public async Task<IEnumerable<ChatMessage>> GetMessagesByUserIdsAsync(int senderId, int receiverId)
     {
