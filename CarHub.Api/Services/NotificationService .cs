@@ -48,7 +48,6 @@ public class NotificationService : INotificationService
 {
     if (msgReason == "win")
     {
-        // Qalib üçün bildiriş
         var winnerNotification = new Notification
         {
             UserId = winner.Id,
@@ -66,7 +65,6 @@ public class NotificationService : INotificationService
 
         Console.WriteLine($"Notification sent to winner user {winner.Id}");
 
-        // Bütün iştirakçıları al, amma qalibi istisna et
         var otherUserIds = _context.AuctionParticipants
             .Where(ap => ap.AuctionId == auctionId && ap.UserId != winner.Id)
             .Select(ap => ap.UserId)
@@ -128,9 +126,6 @@ public class NotificationService : INotificationService
 
     await _context.SaveChangesAsync();
 }
-
-
-
 
 }
 

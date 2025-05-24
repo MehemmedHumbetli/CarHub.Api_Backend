@@ -53,7 +53,7 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IParticipantRepository, SqlParticipantRepository>();
 builder.Services.AddHostedService<AuctionMonitorService>();
 builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
-
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 

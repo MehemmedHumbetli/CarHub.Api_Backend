@@ -28,7 +28,7 @@ public class SqlUnitOfWork(string connectionString, AppDbContext context) : IUni
     public SqlNotificationRepository _notificationRepository;
     public SqlParticipantRepository _participantRepository;
     public TelegramChatRepository _telegramChatRepository;
-
+    public SqlEmailVerificationRepository _emailVerificationRepository;
 
     public ICategoryRepository CategoryRepository => _categoryRepository ?? new SqlCategoryRepository(_connectionString, _context);
     public IProductRepository ProductRepository => _productRepository ?? new SqlProductRepository(_connectionString, _context);
@@ -48,6 +48,7 @@ public class SqlUnitOfWork(string connectionString, AppDbContext context) : IUni
     public IParticipantRepository ParticipantRepository => _participantRepository ?? new SqlParticipantRepository(_context);
 
     public ITelegramChatRepository TelegramChatRepository => _telegramChatRepository ?? new TelegramChatRepository(_context);
+    public IEmailVerificationRepository EmailVerificationRepository => _emailVerificationRepository ??= new SqlEmailVerificationRepository(_context);
 
     public async Task CompleteAsync()
     {

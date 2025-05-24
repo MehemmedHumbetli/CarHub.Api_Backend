@@ -22,6 +22,7 @@ public interface IUnitOfWork
     public IOrderRepository OrderRepository { get; }
 
     public ITelegramChatRepository TelegramChatRepository { get; }
+    public IEmailVerificationRepository EmailVerificationRepository { get; }
     Task CompleteAsync();
     Task<int> SaveChangeAsync();
   

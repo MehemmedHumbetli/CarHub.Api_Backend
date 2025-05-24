@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     {
     }
     
+    public DbSet<EmailVerification> EmailVerifications { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products { get; set; }
