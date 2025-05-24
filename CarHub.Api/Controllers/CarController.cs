@@ -58,6 +58,32 @@ public class CarController(ISender sender) : Controller
         return Ok(result.Data);
     }
 
+    [HttpGet("GetAllTransmissionTypes")]
+    public async Task<IActionResult> GetAllTransmissionTypes()
+    {
+        var result = await _sender.Send(new GetAllTransmissionTypes.GetAllTransmissionTypesQuery());
+
+        if (!result.IsSuccess)
+        {
+            return NotFound(result.Errors);
+        }
+
+        return Ok(result.Data);
+    }
+
+    [HttpGet("GetAllFuelTypes")]
+    public async Task<IActionResult> GetAllFuelTypes()
+    {
+        var result = await _sender.Send(new GetAllFuelTypes.GetAllFuelTypesQuery());
+
+        if (!result.IsSuccess)
+        {
+            return NotFound(result.Errors);
+        }
+
+        return Ok(result.Data);
+    }
+
     [HttpGet("GetById")]
     public async Task<IActionResult> GetById([FromQuery] CarGetByIdCommand request)
     {
