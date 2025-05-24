@@ -45,58 +45,90 @@ public class NotificationService : INotificationService
     }
 
     public async Task SendAuctionStoppedNotificationAsync(int auctionId, string msgReason, User winner)
+{
+    if (msgReason == "win")
     {
-        if (msgReason == "win")
+        // Qalib üçün bildiriş
+        var winnerNotification = new Notification
+        {
+            UserId = winner.Id,
+            Title = "Auction Notification",
+            Message = $"{winner.Name} {winner.Surname} won the auction!"
+        };
+
+        _context.Notifications.Add(winnerNotification);
+
+        await _hubContext.Clients.User(winner.Id.ToString()).SendAsync("ReceiveNotification", new
+        {
+            id = auctionId,
+            message = "You won the auction!"
+        });
+
+        Console.WriteLine($"Notification sent to winner user {winner.Id}");
+
+        // Bütün iştirakçıları al, amma qalibi istisna et
+        var otherUserIds = _context.AuctionParticipants
+            .Where(ap => ap.AuctionId == auctionId && ap.UserId != winner.Id)
+            .Select(ap => ap.UserId)
+            .Distinct()
+            .ToList();
+
+        foreach (var userId in otherUserIds)
         {
             var notification = new Notification
             {
-                UserId = winner.Id,
+                UserId = userId,
                 Title = "Auction Notification",
-                Message = $"{winner.Name} {winner.Surname} won Auction!"
+                Message = "Auction was won by someone else."
             };
 
             _context.Notifications.Add(notification);
-
-            await _hubContext.Clients.User(winner.Id.ToString()).SendAsync("ReceiveNotification", new
-            {
-                id = auctionId,
-                message = $"You won the auction!"
-            });
-
-            Console.WriteLine($"Notification sent to user {winner.Id}");
         }
-        else if (msgReason == "time")
+
+        var stringOtherUserIds = otherUserIds.Select(id => id.ToString()).ToList();
+
+        await _hubContext.Clients.Users(stringOtherUserIds).SendAsync("ReceiveNotification", new
         {
-            var joinedUserIds = _context.AuctionParticipants
-                .Where(ap => ap.AuctionId == auctionId)
-                .Select(ap => ap.UserId)
-                .ToList();
+            id = auctionId,
+            message = "Auction was won by someone else."
+        });
 
-            foreach (var userId in joinedUserIds)
+        Console.WriteLine("Notification sent to non-winner participants.");
+    }
+    else if (msgReason == "time")
+    {
+        var joinedUserIds = _context.AuctionParticipants
+            .Where(ap => ap.AuctionId == auctionId)
+            .Select(ap => ap.UserId)
+            .Distinct()
+            .ToList();
+
+        foreach (var userId in joinedUserIds)
+        {
+            var notification = new Notification
             {
-                var notification = new Notification
-                {
-                    UserId = userId,
-                    Title = "Auction Notification",
-                    Message = "Auction time out"
-                };
+                UserId = userId,
+                Title = "Auction Notification",
+                Message = "Auction time out"
+            };
 
-                _context.Notifications.Add(notification);
-            }
-
-            var stringUserIds = joinedUserIds.Select(id => id.ToString()).ToList();
-
-            await _hubContext.Clients.Users(stringUserIds).SendAsync("ReceiveNotification", new
-            {
-                id = auctionId,
-                message = "Auction time out"
-            });
-
-            Console.WriteLine("Notification sent to auction participants due to time out.");
+            _context.Notifications.Add(notification);
         }
 
-        await _context.SaveChangesAsync();
+        var stringUserIds = joinedUserIds.Select(id => id.ToString()).ToList();
+
+        await _hubContext.Clients.Users(stringUserIds).SendAsync("ReceiveNotification", new
+        {
+            id = auctionId,
+            message = "Auction time out"
+        });
+
+        Console.WriteLine("Notification sent to auction participants due to time out.");
     }
+
+    await _context.SaveChangesAsync();
+}
+
 
 
 
