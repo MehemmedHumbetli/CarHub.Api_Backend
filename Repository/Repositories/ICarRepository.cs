@@ -9,6 +9,7 @@ public interface ICarRepository
     Task AddAsync(Car car);
     void Update(Car car);
     Task Remove(int id);
+    Task ChangeUser(int ownerId, int newUserId, int carId);
     IQueryable<Car> GetAll();
     List<(int Id, string Name)> GetAllBodyTypes();
     Task<Car> GetByIdAsync(int id);

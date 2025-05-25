@@ -5,4 +5,5 @@ namespace Repository.Repositories;
 public interface INotificationRepository
 {
      Task<List<Notification>> GetAllNotification(int userId);
+    Task Remove(int id);
 }

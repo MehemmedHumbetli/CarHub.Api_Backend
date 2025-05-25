@@ -165,4 +165,26 @@ public class SqlCarRepository(string connectionString, AppDbContext context) : B
         .Select(bt => ((int)bt, bt.ToString()))
         .ToList();
     }
+
+    public async Task ChangeUser(int ownerId, int newUserId, int carId)
+    {
+        var car = await _context.Cars
+            .FirstOrDefaultAsync(c => c.Id == carId && c.CreatedBy == ownerId);
+
+        if (car == null)
+        {
+            throw new Exception("Car not found or you are not the owner.");
+        }
+
+        var userExists = await _context.Users.AnyAsync(u => u.Id == newUserId);
+        if (!userExists)
+        {
+            throw new Exception("New user does not exist.");
+        }
+
+        car.CreatedBy = newUserId;
+
+        await _context.SaveChangesAsync();
+    }
+
 }

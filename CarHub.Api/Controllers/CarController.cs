@@ -97,5 +97,10 @@ public class CarController(ISender sender) : Controller
         return Ok(result);
     }
 
-
+    [HttpPut("CarUserChange")]
+    public async Task<IActionResult> CarUserChange([FromBody] ChangeUser.ChangeCarUserCommand request)
+    {
+        var response = await _sender.Send(request);
+        return Ok("createdBy deyisdi ugurla!");
+    }
 }

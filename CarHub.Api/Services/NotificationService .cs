@@ -55,13 +55,23 @@ public class NotificationService : INotificationService
             Message = $"{winner.Name} {winner.Surname} won the auction!"
         };
 
-        _context.Notifications.Add(winnerNotification);
-
         await _hubContext.Clients.User(winner.Id.ToString()).SendAsync("ReceiveNotification", new
         {
             id = auctionId,
             message = "You won the auction!"
         });
+
+            var auction =  _context.Auctions.FirstOrDefault(a => a.Id == auctionId);
+            var user = _context.Users.FirstOrDefault(a => a.Id == auction.SellerId);
+        var ownerNotification = new Notification
+        {
+                UserId = auction.SellerId,
+                Title = $"newUser: {winner.Id},CarId: {auction.CarId}",
+                Message = $"Auction winner {user.Name} {user.Surname}"
+        };
+
+        _context.Notifications.Add(ownerNotification);
+            
 
         Console.WriteLine($"Notification sent to winner user {winner.Id}");
 
