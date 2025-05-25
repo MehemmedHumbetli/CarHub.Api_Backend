@@ -62,7 +62,7 @@ public class NotificationService : INotificationService
         });
 
             var auction =  _context.Auctions.FirstOrDefault(a => a.Id == auctionId);
-            var user = _context.Users.FirstOrDefault(a => a.Id == auction.SellerId);
+            var user = _context.Users.FirstOrDefault(a => a.Id == winner.Id);
         var ownerNotification = new Notification
         {
                 UserId = auction.SellerId,
