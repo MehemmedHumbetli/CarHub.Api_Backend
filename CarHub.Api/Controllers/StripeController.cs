@@ -6,7 +6,7 @@ using Stripe;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using AutoMapper; // AutoMapper namespace ekleniyor
+using AutoMapper; 
 
 namespace CarHub.Api.Controllers
 {
@@ -16,13 +16,13 @@ namespace CarHub.Api.Controllers
     {
         private readonly ISender _sender;
         private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper; // AutoMapper'ı ekledik
+        private readonly IMapper _mapper; 
 
         public PaymentController(ISender sender, IConfiguration configuration, IMapper mapper)
         {
             _sender = sender;
             _configuration = configuration;
-            _mapper = mapper; // AutoMapper'ı inject ettik
+            _mapper = mapper; 
         }
 
         [HttpPost("payment-success")]
@@ -37,17 +37,14 @@ namespace CarHub.Api.Controllers
             {
                 Console.WriteLine($"📦 Gelen SessionId: {sessionId}");
 
-                // PaymentSuccessCommand oluşturuluyor
                 var paymentSuccessCommand = new PaymentSuccess.PaymentSuccessCommand(sessionId);
 
-                // Komut gönderiliyor
                 await _sender.Send(paymentSuccessCommand);
 
                 return Ok(new { Message = "Payment processed successfully." });
             }
             catch (Exception ex)
             {
-                // Hata loglaması yapılır
                 Console.WriteLine($"🔥 PaymentSuccess error: {ex.Message}");
                 return StatusCode(500, new { Errors = new[] { $"Payment success processing failed: {ex.Message}" } });
             }
@@ -57,12 +54,10 @@ namespace CarHub.Api.Controllers
         [HttpPost("webhook")]
         public async Task<IActionResult> StripeWebhook()
         {
-            // Request Body'nin tekrar okunabilmesi için buffering aktif et
             HttpContext.Request.EnableBuffering();
 
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
 
-            // Stream'i başa sarıyoruz
             HttpContext.Request.Body.Position = 0;
 
             Console.WriteLine("🚀 Webhook endpoint triggered.");

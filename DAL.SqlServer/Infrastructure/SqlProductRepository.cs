@@ -30,7 +30,7 @@ public class SqlProductRepository(string connectionString, AppDbContext context)
 
     public IQueryable<Product> GetAll()
     {
-        return _context.Products;
+        return _context.Products.Where(p => !p.IsDeleted);
     }
 
     public IEnumerable<Product> GetByCategoryId(int categoryId)
