@@ -1,25 +1,87 @@
+﻿using DAL.SqlServer;
+using Application;
+
+using CarHub.Api.Infrastructure.Middlewares;
+using CarHub.Api.Security;
+
+using Application.Security;
+using CarHub.Api.Infrastructure;
+using SignalR.Hubs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.Extensions.FileProviders;
+using Application.Services;
+using CarHub.Api.Services;
+using CarHub.Api.SignalR.Hubs;
+using DAL.SqlServer.Infrastructure;
+using Repository.Repositories;
+using CarHub.Api.SignalR;
+using Microsoft.AspNetCore.SignalR;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllWithCredentials", policy =>
+    {
+        policy
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .SetIsOriginAllowed(origin => origin.StartsWith("http://localhost"));
+    });
+});
+
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerService();
+builder.Services.AddScoped<IUserContext, HttpUserContext>();
+
+var conn = builder.Configuration.GetConnectionString("MyConn");
+builder.Services.AddSqlServerServices(conn!);
+builder.Services.AddApplicationServices();
+builder.Services.AddAuthenticationService(builder.Configuration);
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IParticipantRepository, SqlParticipantRepository>();
+builder.Services.AddHostedService<AuctionMonitorService>();
+builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+
+
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseCors("AllowAllWithCredentials"); 
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads")),
+    RequestPath = "/uploads"
+});
 
+
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
+app.MapHub<ChatHub>("/chathub");
+app.MapHub<NotificationHub>("/notificationHub");
+app.MapHub<AuctionHub>("/auctionHub");
+//app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.Run();
